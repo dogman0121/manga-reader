@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block header %}
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='manga-card/style.css') }}">
+<title>Manga Page</title>
+{% endblock %}
+{% block content %}
+<div class="content">
+    <div class="content__inner">
+        <div class="content__left">
+            <img class="title__poster" src="{{ url_for('static', filename='manga-card/images/manga_poster.jpg') }}">
+            <div class="title__info">
+                Тип: манхва<br>
+                Год: 2020<br>
+                Статус: выпускается<br>
+                Автор: Ja-eun huang kotavi<br>
+                Издательство: kakao tapas<br>
+                Переводчик: Пантеон<br>
+            </div>
+            <div class="similar__titles">
+                <span class="similar__title">Похожее</span>
+                <div class="similar__manga btn">
+                    <img class="similar__poster" src="{{ url_for('static', filename='manga-card/images/similar1.jpg') }}">
+                    <p class="similar__text">
+                    Я - дитя этого дома<br>
+                    2018<br>
+                    Манхва
+                    </p>
+                </div>
+                <div class="similar__manga btn">
+                    <img class="similar__poster" src="{{ url_for('static', filename='manga-card/images/similar2.jpg') }}">
+                    <p class="similar__text">
+                        Я стала женой принца-монстра<br>
+                        2021<br>
+                        Манхва
+                    </p>
+                </div>
+                <div class="similar__manga btn">
+                    <img class="similar__poster" src="{{ url_for('static', filename='manga-card/images/similar3.jpg') }}">
+                    <p class="similar__text">
+                        На самом деле я была настоящей<br>
+                        2020<br>
+                        Манхва
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="content__right">
+            <div class="title__about">
+                <div class="title__title">
+                    <div class="title__name">
+                        <span class="name__russian">
+                            Молю, оставь меня в покое
+                        </span>
+                        <span class="name__transation">
+                            Please, leave me / 나를 버려주세요
+                        </span>
+                    </div>
+                    <div class="read__button btn">
+                        Читать
+                    </div>
+                </div>
+                <div class="title__stats">
+                    <div class="stats btn">
+                        <img class="rating__image" src="{{ url_for('static', filename='manga-card/images/rating.svg') }}">
+                        <span class="stats__text">7.9</span>
+                    </div>
+                    <div class="stats btn">
+                        <img class="rating__image" src="{{ url_for('static', filename='manga-card/images/views.svg') }}">
+                        <span class="stats__text">10K</span>
+                    </div>
+                    <div class="stats btn">
+                        <img class="rating__image" src="{{ url_for('static', filename='manga-card/images/featured.svg') }}">
+                        <span class="stats__text">1K</span>
+                    </div>
+                </div>
+                <p class="title__description">
+                    Адель взял под опеку герцог, чтобы та заменила его дочь, что умерла от неизлечимой болезни. Всю свою жизнь она пыталась заслужить хоть капельку любви, но заслужила лишь смерть. После того, как у герцога родилась дочь, он решил избавиться от Адель, выдав замуж, но по дороге к жениху на её карету напали и убили всех, включая героиню. Когда она вновь открыла глаза, то поняла, что вернулась на 3 года назад. "...Это сон?" Адель решает жить так, как сама посчитает нужным, раз от неё все равно захотят избавиться, как только у герцога родится дочь, но её планам не суждено сбыться. "Разве вы во мне не заинтересованы?" Загадочный рыцарь начинает преследовать Адель, кто знает, что он задумал...
+                </p>
+                <div class="tags">
+                    <div class="tag btn">драма</div>
+                    <div class="tag btn">романтика</div>
+                    <div class="tag btn">сёдзе</div>
+                    <div class="tag btn">приключения</div>
+                </div>
+            </div>
+            <div class="sections">
+                <div id="chapters" class="section btn"><span class="section__text">Главы</span></div>
+                <div id="comments"class="section btn"><span class="section__text">Комменарии</span></div>
+            </div>
+            <div class="chapters">
+                <div class="chapters__title">
+                    <span class="chapters__text">Список глав</span>
+                    <img class="btn" src="{{ url_for('static', filename='manga-card/images/filter.svg') }}">
+                </div>
+                <div class="chapter btn">
+                    Том 1 Глава 1
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='manga-card/script.js') }}"></script>
+{% endblock %}

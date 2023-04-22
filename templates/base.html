@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block header %}
+    {% endblock %}
+</head>
+<body>
+    <div class="header">
+        <div class="header__inner">
+            <div class="header__left">
+                <div class="logo"></div>
+            </div>
+            <div class="header__right">
+                <div class="search"></div>
+                <div class="profile_avatar"></div>
+            </div>
+        </div>
+    </div>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
