@@ -1,0 +1,1 @@
+![Manga Card](https://raw.githubusercontent.com/dogman0121/manga-reader/main/design/manga-card.png)
