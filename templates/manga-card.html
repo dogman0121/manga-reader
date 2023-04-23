@@ -11,14 +11,14 @@
 <div class="content">
     <div class="content__inner">
         <div class="content__left">
-            <img class="title__poster" src="{{ url_for('static', filename='manga-card/images/manga_poster.jpg') }}">
+            <img class="title__poster" src="{{ url_for('static', filename=title.poster_url) }}">
             <div class="title__info">
-                Тип: манхва<br>
-                Год: 2020<br>
-                Статус: выпускается<br>
-                Автор: Ja-eun huang kotavi<br>
-                Издательство: kakao tapas<br>
-                Переводчик: Пантеон<br>
+                Тип: {{ title.type }}<br>
+                Год: {{ title.year }}<br>
+                Статус: {{ title.status}}<br>
+                Автор: {{ title.author.replace('/', ' ') }}<br>
+                Издательство: {{ title.publisher.replace('/', ' ') }}<br>
+                Переводчик: {{ title.translator.replace('/', ' ') }}<br>
             </div>
             <div class="similar__titles">
                 <span class="similar__title">Похожее</span>
@@ -49,14 +49,14 @@
             </div>
         </div>
         <div class="content__right">
-            <div class="title__about">
-                <div class="title__title">
-                    <div class="title__name">
+            <div class="manga__about">
+                <div class="manga__title">
+                    <div class="manga__name">
                         <span class="name__russian">
-                            Молю, оставь меня в покое
+                            {{ title.name_russian}}
                         </span>
                         <span class="name__transation">
-                            Please, leave me / 나를 버려주세요
+                            {{ title.name_translation }}
                         </span>
                     </div>
                     <div class="read__button btn">
@@ -66,25 +66,24 @@
                 <div class="title__stats">
                     <div class="stats btn">
                         <img class="rating__image" src="{{ url_for('static', filename='manga-card/images/rating.svg') }}">
-                        <span class="stats__text">7.9</span>
+                        <span class="stats__text">{{ title.rating }}</span>
                     </div>
                     <div class="stats btn">
                         <img class="rating__image" src="{{ url_for('static', filename='manga-card/images/views.svg') }}">
-                        <span class="stats__text">10K</span>
+                        <span class="stats__text">{{ title.views }}</span>
                     </div>
                     <div class="stats btn">
                         <img class="rating__image" src="{{ url_for('static', filename='manga-card/images/featured.svg') }}">
-                        <span class="stats__text">1K</span>
+                        <span class="stats__text"> {{ title.saved }}</span>
                     </div>
                 </div>
                 <p class="title__description">
-                    Адель взял под опеку герцог, чтобы та заменила его дочь, что умерла от неизлечимой болезни. Всю свою жизнь она пыталась заслужить хоть капельку любви, но заслужила лишь смерть. После того, как у герцога родилась дочь, он решил избавиться от Адель, выдав замуж, но по дороге к жениху на её карету напали и убили всех, включая героиню. Когда она вновь открыла глаза, то поняла, что вернулась на 3 года назад. "...Это сон?" Адель решает жить так, как сама посчитает нужным, раз от неё все равно захотят избавиться, как только у герцога родится дочь, но её планам не суждено сбыться. "Разве вы во мне не заинтересованы?" Загадочный рыцарь начинает преследовать Адель, кто знает, что он задумал...
+                    {{ title.description }}
                 </p>
                 <div class="tags">
-                    <div class="tag btn">драма</div>
-                    <div class="tag btn">романтика</div>
-                    <div class="tag btn">сёдзе</div>
-                    <div class="tag btn">приключения</div>
+                    {% for tag in title.genres.split('/') %}
+                    <div class="tag">{{ tag }}</div>
+                    {% endfor %}
                 </div>
             </div>
             <div class="sections">

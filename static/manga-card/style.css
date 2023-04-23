@@ -108,13 +108,13 @@
     margin-left: 12px;
 }
 
-.title__title {
+.manga__title {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.title__name {
+.manga__name {
     display: flex;
     flex-direction: column;
 }
