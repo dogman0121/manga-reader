@@ -1,22 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base/style.css') }}">
     {% block header %}
     {% endblock %}
+    <title>Title</title>
 </head>
 <body>
-    <div class="header">
-        <div class="header__inner">
-            <div class="header__left">
-                <div class="logo"></div>
-            </div>
-            <div class="header__right">
-                <div class="search"></div>
-                <div class="profile_avatar"></div>
+    <header>
+        <div class="content__inner">
+            <div class="header__inner">
+                <div class="nav-left">
+                    <div id="logo"></div>
+                    <nav class="nav-left__nav">
+                        <a class="nav__item">
+                            <span class="nav__text">каталог</span>
+                        </a>
+                        <a class="nav__item">
+                            <img class="nav__icon" src="{{ url_for('static', filename='manga_card/images/search.svg') }}">
+                            <span class="nav__text nav__icon-text">поиск</span>
+                        </a>
+                    </nav>
+                </div>
+                <div class="nav-right__nav">
+                    <nav>
+                        <a class="nav__item" id="profile" href="{{ url_for('logout') if user.is_authenticated else url_for('login') }}">
+                            <img class="empty-icon" src="{{ url_for('static', filename='manga_card/images/user1.svg') }}">
+                        </a>
+                    </nav>
+                </div>
             </div>
         </div>
-    </div>
-    {% block content %}
+    </header>
+    <main>
+        <div class="content__inner">
+            <div class="main__inner">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+    {% block footer %}
     {% endblock %}
 </body>
 </html>
