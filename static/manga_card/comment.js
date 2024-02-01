@@ -145,7 +145,7 @@ class Comment{
                     }
                     else{
                         commentRating.textContent = parseInt(commentRating.textContent) + 1;
-                        voteDown.classList.add("rating__button_active");
+                        voteUp.classList.add("rating__button_active");
                         this.comment.isVotedByUser = true;
                         this.comment.userVoteType = 1;
                     }

@@ -2,7 +2,7 @@ function createGridBlock(title, type){
     let blockElement;
     if (type === 1){
         blockElement = `
-            <a class="catalog__link">
+            <a class="catalog__link" href="manga/${title.id}">
                 <div class="catalog__item title title-square">
                     <img class="title-square__poster" src="static/media/posters/${title.id}.jpg">
                     <span class="title-square__data">
@@ -15,7 +15,7 @@ function createGridBlock(title, type){
         `;
     } else {
         blockElement = `
-            <a class="catalog__link">
+            <a class="catalog__link" href="manga/${title.id}">
                 <div class="catalog__item title title-rectangle">
                     <img class="title-rectangle__poster" src="static/media/posters/${title.id}.jpg">
                     <div class="title-rectangle__data">

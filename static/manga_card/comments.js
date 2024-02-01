@@ -10,7 +10,7 @@ class Comments {
             commentsForm = `
                 <p class="comments-not-auth__text">Чтобы написать комментарий необходимо авторизироваться</p>
                 <div class="comments-not-auth__button">
-                    <a href="login" class="comments-not-auth__login">Войти</a>
+                    <a href="/login" class="comments-not-auth__login">Войти</a>
                 </div>
             `;
 
@@ -84,6 +84,7 @@ class Comments {
 
         let section = document.querySelector(".section");
         section.replaceWith(this.commentsBlock);
+
     }
 
     sendComment() {
@@ -129,3 +130,5 @@ class Comments {
         })
     }
 }
+
+let comments = new Comments();

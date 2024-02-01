@@ -1,6 +1,6 @@
 function getTitles(formData, page=1) {
-    formData.append("page", page);
     let searchParams = new URLSearchParams(formData);
+    searchParams.append("page", page);
     let queryParams = searchParams.toString();
     let query = "/get_catalog?" + queryParams;
     return fetch(query, {

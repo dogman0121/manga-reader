@@ -4,7 +4,7 @@ class Chapters {
     }
     show(){
         let chaptersBlockHtml;
-        if(this.chapters.length != 0) {
+        if(this.chapters.length !== 0) {
             chaptersBlockHtml = `
                 <div id="chapters" class="section">
                     <div id="chapters__header">
@@ -47,7 +47,7 @@ class Chapters {
         let chaptersBlockRendered = new DOMParser().parseFromString(chaptersBlockHtml, "text/html");
         let chaptersBlockElement = chaptersBlockRendered.querySelector("#chapters");
 
-        if(this.chapters.length != 0) {
+        if(this.chapters.length !== 0) {
             let chaptersList = chaptersBlockElement.querySelector(".chapters__list");
             for(let chapter of this.chapters)
                 chaptersList.append(chapter.element);
@@ -57,3 +57,5 @@ class Chapters {
         section.replaceWith(chaptersBlockElement);
     }
 }
+
+let chapters = new Chapters();

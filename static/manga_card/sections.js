@@ -10,8 +10,7 @@ function underLineSection(element) {
 
 
 let sections = document.querySelector("#section-buttons");
-let chapters = new Chapters();
-let comments = new Comments();
+
 sections.addEventListener("click", chooseSection);
 function chooseSection(event){
     if (!event.target.classList.contains("section-buttons__item"))
@@ -20,20 +19,12 @@ function chooseSection(event){
     underLineSection(event.target);
 
     if (event.target.id === "chapters-button"){
-        window.removeEventListener("scroll", scrollLoading);
         chapters.show();
+        window.removeEventListener("scroll", loadCommentsOnScroll);
     }
 
     if (event.target.id === "comments-button") {
-        window.addEventListener("scroll", scrollLoading);
         comments.show();
+        window.addEventListener("scroll", loadCommentsOnScroll);
     }
-}
-
-function scrollLoading() {
-    let commentsList = document.querySelector(".comments__list");
-    let commentsListCords = commentsList.getBoundingClientRect();
-    let commentListBottom = commentsListCords.bottom + window.scrollY;
-    if(Math.abs(commentListBottom - (window.scrollY + document.documentElement.clientHeight)) < 10)
-        comments.load();
 }

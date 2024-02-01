@@ -1,11 +1,9 @@
 import json
-
 from flask import Flask, request, render_template, jsonify, redirect, flash, url_for
-from database import User, Comment, Chapter, Title, Rating, Saves
+from database import User, Comment, Chapter, Title, Rating, Saves, Genres, Types, Tags, Statuses
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from user_login import UserLogin
-from json import dumps
 
 
 app = Flask(__name__)
@@ -241,11 +239,15 @@ def catalog():
     sort = request.args.get("sort_by")
     sort = int(sort) if sort else None
 
-    ans = Title.get_title_with_filter(types, genres, tags, status, adult, rating_by, rating_to, year_by, year_to, sort)
+    page = request.args.get("page")
+    page = int(page) if sort else None
+
+    ans = Title.get_title_with_filter(types, genres, tags, status, adult, rating_by, rating_to, year_by, year_to, sort, page)
     titles = [Title.get(t) for t in ans]
     titles_json = json.dumps(titles, ensure_ascii=False)
-    print(titles_json)
-    return render_template("catalog.html", user=current_user, titles=titles, titles_json=titles_json)
+    return render_template("catalog.html", user=current_user, titles=titles, titles_json=titles_json,
+                           genres=Genres.get_genres(), types=Types.get_types(), tags=Tags.get_tags(),
+                           statuses=Statuses.get_statuses())
 
 
 @app.route("/get_catalog")
@@ -280,7 +282,10 @@ def get_catalog():
     sort = request.args.get("sort_by")
     sort = int(sort) if sort else None
 
-    ans = Title.get_title_with_filter(types, genres, tags, status, adult, rating_by, rating_to, year_by, year_to, sort)
+    page = request.args.get("page")
+    page = int(page) if page else None
+
+    ans = Title.get_title_with_filter(types, genres, tags, status, adult, rating_by, rating_to, year_by, year_to, sort, page)
     ans_titles = [Title.get(t) for t in ans]
     return jsonify(ans_titles)
 

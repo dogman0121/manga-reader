@@ -154,7 +154,7 @@ class Title:
 
     @staticmethod
     def get_title_with_filter(type=None, genres=None, tags=None, status=None, adult=None, rating_from=None,
-                              rating_to=None, year_from=None, year_to=None, sort=None):
+                              rating_to=None, year_from=None, year_to=None, sort=None, page=None):
         if sort is None or sort == 1:
             titles = cursor.execute(""" SELECT id FROM titles ORDER BY views DESC""").fetchall()
         elif sort == 2:
@@ -227,7 +227,11 @@ class Title:
                     flag = False
             if flag:
                 answer.append(title_id)
-        return answer
+
+        if page == 1 or page is None:
+            return answer[:20]
+        else:
+            return answer[20*(page-1):20+page]
 
 
 class Rating:
@@ -312,6 +316,10 @@ class Saves:
 
 class Genres:
     @staticmethod
+    def get_genres():
+        return cursor.execute(" SELECT * FROM genres ").fetchall()
+
+    @staticmethod
     def get_title_genres(title_id):
         cursor.execute(
             """ SELECT id, name FROM titles_genres JOIN genres ON titles_genres.genre_id = genres.id WHERE title_id=? """,
@@ -334,6 +342,24 @@ class Genres:
     @staticmethod
     def delete_genre(genre_id):
         cursor.execute(""" DELETE FROM genres WHERE id=? """, (genre_id,))
+
+
+class Types:
+    @staticmethod
+    def get_types():
+        return cursor.execute(""" SELECT * FROM types """).fetchall()
+
+
+class Tags:
+    @staticmethod
+    def get_tags():
+        return cursor.execute(""" SELECT * FROM tags """).fetchall()
+
+
+class Statuses:
+    @staticmethod
+    def get_statuses():
+        return cursor.execute(""" SELECT * FROM statuses """).fetchall()
 
 
 #Title.get_title_with_filter(type=[1, 2, 3, 5])
