@@ -1,8 +1,8 @@
 let queue = 0;
 let formData = new FormData();
 // mode: 1 - добавить элемент в форму
-// mode: 2 - удалить элемент из формы
-// mode: 3 - усталовить значение элемента формы
+// mode: 2 - усталовить значение элемента формы
+// mode: 3 - удалить элемент из формы
 
 function editCatalog(name, value, mode){
     queue++;
@@ -11,17 +11,20 @@ function editCatalog(name, value, mode){
             formData.append(name, value);
             break;
         case 2:
+            formData.set(name, value);
+            break;
+        case 3:
             let valuesWithName = formData.getAll(name);
             formData.delete(name);
             for (let attrValue of valuesWithName)
                 if (attrValue !== value)
                     formData.append(name, attrValue);
             break;
-        case 3:
-            formData.set(name, value);
-            break;
+        case 4:
+            formData.delete(name);
     }
-
+    let newSearch = "?" + (new URLSearchParams(formData)).toString();
+    window.history.pushState(null, null, newSearch);
     setTimeout(function (){
         queue--;
         if (queue !== 0)

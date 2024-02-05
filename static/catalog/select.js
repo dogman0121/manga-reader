@@ -1,93 +1,162 @@
-let selectForms = document.querySelectorAll(".select");
-for (let form of selectForms) {
-    form.addEventListener("click", formClick);
-}
+// Класс отвечающий за работу select-фильтров
+class Select {
+    constructor(element) {
+        this.name = element.id;
+        this.selectInputBlock = element.querySelector(".select__input-block");
+        this.selectInput = element.querySelector(".select__input");
+        this.selectChoices = element.querySelector(".select__list");
+        this.selectedBlocks = element.querySelector(".select__selected");
+        this.isChoicesOpened = false;
 
-let openedSelectForm = null;
-function formClick(event){
-    if (event.target.closest(".select__input-block")){
-        if (openedSelectForm != null)
-            openedSelectForm.hidden = true;
-
-        let selectForm = event.target.closest(".select");
-        let visibleOptionsListInner = selectForm.querySelector(".select-list__inner");
-        visibleOptionsListInner.hidden = false;
-        openedSelectForm = visibleOptionsListInner;
-        event.stopPropagation();
+        this.selectInputBlock.addEventListener("click", {handleEvent: this.openChoicesEvent, object: this});
+        this.selectChoices.addEventListener("click", {handleEvent:this.chooseElementEvent, object: this});
+        this.selectInput.addEventListener("input", {handleEvent: this.inputEvent, object: this});
+        this.selectedBlocks.addEventListener("click", {handleEvent: this.deleteChoiceEvent, object:this})
+        document.body.addEventListener("click", {handleEvent: function (){}, object: this})
     }
-    if (event.target.classList.contains("select-list__option")){
-        let selectBlock = event.target.closest(".select");
-        let selectedVisibleOption = selectBlock.querySelector(".select__selected");
-        let selectForm = selectBlock.querySelector(".select__select");
-        if (event.target.classList.contains("select-list__option_selected")) {
-            event.target.classList.remove("select-list__option_selected");
-            let value = event.target.dataset.value;
-            selectedVisibleOption.querySelector(`[data-value="${value}"]`).remove();
-            let selectFormOption = selectForm.querySelector(`[value="${value}"]`);
-            selectFormOption.remove();
-            editCatalog(selectForm.name, selectFormOption.value, 2);
-            return null;
+
+    openChoicesEvent(event) {
+        this.object.openChoices();
+    }
+
+    openChoices() {
+        this.selectChoices.querySelector(".select-list__inner").hidden = null;
+        this.isChoicesOpened = true;
+    }
+
+    closeChoices() {
+        this.selectChoices.querySelector(".select-list__inner").hidden = true;
+        this.isChoicesOpened = false;
+    }
+
+    addChoice(value) {
+        let text = this.selectChoices.querySelector(`[data-value="${value}"]`).textContent;
+        let choiceBlock = `
+            <div class="selected__option" data-value="${value}">
+                ${text} | <span class="selected__delete"> X </span>
+            </div>
+        `
+        this.selectedBlocks.innerHTML += choiceBlock;
+
+        let choiceElement = this.selectChoices.querySelector(`[data-value="${value}"]`);
+        choiceElement.classList.add("select-list__option_selected");
+    }
+
+    removeChoice(value) {
+        this.selectedBlocks.querySelector(`[data-value="${value}"]`).remove();
+
+        let choiceElement = this.selectChoices.querySelector(`[data-value="${value}"]`);
+        choiceElement.classList.remove("select-list__option_selected");
+    }
+
+    cleanChoices() {
+        this.selectedBlocks.innerHTML = "";
+
+        for (let el of this.selectChoices.querySelectorAll(".select-list__option")){
+            el.classList.remove("select-list__option_selected");
         }
 
-        event.target.classList.add("select-list__option_selected")
-        selectedVisibleOption.innerHTML += `
-            <div class="selected__option" data-value="${event.target.dataset.value}">
-                ${event.target.textContent} | <span class="selected__delete"> X </span>
-            </div>
-        `;
+        editCatalog(this.name, null, 4);
+    }
 
-        selectForm.innerHTML += `
-            <option class="select-list__option" value="${event.target.dataset.value}" selected>
-                ${event.target.textContent}
-            </option>
-        `;
-        editCatalog(selectForm.name, event.target.dataset.value, 1);
+    chooseElementEvent(event) {
+        if (event.target.classList.contains("select-list__option")){
+            if (event.target.classList.contains("select-list__option_selected")) {
+                this.object.removeChoice(event.target.dataset.value);
+                editCatalog(this.object.name, event.target.dataset.value, 2);
+            }
+            else {
+                this.object.addChoice(event.target.dataset.value);
+                editCatalog(this.object.name, event.target.dataset.value, 1);
+            }
+        }
+    }
+
+    deleteChoiceEvent(event) {
+        if(event.target.classList.contains("selected__delete")){
+            let selectedBlock = event.target.closest(".selected__option");
+            this.object.removeChoice(selectedBlock.dataset.value);
+            editCatalog(this.object.name, selectedBlock.dataset.value, 2);
+        }
+    }
+
+    inputEvent(event) {
+        let selectChoiceElements = this.object.selectChoices.querySelectorAll(".select-list__option");
+        for (let choice of selectChoiceElements){
+            if (!choice.textContent.toLowerCase().includes(event.target.value.toLowerCase()))
+                choice.hidden = true;
+            else
+                choice.hidden = null;
+        }
     }
 }
 
 
-let selectVisibleBlock = document.querySelectorAll(".selected");
-for (let form of selectVisibleBlock) {
-    form.addEventListener("click", deleteSelected);
-}
-
-function deleteSelected(event) {
-    let selectBlock = event.target.closest(".select");
-    let selectForm = selectBlock.querySelector(".select__select");
-    let selectVisibleList = selectBlock.querySelector(".select-list");
-    if (event.target.className === "selected__delete"){
-        let selectedOption = event.target.closest(".selected__option");
-        let selectFormOption = selectForm.querySelector(`[value="${selectedOption.dataset.value}"]`);
-        let selectVisibleOption = selectVisibleList.querySelector(`[data-value="${selectedOption.dataset.value}"]`);
-
-        selectFormOption.remove();
-        selectedOption.remove();
-        selectVisibleOption.classList.remove("select-list__option_selected");
-        editCatalog(selectForm.name, selectFormOption.value, 2);
-    }
-}
-
-let selectInputs = document.querySelectorAll(".select__input");
-for(let input of selectInputs){
-    input.addEventListener("input", inputFilter)
-}
-
-function inputFilter(event){
-    let selectBlock = event.target.closest(".select");
-    let selectListVisible = selectBlock.querySelector(".select-list__inner");
-    let selectListVisibleChildren = selectListVisible.children;
-    for (let i = 0; i < selectListVisibleChildren.length; i++){
-        if (!selectListVisibleChildren[i].textContent.toLowerCase().includes(event.target.value.toLowerCase()))
-            selectListVisibleChildren[i].style.display = "none";
-        else
-            selectListVisibleChildren[i].style.display = null;
-    }
-}
+let types = new Select(document.querySelector(".type"));
+let genres = new Select(document.querySelector(".genres"));
+let tags = new Select(document.querySelector(".tags"));
+let statuses = new Select(document.querySelector(".status"));
 
 
-document.body.addEventListener("click", function(event) {
-    if (openedSelectForm){
-        openedSelectForm.hidden = true;
-        openedSelectForm = null;
-    }
+document.body.addEventListener("click", function (event){
+    if (types.isChoicesOpened && !event.target.closest(".type"))
+        types.closeChoices();
+    if (genres.isChoicesOpened && !event.target.closest(".genres"))
+        genres.closeChoices();
+    if (tags.isChoicesOpened && !event.target.closest(".tags"))
+        tags.closeChoices();
+    if (statuses.isChoicesOpened && !event.target.closest(".status"))
+        statuses.closeChoices();
 })
+
+
+function getParamsFromUrl(url){
+    let queryDict = {};
+    url.substring(1).split("&").forEach((item) => {
+        let param = item.split("=");
+        if (queryDict[param[0]])
+            queryDict[param[0]].push(param[1]);
+        else
+            queryDict[param[0]] = [param[1]];
+    })
+    return queryDict;
+}
+
+let params = getParamsFromUrl(window.location.search);
+
+let typesParams = params['types'];
+if (typesParams)
+    for (let type of typesParams){
+        types.addChoice(type);
+        formData.append("types", type);
+    }
+
+let genresParams = params['genres'];
+if (genresParams)
+    for (let genre of genresParams){
+        genres.addChoice(genre);
+        formData.append("genres", genre);
+    }
+
+let tagsParams = params['tags'];
+if (tagsParams)
+    for (let tag of tagsParams){
+        tags.addChoice(tag);
+        formData.append("tags", tag);
+    }
+
+let statusesParams = params['status'];
+if (statusesParams)
+    for (let status of statusesParams){
+        statuses.addChoice(status);
+        formData.append("status", status);
+    }
+
+
+let cleanButton = document.querySelector(".filters__clean");
+cleanButton.addEventListener("click", function (){
+    types.cleanChoices();
+    genres.cleanChoices();
+    tags.cleanChoices();
+    statuses.cleanChoices();
+});
