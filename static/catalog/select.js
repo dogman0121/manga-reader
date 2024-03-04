@@ -76,7 +76,7 @@ class Select {
         if(event.target.classList.contains("selected__delete")){
             let selectedBlock = event.target.closest(".selected__option");
             this.object.removeChoice(selectedBlock.dataset.value);
-            editCatalog(this.object.name, selectedBlock.dataset.value, 2);
+            editCatalog(this.object.name, selectedBlock.dataset.value, 3);
         }
     }
 
@@ -123,6 +123,7 @@ function getParamsFromUrl(url){
 }
 
 let params = getParamsFromUrl(window.location.search);
+console.log(params);
 
 let typesParams = params['types'];
 if (typesParams)

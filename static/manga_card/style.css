@@ -49,6 +49,11 @@ li {
     list-style-type: none;
 }
 
+.main__inner {
+    display: flex;
+    flex-direction: row;
+}
+
 #left-side {
     max-width: 278px;
     min-width: 220px;
@@ -452,4 +457,8 @@ li {
 
 .user-rating_excellent{
     background: #339900;
+}
+
+.user__avatar {
+    max-width: ;
 }

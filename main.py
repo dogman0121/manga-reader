@@ -4,6 +4,8 @@ from database import User, Comment, Chapter, Title, Rating, Saves, Genres, Types
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from user_login import UserLogin
+from forms import EditProfileForm, MangaForm
+import os
 
 
 app = Flask(__name__)
@@ -87,8 +89,14 @@ def manga_page(title_id):
                            saved=saved)
 
 
-@app.route("/profile")
-def profile():
+@app.route("/manga/add")
+def add_manga():
+    form = MangaForm()
+    return render_template("add_title.html", form=form, user=current_user)
+
+
+@app.route("/manga/edit")
+def edit_manga():
     pass
 
 
@@ -190,6 +198,7 @@ def delete_rating():
     voices_count = Rating.get_rating_voices_count(title_id)
     return jsonify({"rating": new_rating, "voices_count": voices_count})
 
+
 @app.route("/add_save", methods=["POST"])
 @login_required
 def add_save():
@@ -197,6 +206,7 @@ def add_save():
     Saves.add_save(current_user.get_id(), title_id)
     saves = Saves.get_saves(title_id)
     return jsonify({"saves": saves})
+
 
 @app.route("/delete_save", methods=["POST"])
 @login_required
@@ -289,6 +299,26 @@ def get_catalog():
     ans_titles = [Title.get(t) for t in ans]
     return jsonify(ans_titles)
 
+
+@app.route("/profile/<int:profile_id>")
+def profile(profile_id):
+    return render_template("profile.html", user=current_user)
+
+
+@app.route("/profile/edit", methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        new_avatar = request.files["file"]
+        new_avatar.save("static\\media\\avatars\\" + str(current_user.get_id()) + ".png")
+        new_login = form.login.data;
+        new_email = form.email.data;
+        return redirect(url_for("profile", profile_id=current_user.get_id()))
+    user_data = User.get_by_id(current_user.get_id())
+    has_user_photo = os.path.exists("static\\media\\avatars\\" + str(current_user.get_id()) + ".png")
+    return render_template("edit_profile.html", form=form, user=current_user, user_data=user_data,
+                           has_user_photo=has_user_photo)
 
 if __name__ == "__main__":
     app.run(debug=True)

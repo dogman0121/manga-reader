@@ -58,10 +58,8 @@ class Comments {
                     <p class="no-comments__text">Будьте первым!</p>
                 </div>
             `
-            let messageRendered = new DOMParser().parseFromString(messageHTML, "text/html");
-            let messageElement = messageRendered.querySelector(".no-comments");
             let commentsList = this.commentsBlock.querySelector(".comments__list");
-            commentsList.append(messageElement);
+            commentsList.innerHTML = messageHTML;
             let section = document.querySelector("#chapters");
             section.replaceWith(this.commentsBlock);
             return null;

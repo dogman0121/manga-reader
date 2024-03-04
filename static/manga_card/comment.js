@@ -1,7 +1,6 @@
 class Comment{
-    constructor(commentData) {
+    constructor(commentData, parentComment=undefined, rootComment=undefined) {
         this.id = commentData.id;
-        this.titleId = commentData.title_id;
         this.parent = commentData.parent;
         this.text = commentData.text;
         this.user = commentData.user;
@@ -251,6 +250,7 @@ class Comment{
             },
             body: JSON.stringify({
                 parent: this.comment.id,
+                root: this.comment.root?.id,
                 user_id: user_id,
                 title_id: title_id,
                 text: answerFormInput.value,
@@ -258,18 +258,18 @@ class Comment{
         })
             .then((response) => response.json())
             .then((comment) => {
-                this.comment.answersCount += 1;
-                let answersCount = this.comment.element.querySelector(".show-answers__answers-count");
-                answersCount.textContent = parseInt(answersCount.textContent) + 1;
-                if (this.comment.mainParent){
-                    let commentObject = new CommentAnswer(comment, this.comment.mainParent);
-                    if (!commentObject.mainParent.element.querySelector(".answers__list"))
-                        commentObject.mainParent.showAnswers();
-                    let answerList = commentObject.mainParent.element.querySelector(".answers__list");
+                let commentObject = new CommentAnswer(comment, this.comment, this.comment.root);
+                if (this.comment.root){
+                    // Проверяем, показаны ли ответы на комментарий и если нет, то показываем
+                    if (!commentObject.root.element.querySelector(".answers__list"))
+                        commentObject.root.showAnswers();
+                    let answerList = commentObject.root.element.querySelector(".answers__list");
                     answerList.append(commentObject.element);
                 }
-                else{
-                    // let commentObject = new CommentAnswer(comment, this.comment);
+                else {
+                    this.comment.answersCount += 1;
+                    let answersCount = this.comment.element.querySelector(".show-answers__answers-count");
+                    answersCount.textContent = parseInt(answersCount.textContent) + 1;
                     if (this.comment.answers.length === 0){
                         this.comment.loadAnswers(this.comment.id).then(answers => {
                             let answersObjects = answers.map(answer => new CommentAnswer(answer, this.comment));
@@ -326,7 +326,7 @@ class TitleComment extends Comment {
         }
         if(this.answers.length === 0){
             this.loadAnswers(this.id).then(answers => {
-                let answersObjects = answers.map(answer => new CommentAnswer(answer));
+                let answersObjects = answers.map(answer => new CommentAnswer(answer, null, this));
                 this.answers = this.answers.concat(answersObjects);
                 this.showAnswers();
             });
@@ -370,8 +370,11 @@ class TitleComment extends Comment {
 }
 
 class CommentAnswer extends Comment{
-    constructor(commentData, parent) {
+    constructor(commentData, parent=undefined, root=undefined) {
         super(commentData);
-        this.mainParent = parent;
+        this.parentId = commentData.parent;
+        this.rootId = commentData.root;
+        this.parent = parent;
+        this.root = root;
     }
 }

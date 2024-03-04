@@ -32,8 +32,6 @@ main {
 }
 
 .empty-icon {
-    width: 45px;
-    height: 45px;
     color: #D9D9D9;
     display: block;
 }
@@ -88,7 +86,43 @@ main {
     margin-top: 55px;
 }
 
-.main__inner {
+a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.user-avatar, .empty-icon {
+    width: 45px;
+    height: 45px;
+}
+
+.dropdown-panel{
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    z-index: 1001;
+}
+
+.profile-menu {
+    padding: 5px 10px;
+    background: #FFFFFF;
+    font-size: 16px;
+    border-radius: 12px;
+    min-width: 200px;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2)
+}
+
+.profile-menu__option {
+    height: 30px;
     display: flex;
-    flex-direction: row;
+    align-items: center;
+}
+
+.profile-menu__icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
 }
