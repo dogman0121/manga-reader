@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='base/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
     {% block header %}
     {% endblock %}
     <title>Title</title>
@@ -30,9 +31,31 @@
                 </div>
                 <div class="nav-right__nav">
                     <nav>
-                        <a class="nav__item" id="profile" href="{{ url_for('logout') if user.is_authenticated else url_for('login') }}">
+                        {% if user.is_authenticated %}
+                        <div class="dropdown-panel">
+                            <div class="nav__item dropdown-button">
+                                <img class="user-avatar" src="{{ url_for('static', filename='media/avatars/{}.png'.format(user.get_id())) }}">
+                            </div>
+                            <div class="dropdown-menu profile-menu" hidden>
+                                <a href="{{ url_for('profile', profile_id=user.get_id()) }}" class="profile-menu__option">
+                                    <img src="{{ url_for('static', filename='base/images/profile.svg') }}" class="profile-menu__icon">
+                                    Профиль
+                                </a>
+                                <a href="{{ url_for('edit_profile') }}" class="profile-menu__option">
+                                    <img src="{{ url_for('static', filename='base/images/settings.svg') }}" class="profile-menu__icon">
+                                    Настройки
+                                </a>
+                                <a href="{{ url_for('logout') }}" class="profile-menu__option">
+                                    <img src="{{ url_for('static', filename='base/images/exit.svg') }}" class="profile-menu__icon">
+                                    Выйти
+                                </a>
+                            </div>
+                        </div>
+                        {% else %}
+                        <a class="nav__item" id="profile" href="{{ url_for('login')}}">
                             <img class="empty-icon" src="{{ url_for('static', filename='manga_card/images/user1.svg') }}">
                         </a>
+                        {% endif %}
                     </nav>
                 </div>
             </div>
@@ -51,5 +74,6 @@
     </footer>
     {% block footer %}
     {% endblock %}
+    <script src="{{ url_for('static', filename='base/dropdown.js') }}"></script>
 </body>
 </html>

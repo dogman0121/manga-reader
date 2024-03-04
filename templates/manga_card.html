@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block header %}
-<link rel="stylesheet" href="{{ url_for('static', filename='manga_card/normalize.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/style.css') }}">
 <script>
     let auth = {{ 'true' if user.is_authenticated else 'false' }};
@@ -111,7 +110,7 @@
             <ul id="genres-list">
                 {% for genre in title["genres"] %}
                     <li class="genres-list__item">
-                        <a class="genres-list__link" href="../catalog?genre={{ genre['id'] }}">{{ genre["name"] }}</a>
+                        <a class="genres-list__link" href="../catalog?genres={{ genre['id'] }}">{{ genre["name"] }}</a>
                     </li>
                 {% endfor %}
             </ul>
