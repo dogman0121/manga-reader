@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block header %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.css" integrity="sha512-bs9fAcCAeaDfA4A+NiShWR886eClUcBtqhipoY5DM60Y1V3BbVQlabthUBal5bq8Z8nnxxiyb1wfGX2n76N1Mw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{{ url_for('static', filename='modules/modal/modal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='add_title/style.css') }}">
+{% endblock %}
+{% block content %}
+<form action="" method="POST" enctype="multipart/form-data" autocomplete="off">
+    {{ form.hidden_tag() }}
+    {% if has_user_photo %}
+        <img class="user-photo" src="{{ url_for('static', filename='media/avatars/{}.png'.format(user.get_id())) }}">
+    {% else %}
+        <img class="user-photo" src="{{ url_for('static', filename='media/avatars/default.png') }}">
+    {% endif %}
+    <label class="input-file">
+        {{ form.file(hidden=True) }}
+	   	<span class="input-file__text">Изменить фото</span>
+ 	</label>
+    <div class="input">
+        <label>
+            <span class="input__header">Название на языке оригинала</span>
+            <div class="input__block">
+                {{ form.name_original() }}
+            </div>
+        </label>
+    </div>
+    <div class="input">
+        <label>
+            <span class="input__header">Название на русском языке</span>
+            <div class="input__block">
+                {{ form.name_russian() }}
+            </div>
+        </label>
+    </div>
+    <div class="input">
+        <label>
+            <span class="input__header">Название на английском языке</span>
+            <div class="input__block">
+                {{ form.name_english() }}
+            </div>
+        </label>
+    </div>
+    <div class="select">
+        <label>
+            <span class="input__header">Название на языке оригинала</span>
+            <div class="input__block">
+                {{ form.type() }}
+            </div>
+        </label>
+    </div>
+    <div class="input">
+        <label>
+            <span class="input__header">Название на языке оригинала</span>
+            <div class="input__block">
+                {{ form.name_original() }}
+            </div>
+        </label>
+    </div>
+    {{ form.submit(value="Сохранить", class_="send-button") }}
+</form>
+{% endblock %}
+{% block footer %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.js" integrity="sha512-Zt7blzhYHCLHjU0c+e4ldn5kGAbwLKTSOTERgqSNyTB50wWSI21z0q6bn/dEIuqf6HiFzKJ6cfj2osRhklb4Og==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ url_for('static', filename='modules/modal/modal.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block header %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.css" integrity="sha512-bs9fAcCAeaDfA4A+NiShWR886eClUcBtqhipoY5DM60Y1V3BbVQlabthUBal5bq8Z8nnxxiyb1wfGX2n76N1Mw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{{ url_for('static', filename='modules/modal/modal.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='modules/inputs/inputs.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='edit_profile/style.css') }}">
+{% endblock %}
+{% block content %}
+
+<div class="left-side">
+    <div class="section-button {% if section != "password" %}section-button_selected{% endif %} general-section">
+        Основные настройки
+    </div>
+    <div class="section-button {% if section == "password" %}section-button_selected{% endif %} password-section">
+        Смена пароля
+    </div>
+</div>
+<div class="right_side">
+    <form method="POST" class="general-settings" {% if section == "password" %}hidden{% endif %}
+    action="{{ url_for('profile.change_data') }}" enctype="multipart/form-data">
+        {{ general_settings.csrf_token(id=False) }}
+        <img class="avatar" src="{{ user_data['avatar'] }}">
+        <label>
+        <div class="button">
+            Изменить
+        </div>
+        <div class="setting-option">
+            {{ general_settings.avatar(hidden=True) }}
+        </div></label>
+        <div class="setting-option">
+            Логин
+            {{ general_settings.login(value=user_data['login']) }}
+            {% with messages = get_flashed_messages(category_filter=("login_taken")) %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="error-message">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="setting-option">
+            E-mail
+            {{ general_settings.email(value=user_data['email']) }}
+        </div>
+        <div class="button">
+            {{ general_settings.submit(value="Сохранить", id=False) }}
+        </div>
+    </form>
+    <form method="POST" class="change-password" {% if section != "password" %}hidden{% endif %}
+          action="{{ url_for('profile.change_password') }}" enctype="multipart/form-data">
+        {{ password_settings.csrf_token(id=False) }}
+        <div class="setting-option">
+            Старый пароль
+            {{ password_settings.old_password() }}
+        </div>
+        {% with messages = get_flashed_messages(category_filter=("wrong_password")) %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="error-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="setting-option">
+            Новый пароль
+            {{ password_settings.new_password() }}
+        </div>
+        <div class="setting-option">
+            Повтор пароля
+            {{ password_settings.new_password_repeat() }}
+        </div>
+        {% with messages = get_flashed_messages(category_filter=("passwords_not_matches")) %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="error-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="button">
+            {{ password_settings.submit(value="Сохранить", id=False) }}
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block footer %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.js" integrity="sha512-Zt7blzhYHCLHjU0c+e4ldn5kGAbwLKTSOTERgqSNyTB50wWSI21z0q6bn/dEIuqf6HiFzKJ6cfj2osRhklb4Og==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ url_for('static', filename='edit_profile/change_form.js') }}"></script>
+<script src="{{ url_for('static', filename='modules/modal/modal.js') }}"></script>
+<script src="{{ url_for('static', filename='modules/inputs/inputs.js') }}"></script>
+<script src="{{ url_for('static', filename='edit_profile/show_loaded_photo.js') }}"></script>
+<script src="{{ url_for('static', filename='edit_profile/cropp_user_photo.js') }}"></script>
+<script src="{{ url_for('static', filename='edit_profile/improve_inputs.js') }}"></script>
+{% endblock %}

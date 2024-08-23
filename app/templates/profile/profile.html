@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='profile/style.css') }}">
+{% endblock %}
+{% block content %}
+<div class="profile">
+    <img class="profile__avatar" src="{{ profile_data['avatar'] }}">
+    <div class="profile__info">
+        <span class="name">{{ profile_data["login"] }}</span>
+    </div>
+    {% if profile_data["id"] == user_data["id"] %}
+    <a class="profile__settings settings_button" href="{{ url_for('profile.edit_profile') }}">
+        <span class="settings_button__text" >Настройки</span>
+        <img class="settings_button__icon" src="{{ url_for('static', filename='profile/images/settings.svg') }}">
+    </a>
+    {% endif %}
+</div>
+<div class="sections">
+    <button class="sections__button">читаю</button>
+    <button class="sections__button">прочитанные</button>
+    <button class="sections__button">закладки</button>
+    <button class="sections__button">комментарии</button>
+</div>
+<div class="section__inner"></div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

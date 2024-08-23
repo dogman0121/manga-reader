@@ -1,0 +1,479 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+a {
+    text-decoration: none;
+    color: #000000;
+}
+
+a:hover {
+    color: #000000;
+}
+
+a:visited {
+    color: #000000;
+    text-decoration: none;
+}
+
+
+h1, .manga-names__russian {
+    font-size: 28px;
+    font-weight: normal;
+    margin: 0;
+}
+
+h2, .manga-names__languages {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+ul {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+li {
+    list-style-type: none;
+}
+
+.main__inner {
+    display: flex;
+    flex-direction: row;
+}
+
+#left-side {
+    max-width: 278px;
+    min-width: 220px;
+}
+
+#poster {
+    width: 100%;
+}
+
+#description {
+    padding: 15px;
+    margin-top: 7px;
+    border-radius: 12px;
+    background-color: #D9D9D9;
+}
+
+#similar {
+    margin-top: 10px;
+}
+
+.similar-title {
+    display: flex;
+    flex-direction: row;
+}
+
+.similar-title + .similar-title {
+    margin-top: 7px;
+}
+
+.similar-title__poster {
+    width: 64px;
+    height: 90px;
+}
+
+.similar-title__description {
+    margin-left: 8px;
+}
+
+#right-side {
+    width: 100%;
+    margin-left: 12px;
+    max-width: 870px;
+    min-width: 400px;
+    position: relative;
+}
+
+#manga-info__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#manga-names {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+textarea {
+    border: none;
+    overflow: hidden;
+    resize: none;
+}
+
+textarea:focus {
+    outline:none;
+}
+
+#read-button {
+    height: 60px;
+    width: 228px;
+    background-color: #FFD600;
+    font-size: 20px;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#stats {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.stats-option {
+    display: flex;
+    flex-direction: row;
+}
+
+.stats-option__header {
+    font-size: 18px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.stats-option__caption {
+    margin: auto 0;
+}
+
+.stats-option + .stats-option {
+    margin-left: 15px;
+}
+
+.stats-option__icon {
+    max-width: 24px;
+    max-height: 24px;
+}
+
+.stats-option__text {
+    margin: auto 0 auto 5px;
+    white-space: nowrap;
+}
+
+#about {
+    margin-top: 20px;
+    line-height: 1.4;
+    width: 100%;
+}
+
+#genres-list {
+    margin-top: 20px;
+    display: flex;
+}
+
+.genres-list__item {
+    padding: 1px 8px 2px;
+    background-color: #D9D9D9;
+    border-radius: 8px;
+}
+
+.genres-list__item + .genres-list__item {
+    margin-left: 5px;
+}
+
+#sections {
+    margin-top: 20px;
+}
+
+#section-buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.section-buttons__item {
+    width: 160px;
+    height: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-buttons__item_active {
+    border-bottom: 2px solid #FFD600;
+}
+
+#sections-content {
+    margin-top: 17px;
+}
+
+#chapters__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.chapters__item {
+    padding: 20px 14px;
+    background-color: #D9D9D9;
+    border-radius: 12px;
+}
+
+.chapters__list {
+    margin-top: 8px;
+}
+
+.chapters__item + .chapters__item {
+    margin-top: 5px;
+}
+
+.comments__form {
+    border-radius: 12px;
+    border: 1px solid #CFCECE;
+    padding: 12px 14px 45px 14px;
+    position: relative;
+    width: 100%;
+}
+
+.comments__input {
+    border:none;
+    resize:none;
+    overflow: hidden;
+    display:block;
+    width: 100%;
+}
+
+.comments__send {
+    padding: 6px 12px;
+    background-color: #FFD600;
+    border-radius: 6px;
+
+    font-size: 14px;
+    position:absolute;
+    right: 14px;
+    bottom: 8px;
+}
+
+.comments__send:hover {
+    cursor: pointer;
+}
+
+.comments__input:focus {
+    outline: none;
+}
+
+.comments-not-auth__text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.comments-not-auth__login {
+    padding: 5px 10px;
+    border: 0;
+    border-radius: 6px;
+    background-color: #FFD600;
+}
+
+.comments-not-auth__button {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.comments__list {
+    margin-top: 14px;
+}
+
+.comment__user {
+    display: flex;
+    flex-direction: row;
+}
+
+.user__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 3px;
+}
+
+.user__info {
+    display: flex;
+    flex-direction: column;
+
+    margin-left: 5px;
+}
+
+.user__name {
+    text-align: start;
+}
+
+.comment__text {
+    margin-top: 9px;
+}
+
+.comment__reactions {
+    display: flex;
+    flex-direction: row;
+}
+
+.comment__rating {
+    display: flex;
+    flex-direction: row;
+}
+
+.rating__button {
+    width: 23px;
+    height: 23px;
+}
+
+.rating__button_active {
+    background: #D9D9D9;
+    border-radius: 50%;
+}
+
+.rating-up {
+
+}
+
+.rating-up__image {
+    padding: 6px 4px 7px;
+}
+
+.rating-down__image {
+    padding: 7px 4px 6px;
+}
+
+.rating__text {
+    margin: auto 0 auto 7px;
+}
+.rating-down {
+    margin-left: 6px;
+}
+
+.comment__answer-button {
+    margin: auto 0 auto 30px;
+}
+
+.comment + .comment {
+    margin-top: 12px;
+}
+
+.answer__form {
+    margin-top: 5px;
+}
+
+.comment__answers {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.answers__line {
+    width: 2px;
+    margin-left: 20px;
+    margin-right: 18px;
+    background-color: #D9D9D9;;
+}
+
+.answers__list {
+    padding-top: 10px;
+    padding-bottom: 17px;
+    width: 100%;
+}
+
+.show-answers {
+    margin: auto 0 auto 30px;
+}
+
+.show-answers__image {
+    margin-left: 2px;
+}
+
+.no-comments, .no-chapters {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.no-comments__header, .no-chapters__header {
+    font-size: 24px;
+}
+
+.no-comments__text, .no-chapters__text {
+    font-size: 16px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal__content {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+}
+
+.modal__inner {
+    font-size: 16px;
+    padding: 20px 30px;
+}
+
+.rating-option + .rating-option {
+    margin-top: 10px;
+}
+
+.rating-option__image {
+    vertical-align: middle;
+}
+
+.rating-option__number {
+    margin-left: 5px;
+}
+
+.rating-option__description {
+    margin-left: 10px;
+}
+
+.user-rating {
+    margin: auto 0;
+
+    color: white;
+    border-radius: 10px;
+    padding: 0.5px 6px 1px 6px;
+    font-size: 16px;
+    margin-left: 2px;
+}
+
+.user-rating_bad{
+    background: #FF0000;
+}
+
+.user-rating_normal{
+    background: #FFCC00;
+}
+
+.user-rating_good{
+    background: #33CC66;
+}
+
+.user-rating_excellent{
+    background: #339900;
+}

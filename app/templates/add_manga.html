@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='manga_card/style.css') }}">
+<script>
+</script>
+{% endblock %}
+{% block content %}
+<div id="left-side">
+    <img id="poster" src="{{ url_for('static', filename='manga_card/images/manga-poster.jpg') }}">
+    <section id="description">
+        Тип: манхва<br>
+        Год: 2020<br>
+        Статус: выпускается<br>
+        Автор: Ja-eun huang kotavi<br>
+        Художник: kotavi chero<br>
+        Издательсво: kakao tapas<br>
+        Переводик: Пантеон
+    </section>
+    <ul id="similar">
+        <h3>Похожее</h3>
+        <li class="similar-title">
+            <img class="similar-title__poster" src="{{ url_for('static', filename='manga_card/images/simiar_manga-poster1.jpg') }}">
+            <p class="similar-title__description">
+                Я - дитя этого дома<br>
+                2018<br>
+                Манхва
+            </p>
+        </li>
+        <li class="similar-title">
+            <img class="similar-title__poster" src="{{ url_for('static', filename='manga_card/images/similar_manga-poster2.jpg') }}">
+            <p class="similar-title__description">
+                Я стала женой принца-монстра<br>
+                2021<br>
+                Манхва
+            </p>
+        </li>
+        <li class="similar-title">
+            <img class="similar-title__poster" src="{{ url_for('static', filename='manga_card/images/similar_manga-poster3.jpg') }}">
+            <p class="similar-title__description">
+                На самом деле я была настоящей<br>
+                2020
+                Манхва
+            </p>
+        </li>
+    </ul>
+</div>
+<div id="right-side">
+    <div id="manga-info">
+        <div id="manga-info__header">
+            <div id="manga-names">
+                <textarea class="manga-names__russian" rows="1" placeholder="Название на русском...">Молю, оставь меня в покое</textarea>
+                <textarea class="manga-names__languages" rows="1" placeholder="Название на других языках...">Please, leave me / 나를 버려주세요</textarea>
+            </div>
+            <div id="read-button">Сохранить</div>
+        </div>
+        <div id="manga-info__description">
+            <ul id="stats">
+                <li class="stats-option rating">
+                    <div class="stats-option__header">
+                        <img class="stats-option__icon" src="{{ url_for('static', filename='manga_card/images/rating.svg') }}">
+                        <span class="stats-option__text">--</span>
+                        {% if rating_by_user %}
+                            {% if rating_by_user < 4 %}
+                                <span class="user-rating user-rating_bad" data-stars="{{ rating_by_user }}">
+                            {% elif rating_by_user < 7 %}
+                                <span class="user-rating user-rating_normal" data-stars="{{ rating_by_user }}">
+                            {% elif rating_by_user < 10 %}
+                                <span class="user-rating user-rating_good" data-stars="{{ rating_by_user }}">
+                            {% elif rating_by_user == 10 %}
+                                <span class="user-rating user-rating_excellent" data-stars="{{ rating_by_user }}">
+                            {% endif %}
+                                    <span class="user-rating__number">{{ rating_by_user }}</span>
+                                </span>
+                        {% endif %}
+                    </div>
+                    <div class="stats-option__caption">
+                        (голосов: <span class="stats-option__votes">--</span>)
+                    </div>
+                </li>
+                <li class="stats-option saved">
+                    <div class="stats-option__header">
+                        <img class="stats-option__icon" src="{{ url_for('static', filename='manga_card/images/saved.svg') }}">
+                        <span class="stats-option__text">--</span>
+                    </div>
+                    {% if saved %}
+                        <div class="stats-option__caption">(сохранено)</div>
+                    {% endif %}
+                </li>
+                <li class="stats-option views">
+                    <div class="stats-option__header">
+                        <img class="stats-option__icon" src="{{ url_for('static', filename='manga_card/images/views.svg') }}">
+                        <span class="stats-option__text">--</span>
+                    </div>
+                </li>
+            </ul>
+            <textarea id="about" rows="1" placeholder="Описание...">
+                Адель взял под опеку герцог, чтобы та заменила его дочь, что умерла от неизлечимой болезни.
+                Всю свою жизнь она пыталась заслужить хоть капельку любви, но заслужила лишь смерть.
+                После того, как у герцога родилась дочь, он решил избавиться от Адель, выдав замуж, но по дороге к жениху на её карету напали и убили всех, включая героиню.
+                Когда она вновь открыла глаза, то поняла, что вернулась на 3 года назад.
+                "...Это сон?" Адель решает жить так, как сама посчитает нужным, раз от неё все равно захотят избавиться, как только у герцога родится дочь, но её планам не суждено сбыться.
+                "Разве вы во мне не заинтересованы?" Загадочный рыцарь начинает преследовать Адель, кто знает, что он задумал...
+            </textarea>
+            <ul id="genres-list">
+                <li class="genres-list__item genres-list__item_add">добавить жанр...</li>
+            </ul>
+        </div>
+    </div>
+    <div id="sections">
+        <div id="section-buttons">
+            <div class="section-buttons__item section-buttons__item_active" id="chapters-button">Главы</div>
+            <div class="section-buttons__item" id="comments-button">Комментарии</div>
+        </div>
+        <section id="sections-content">
+            <div id="chapters" class="section">
+                {% if chapters|length > 0 %}
+                    <div id="chapters__header">
+                        Список глав
+                        <img id="filter-button" src="{{ url_for('static', filename='manga_card/images/filter.svg') }}">
+                    </div>
+                    <div class="chapters__list">
+                        {% for chapter in chapters %}
+                        <div class="chapters__item chapter">
+                            <a class="chapter__link" href="{{ url_for('chapters.chapter', chapter_id=chapter['id']) }}">
+                                <div class="chapter__content">
+                                    Том {{ chapter["tome"] }} Глава {{ chapter["chapter"] }}
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                <div class="no-chapters">
+                    <h1 class="no-chapters__header">
+                    Глав нет
+                    </h1>
+                    <p class="no-chapters__text">Автор еще не добавил ни одной главы</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+<script src="{{ url_for('static', filename='add_title/textarea.js') }}"></script>
+{% endblock %}

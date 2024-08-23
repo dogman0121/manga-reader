@@ -1,0 +1,26 @@
+.inputs-select__select {
+    display: none;
+}
+
+.select-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.select-wrapper__options {
+    display: flex;
+    flex-direction: column;
+}
+
+.select-wrapper__options_closed {
+    display: none;
+}
+
+.inputs-input {
+    overflow: hidden;
+}
+
+.inputs-input__input {
+    border: none;
+    outline: none;
+}
