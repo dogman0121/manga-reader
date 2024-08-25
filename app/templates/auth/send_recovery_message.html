@@ -1,0 +1,20 @@
+{% extends "auth/base.html" %}
+{% block form %}
+    {{ email_form.csrf_token() }}
+    <h1>Восстановление</h1>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        {% if category == "error" %}
+            <div class="flash_error">{{message}}</div>
+        {% endif %}
+    {% endfor %}
+    <div class="input-box">
+        {{ email_form.email(placeholder="E-mail") }}
+        <img class="input-box__images" src="{{ url_for('static', filename='auth/images/email.svg') }}">
+    </div>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        {% if category == "info" %}
+            <div class="flash_information">{{message}}</div>
+        {% endif %}
+    {% endfor %}
+    {{ email_form.submit(class="btn") }}
+{% endblock %}

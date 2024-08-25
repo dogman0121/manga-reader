@@ -1,9 +1,11 @@
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from user_login import UserLogin
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from database import User
 from app.auth import bp
+from app.auth.email import send_password_recovery_mail, check_password_recovery_token
+from app.auth.forms import SendEmailForm, RecoveryPasswordForm
 
 
 @bp.route("/", methods=["GET"])
@@ -54,12 +56,28 @@ def logout():
     return redirect(url_for("index"))
 
 
-@bp.route("/recovery", methods=["GET"])
-def recovery_form():
-    return render_template("auth/recovery.html")
-
-
-@bp.route("/recovery", methods=["POST"])
+@bp.route("/recovery", methods=["GET", "POST"])
 def recovery():
-    flash("На ваш адрес электронной почты было отправлено письмо с инструкциями о том, как сбросить пароль.", "info")
-    return render_template("auth/recovery.html")
+    send_email_form = SendEmailForm()
+    if send_email_form.validate_on_submit():
+        email = send_email_form.email.data
+        flash("На ваш адрес электронной почты было отправлено письмо с инструкциями о том, как сбросить пароль.",
+              "info")
+        send_password_recovery_mail(current_user.get_id(), email)
+    return render_template("auth/send_recovery_message.html", email_form=send_email_form)
+
+
+@bp.route("/recovery/<token>", methods=["GET", "POST"])
+def recovery_password(token):
+    user = check_password_recovery_token(token)
+    if not user:
+        return redirect(url_for("auth.recovery"))
+    recovery_password_form = RecoveryPasswordForm()
+    if recovery_password_form.validate_on_submit():
+        password = recovery_password_form.password.data
+        repeat_password = recovery_password_form.repeat_password.data
+        if password != repeat_password:
+            flash("Пароли не совпадают!", "error")
+        else:
+            flash("Пароль успешно изменен", "info")
+    return render_template("auth/recovery_password.html", password_form=recovery_password_form)
