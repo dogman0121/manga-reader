@@ -2,14 +2,14 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, SubmitField, FileField, PasswordField
 
 
-class GeneralInformation(FlaskForm):
+class GeneralInformationForm(FlaskForm):
     avatar = FileField()
     login = StringField()
     email = EmailField()
     submit = SubmitField()
 
 
-class PasswordChanging(FlaskForm):
+class ChangePasswordForm(FlaskForm):
     old_password = PasswordField()
     new_password = PasswordField()
     new_password_repeat = PasswordField()

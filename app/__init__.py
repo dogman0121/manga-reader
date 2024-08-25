@@ -36,6 +36,7 @@ def create_app(config):
 
     return app
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return UserLogin().create(User.get_by_id(user_id))

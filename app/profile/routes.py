@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash, request
-from app.profile.forms import GeneralInformation, PasswordChanging
+from app.profile.forms import GeneralInformationForm, ChangePasswordForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import User
 from flask_login import current_user, login_required
@@ -17,8 +17,8 @@ def get_profile(profile_id):
 @login_required
 def edit_profile():
     section = request.args.get("section")
-    general_settings = GeneralInformation()
-    password_settings = PasswordChanging()
+    general_settings = GeneralInformationForm()
+    password_settings = ChangePasswordForm()
     user_data = get_user_data(current_user.get_id())
     return render_template("edit_profile.html", general_settings=general_settings,
                            password_settings=password_settings, user_data=user_data, section=section)
@@ -27,7 +27,7 @@ def edit_profile():
 @bp.route("/change_password", methods=["POST"])
 @login_required
 def change_password():
-    password_settings = PasswordChanging()
+    password_settings = ChangePasswordForm()
     if password_settings.validate_on_submit():
         user_id = current_user.get_id()
         user_data = User().get_by_id(current_user.get_id(), root=True)
@@ -49,7 +49,7 @@ def change_password():
 @bp.route("/change_data", methods=["POST"])
 @login_required
 def change_data():
-    general_settings = GeneralInformation()
+    general_settings = GeneralInformationForm()
     if general_settings.validate_on_submit():
         user_id = current_user.get_id()
         user_data = get_user_data(user_id)
