@@ -9,7 +9,7 @@ class Chapters {
                 <div id="chapters" class="section">
                     <div id="chapters__header">
                         Список глав
-                        <img id="chapters__filter" src="static/manga_card/images/filter.svg">
+                        <img id="chapters__filter" src="/static/manga_card/images/filter.svg">
                     </div>
                     <div class="chapters__list"></div>
                 </div>
@@ -29,7 +29,7 @@ class Chapters {
                 `;
             }
             else {
-                fetch("../chapters/get?" + new URLSearchParams({title_id: title_id}))
+                fetch("../api/chapters?" + new URLSearchParams({title_id: title_id}))
                     .then(response => response.json())
                     .then(chapters => {
                         if(chapters.length === 0)

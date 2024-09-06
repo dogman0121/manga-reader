@@ -4,11 +4,11 @@
 {% endblock %}
 {% block content %}
 <div class="profile">
-    <img class="profile__avatar" src="{{ profile_data['avatar'] }}">
+    <img class="profile__avatar" src="{{ profile.avatar }}">
     <div class="profile__info">
-        <span class="name">{{ profile_data["login"] }}</span>
+        <span class="name">{{ profile.login }}</span>
     </div>
-    {% if profile_data["id"] == user_data["id"] %}
+    {% if profile.id == user.id %}
     <a class="profile__settings settings_button" href="{{ url_for('profile.edit_profile') }}">
         <span class="settings_button__text" >Настройки</span>
         <img class="settings_button__icon" src="{{ url_for('static', filename='profile/images/settings.svg') }}">

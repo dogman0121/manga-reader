@@ -1,3 +1,5 @@
+
+
 let ratingButton = document.querySelector(".rating");
 ratingButton.addEventListener("click", function(event){
     let modal = `
@@ -78,8 +80,10 @@ function ratingEvent(event) {
     //console.log(ratingElement);
     if (document.querySelector(".user-rating")) {
         let userRatingElement = document.querySelector(".user-rating");
-        if (userRatingElement.dataset.stars === ratingElement.dataset.stars) {
-            fetch("../api/delete_rating", {
+        let userRatingNumber = document.querySelector(".user-rating__number");
+        console.log(userRatingNumber);
+        if ((userRatingElement.dataset.stars === ratingElement.dataset.stars) && userRatingNumber) {
+            fetch("../api/rating", {
                 method: "DELETE",
                 headers: {
                     'Accept': 'application/json',
@@ -91,18 +95,16 @@ function ratingEvent(event) {
                 }),
             })
                 .then(response => (response.json()))
-                .then(rating => {
+                .then(status => {
                     let ratingStats = document.querySelector(".rating");
-                    let ratingStatsText = ratingStats.querySelector(".stats-option__text");
-                    ratingStatsText.textContent = rating.rating;
                     let ratingVotes = ratingStats.querySelector(".stats-option__votes");
-                    ratingVotes.textContent = rating.voices_count;
+                    ratingVotes.textContent = String(parseInt(ratingVotes.textContent) - 1);
 
                     userRatingElement.remove();
                 })
         }
         else {
-            fetch("../api/update_rating", {
+            fetch("../api/rating", {
                 method: "UPDATE",
                 headers: {
                     'Accept': 'application/json',
@@ -114,7 +116,7 @@ function ratingEvent(event) {
                 }),
             })
                 .then(response => (response.json()))
-                .then(rating => {
+                .then(status => {
                     let userRatingBlockHtml = `
                         <span class="user-rating" data-stars="${ratingElement.dataset.stars}">
                             <span class="user-rating__number">
@@ -137,18 +139,13 @@ function ratingEvent(event) {
                         userRatingBlockElement.classList.add("user-rating_excellent");
 
                     let ratingStats = document.querySelector(".rating");
-                    let ratingStatsText = ratingStats.querySelector(".stats-option__text");
-                    ratingStatsText.textContent = rating.rating;
-
-                    let ratingVotes = ratingStats.querySelector(".stats-option__votes");
-                    ratingVotes.textContent = rating.voices_count;
 
                     userRatingElement.replaceWith(userRatingBlockElement);
                 })
         }
     }
     else {
-        fetch("../api/add_rating", {
+        fetch("../api/rating", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -160,7 +157,7 @@ function ratingEvent(event) {
             }),
         })
             .then(response => response.json())
-            .then(rating => {
+            .then(status => {
                 let userRatingBlockHtml = `
                     <span class="user-rating" data-stars="${ratingElement.dataset.stars}">
                         <span class="user-rating__number">
@@ -184,11 +181,9 @@ function ratingEvent(event) {
 
                 let ratingStats = document.querySelector(".rating");
                 let ratingStatsHeader = ratingStats.querySelector(".stats-option__header");
-                let ratingStatsText = ratingStats.querySelector(".stats-option__text");
-                ratingStatsText.textContent = rating.rating;
 
                 let ratingVotes = ratingStats.querySelector(".stats-option__votes");
-                ratingVotes.textContent = rating.voices_count;
+                ratingVotes.textContent = String(parseInt(ratingVotes.textContent) + 1);
 
                 ratingStatsHeader.append(userRatingBlockElement);
             })

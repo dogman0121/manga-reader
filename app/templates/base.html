@@ -31,13 +31,13 @@
                 </div>
                 <div class="nav-right">
                     <nav>
-                        {% if user_data["authorized"] %}
+                        {% if user.is_authenticated %}
                         <div class="dropdown-panel">
                             <div class="nav__item dropdown-button">
-                                <img class="user-avatar" src="{{ user_data['avatar'] }}">
+                                <img class="user-avatar" src="{{ user.avatar }}">
                             </div>
                             <div class="dropdown-menu profile-menu" hidden>
-                                <a href="{{ url_for('profile.get_profile', profile_id=user_data['id']) }}" class="profile-menu__option">
+                                <a href="{{ url_for('profile.get_profile', profile_id=user.id) }}" class="profile-menu__option">
                                     <img src="{{ url_for('static', filename='base/images/profile.svg') }}" class="profile-menu__icon">
                                     Профиль
                                 </a>
@@ -53,7 +53,7 @@
                         </div>
                         {% else %}
                         <a class="nav__item" id="profile" href="{{ url_for('auth.login_form')}}">
-                            <img class="empty-icon" src="{{ user_data['avatar'] }}">
+                            <img class="empty-icon" src="{{ url_for("static", filename="media/avatars/default.png") }}">
                         </a>
                         {% endif %}
                     </nav>

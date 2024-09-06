@@ -1,19 +1,21 @@
-from database import User, Comment, Chapter
+from app.models import Comment, Chapter
 from flask import url_for
 from flask_login import current_user
 import os
 
 
-def get_user_data(user_id):
+def get_user_data():
     user_data = {}
-    if User().get_by_id(user_id):
+    if current_user.is_authenticated:
         user_data["authorized"] = True
-        user_data = user_data | dict(User().get_by_id(user_id))
+        user_data["id"] = current_user.id
+        user_data["login"] = current_user.login
+        user_data["email"] = current_user.email
     else:
         user_data["authorized"] = False
 
-    if os.path.exists(f"app/static/media/avatars/{user_id}.png"):
-        user_data["avatar"] = url_for('static', filename=f"media/avatars/{user_id}.png")
+    if os.path.exists(url_for('static', filename=f"media/avatars/{current_user.id}.png")):
+        user_data["avatar"] = url_for('static', filename=f"media/avatars/{current_user.id}.png")
     else:
         user_data["avatar"] = url_for('static', filename='manga_card/images/user1.svg')
 
@@ -22,7 +24,7 @@ def get_user_data(user_id):
 
 def get_comment_as_dict(comment):
     comment_dict = dict()
-    comment_dict["user"] = get_user_data(comment["user_id"])
+    comment_dict["user"] = get_user_data()
     comment_dict["answers_count"] = Comment.get_answers_count(comment["id"])
     comment_dict["text"] = comment["text"]
     comment_dict["user_id"] = comment["user_id"]

@@ -1,8 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from user_login import UserLogin
+from app.models import User
 from flask_login import login_user, logout_user, current_user
-from database import User
 from app.auth import bp
 from app.auth.email import send_password_recovery_mail, check_password_recovery_token
 from app.auth.forms import SendEmailForm, RecoveryPasswordForm
@@ -25,9 +24,11 @@ def login_form():
 @bp.route("/", methods=["POST"])
 def login():
     if request.args.get("section") == "register":
-        if not (User.is_login_taken(request.form.get("login"))):
+        if not User.is_login_taken(request.form.get("login")):
             user_data = request.form
-            User.add(user_data["login"], user_data["email"], generate_password_hash(user_data["password"]))
+            user = User(login=user_data["login"], email=user_data["email"])
+            user.set_password(user_data["password"])
+            user.add()
             if request.args.get("from") is None:
                 return redirect(url_for("index"))
             if request.args.get("from"):
@@ -36,9 +37,9 @@ def login():
         flash("*Данное имя пользователя занято", "error")
         return render_template("auth/register.html")
     else:
-        user_data = User.get_by_login(request.form.get("login"), root=True)
-        if user_data and check_password_hash(user_data["password"], request.form.get("password")):
-            login_user(UserLogin().create(user_data), remember={"on": True, None: False}[request.form.get("remember")])
+        user_data = User.get_by_login(request.form.get("login"))
+        if user_data and check_password_hash(user_data.password_hash, request.form.get("password")):
+            login_user(user_data, remember={"on": True, None: False}[request.form.get("remember")])
             if request.args.get("from") is None:
                 return redirect(url_for("index"))
             if request.args.get("from"):

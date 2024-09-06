@@ -6,3 +6,5 @@ import app.api.comments
 import app.api.votes
 import app.api.saves
 import app.api.rating
+import app.api.catalog
+import app.api.chapters

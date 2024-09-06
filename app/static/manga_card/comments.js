@@ -87,7 +87,7 @@ class Comments {
 
     sendComment() {
         let commentInput = this.comment.commentsBlock.querySelector(".comments__input");
-        fetch("../comments/add", {
+        fetch("../api/comments", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',

@@ -5,12 +5,11 @@ class Comment{
         this.text = commentData.text;
         this.user = commentData.user;
         this.date = commentData.date;
-        this.voteUp = commentData.vote_up;
-        this.voteDown = commentData.vote_down;
+        this.voteUp = commentData.up_votes;
+        this.voteDown = commentData.down_votes;
         this.isVotedByUser = commentData.is_voted_by_user;
         this.userVoteType = commentData.user_vote_type;
 
-        console.log(this.user);
         this.element = this.renderElement();
 
         let voteUp = this.element.querySelector(".rating-up");
@@ -249,7 +248,7 @@ class Comment{
         else
             root = this.comment.id;
 
-        fetch("../api/add", {
+        fetch("../api/comments", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -373,7 +372,7 @@ class TitleComment extends Comment {
 
 
     loadAnswers(commentId) {
-        return fetch("../api/get_answers?"+ new URLSearchParams({comment_id: commentId}))
+        return fetch("../api/comments?"+ new URLSearchParams({root: commentId}))
             .then(response => response.json());
     }
 }

@@ -33,14 +33,14 @@
             </div>
             <div class="catalog__grid catalog__grid_square">
                 {% for title in titles %}
-                <a class="catalog__link" href="/manga/{{ title['id'] }}">
+                <a class="catalog__link" href="/manga/{{ title.id }}">
                 <div class="catalog__item title title-square">
                     <img class="title-square__poster" src="{{ url_for('static', filename='media/posters/' + title['id']|string +'.jpg') }}">
                     <span class="title-square__data">
-                        <span class="title-square__type">{{ title['type'] }}</span>
-                        <span class="title-square__year">{{ title['year'] }}</span>
+                        <span class="title-square__type">{{ title.type }}</span>
+                        <span class="title-square__year">{{ title.year }}</span>
                     </span>
-                    <p class="title-square__name">{{ title['name_russian'] }}</p>
+                    <p class="title-square__name">{{ title.name_russian }}</p>
                 </div>
                 </a>
                 {% endfor %}
@@ -63,7 +63,7 @@
                     <div class="select__list select-list">
                         <div class="select-list__inner" hidden>
                             {% for type in types %}
-                            <div class="select-list__option" data-value="{{ type['id'] }}">{{ type['name'] }}</div>
+                            <div class="select-list__option" data-value="{{ type.id }}">{{ type.name }}</div>
                             {% endfor %}
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                     <div class="select__list select-list">
                         <div class="select-list__inner" hidden>
                             {% for genre in genres %}
-                            <div class="select-list__option" data-value="{{ genre['id'] }}">{{ genre['name'] }}</div>
+                            <div class="select-list__option" data-value="{{ genre.id }}">{{ genre.name }}</div>
                             {% endfor %}
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                     <div class="select__list select-list">
                         <div class="select-list__inner" hidden>
                             {% for tag in tags %}
-                            <div class="select-list__option" data-value="{{ tag['id'] }}">{{ tag['name'] }}</div>
+                            <div class="select-list__option" data-value="{{ tag.id }}">{{ tag.name }}</div>
                             {% endfor %}
                         </div>
                     </div>
@@ -102,7 +102,7 @@
                     <div class="select__list select-list">
                         <div class="select-list__inner" hidden>
                             {% for status in statuses %}
-                            <div class="select-list__option" data-value="{{ status['id'] }}">{{ status['name'] }}</div>
+                            <div class="select-list__option" data-value="{{ status.id }}">{{ status.name }}</div>
                             {% endfor %}
                         </div>
                     </div>

@@ -14,7 +14,6 @@ def send_email(subject, sender, recipients, text, html):
 
 def send_password_recovery_mail(user_id, email):
     token = generate_password_recovery_token(user_id)
-    print(render_template("email/recovery_password.html", token=token))
     send_email("Восстановление пароля",
                sender=current_app.config["MAIL_DEFAULT_SENDER"],
                recipients=[email],

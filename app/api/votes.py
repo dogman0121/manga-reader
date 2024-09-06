@@ -1,18 +1,14 @@
 from flask import request
-from flask_login import current_user
+from flask_login import current_user, login_required
 from app.api import bp
-from database import Comment
+from app.models import Comment
 
 
 @bp.route("/vote", methods=["POST"])
+@login_required
 def vote_up():
     vote_type = request.json["type"]
     comment_id = request.json["commentId"]
-    user_id = current_user.get_id()
-    if user_id is None:
-        return "false"
-    if vote_type == 1:
-        Comment.vote_up(comment_id, user_id)
-        return "true"
-    Comment.vote_down(comment_id, user_id)
-    return "true"
+    comment = Comment.get_by_id(comment_id)
+    comment.add_vote(current_user, vote_type)
+    return {"status": "ok"}

@@ -1,12 +1,10 @@
-from flask import request, render_template, jsonify
-from app.models import Title, Genre, Tag, Status, Type
-from flask_login import current_user
-import json
-from app.catalog import bp
+from flask import request, jsonify
+from app.api import bp
+from app.models import Title
 
 
-@bp.route("/")
-def catalog_page():
+@bp.route("/catalog", methods=["GET"])
+def get_catalog():
     types = [int(i) for i in request.args.getlist('types')]
     types = None if not types else types
 
@@ -38,11 +36,7 @@ def catalog_page():
     sort = int(sort) if sort else None
 
     page = request.args.get("page")
-    page = int(page) if sort else None
+    page = int(page) if page else None
 
     titles = Title.get_with_filter(types, genres, tags, status, adult, rating_by, rating_to, year_by, year_to, sort, page)
-    titles_json = json.dumps([i.__dict__ for i in titles], ensure_ascii=False)
-    return render_template("catalog.html", user=current_user, titles=titles,
-                           titles_json=titles_json, genres=Genre.get_all(), types=Type.get_all(),
-                           tags=Tag.get_all(), statuses=Status.get_all())
-
+    return jsonify([i.__dict__ for i in titles])

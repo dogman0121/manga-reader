@@ -2,6 +2,12 @@
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/style.css') }}">
 <script>
+    let auth = {{ 'true' if user.is_authenticated else 'false' }};
+    let title_id = {{ title.id }};
+    {% if user.is_authenticated %}
+    let user_id = {{ user.id }};
+    {% endif %}
+    let commentsCount = {{ comments_count }};
 </script>
 {% endblock %}
 {% block content %}
@@ -48,39 +54,39 @@
     <div id="manga-info">
         <div id="manga-info__header">
             <div id="manga-names">
-                <textarea class="manga-names__russian" rows="1" placeholder="Название на русском...">Молю, оставь меня в покое</textarea>
-                <textarea class="manga-names__languages" rows="1" placeholder="Название на других языках...">Please, leave me / 나를 버려주세요</textarea>
+                <h1 class="manga-names__russian">Молю, оставь меня в покое</h1>
+                <h2 class="manga-names__languages">Please, leave me / 나를 버려주세요</h2>
             </div>
-            <div id="read-button">Сохранить</div>
+            <div id="read-button">Читать</div>
         </div>
         <div id="manga-info__description">
             <ul id="stats">
                 <li class="stats-option rating">
                     <div class="stats-option__header">
                         <img class="stats-option__icon" src="{{ url_for('static', filename='manga_card/images/rating.svg') }}">
-                        <span class="stats-option__text">--</span>
-                        {% if rating_by_user %}
-                            {% if rating_by_user < 4 %}
-                                <span class="user-rating user-rating_bad" data-stars="{{ rating_by_user }}">
-                            {% elif rating_by_user < 7 %}
-                                <span class="user-rating user-rating_normal" data-stars="{{ rating_by_user }}">
-                            {% elif rating_by_user < 10 %}
-                                <span class="user-rating user-rating_good" data-stars="{{ rating_by_user }}">
-                            {% elif rating_by_user == 10 %}
-                                <span class="user-rating user-rating_excellent" data-stars="{{ rating_by_user }}">
+                        <span class="stats-option__text">{{title.rating}}</span>
+                        {% if user_rating %}
+                            {% if user_rating < 4 %}
+                                <span class="user-rating user-rating_bad" data-stars="{{ user_rating }}">
+                            {% elif user_rating < 7 %}
+                                <span class="user-rating user-rating_normal" data-stars="{{ user_rating }}">
+                            {% elif user_rating < 10 %}
+                                <span class="user-rating user-rating_good" data-stars="{{ user_rating }}">
+                            {% elif user_rating == 10 %}
+                                <span class="user-rating user-rating_excellent" data-stars="{{ user_rating }}">
                             {% endif %}
-                                    <span class="user-rating__number">{{ rating_by_user }}</span>
+                                    <span class="user-rating__number">{{ user_rating }}</span>
                                 </span>
                         {% endif %}
                     </div>
                     <div class="stats-option__caption">
-                        (голосов: <span class="stats-option__votes">--</span>)
+                        (голосов: <span class="stats-option__votes">{{ title.rating_votes}}</span>)
                     </div>
                 </li>
                 <li class="stats-option saved">
                     <div class="stats-option__header">
                         <img class="stats-option__icon" src="{{ url_for('static', filename='manga_card/images/saved.svg') }}">
-                        <span class="stats-option__text">--</span>
+                        <span class="stats-option__text">{{ title.saves }}</span>
                     </div>
                     {% if saved %}
                         <div class="stats-option__caption">(сохранено)</div>
@@ -89,20 +95,24 @@
                 <li class="stats-option views">
                     <div class="stats-option__header">
                         <img class="stats-option__icon" src="{{ url_for('static', filename='manga_card/images/views.svg') }}">
-                        <span class="stats-option__text">--</span>
+                        <span class="stats-option__text">{{ title.views }}</span>
                     </div>
                 </li>
             </ul>
-            <textarea id="about" rows="1" placeholder="Описание...">
+            <article id="about">
                 Адель взял под опеку герцог, чтобы та заменила его дочь, что умерла от неизлечимой болезни.
                 Всю свою жизнь она пыталась заслужить хоть капельку любви, но заслужила лишь смерть.
                 После того, как у герцога родилась дочь, он решил избавиться от Адель, выдав замуж, но по дороге к жениху на её карету напали и убили всех, включая героиню.
                 Когда она вновь открыла глаза, то поняла, что вернулась на 3 года назад.
                 "...Это сон?" Адель решает жить так, как сама посчитает нужным, раз от неё все равно захотят избавиться, как только у герцога родится дочь, но её планам не суждено сбыться.
                 "Разве вы во мне не заинтересованы?" Загадочный рыцарь начинает преследовать Адель, кто знает, что он задумал...
-            </textarea>
+            </article>
             <ul id="genres-list">
-                <li class="genres-list__item genres-list__item_add">добавить жанр...</li>
+                {% for genre in title.genres %}
+                    <li class="genres-list__item">
+                        <a class="genres-list__link" href="../../catalog?genres={{ genre.id }}">{{ genre.name }}</a>
+                    </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
@@ -121,9 +131,9 @@
                     <div class="chapters__list">
                         {% for chapter in chapters %}
                         <div class="chapters__item chapter">
-                            <a class="chapter__link" href="{{ url_for('chapters.chapter', chapter_id=chapter['id']) }}">
+                            <a class="chapter__link" href="{{ url_for('chapters.chapter', chapter_id=chapter.id) }}">
                                 <div class="chapter__content">
-                                    Том {{ chapter["tome"] }} Глава {{ chapter["chapter"] }}
+                                    Глава {{ chapter.chapter }}
                                 </div>
                             </a>
                         </div>
@@ -143,5 +153,12 @@
 </div>
 {% endblock %}
 {% block footer %}
-<script src="{{ url_for('static', filename='add_title/textarea.js') }}"></script>
+<script src="{{ url_for('static', filename='manga_card/rating.js') }}"></script>
+<script src="{{ url_for('static', filename='manga_card/saves.js') }}"></script>
+<script src="{{ url_for('static', filename='manga_card/comment.js') }}"></script>
+<script src="{{ url_for('static', filename='manga_card/comments.js') }}"></script>
+<script src="{{ url_for('static', filename='manga_card/chapter.js') }}"></script>
+<script src="{{ url_for('static', filename='manga_card/chapters.js') }}"></script>
+<script src="{{ url_for('static', filename='manga_card/scroll_loading.js') }}"></script>
+<script src="{{ url_for('static', filename='manga_card/sections.js') }}"></script>
 {% endblock %}

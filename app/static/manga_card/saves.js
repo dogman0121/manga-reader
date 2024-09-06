@@ -5,8 +5,8 @@ function saveEvent(){
     let save = document.querySelector(".saved");
     if (save.querySelector(".stats-option__caption")){
         let savesMessage = save.querySelector(".stats-option__caption");
-        fetch("../api/delete_save", {
-            method: "POST",
+        fetch("../api/save", {
+            method: "DELETE",
             headers: {
                 'Accept': 'application/json',
                 "Content-Type": "application/json"
@@ -16,16 +16,17 @@ function saveEvent(){
             }),
         })
             .then(response => response.json())
-            .then(saves => {
-                let savesCount = save.querySelector(".stats-option__text");
-                savesCount.textContent = saves.saves;
+            .then(status => {
+                let saves = save.querySelector(".stats-option__text");
+                let savesCount = parseInt(saves.textContent);
+                saves.textContent = String(savesCount - 1);
 
                 savesMessage.remove();
             })
         return null;
     }
 
-    fetch("../api/add_save", {
+    fetch("../api/save", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -36,7 +37,7 @@ function saveEvent(){
             }),
         })
             .then(response => response.json())
-            .then(saves => {
+            .then(status => {
                 let savedMesageHtml = `
                     <div class="stats-option__caption">
                         (сохранено)
@@ -45,8 +46,9 @@ function saveEvent(){
                 let savedMessageRendered = new DOMParser().parseFromString(savedMesageHtml, "text/html");
                 let savesMessageElement = savedMessageRendered.querySelector(".stats-option__caption");
 
-                let savesCount = save.querySelector(".stats-option__text");
-                savesCount.textContent = saves.saves;
+                let saves = save.querySelector(".stats-option__text");
+                let savesCount = parseInt(saves.textContent);
+                saves.textContent = String(savesCount + 1);
 
                 save.append(savesMessageElement);
             })

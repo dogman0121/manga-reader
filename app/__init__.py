@@ -1,8 +1,7 @@
 from flask import Flask
 from flask_mail import Mail
-from database import User
+from app.models import User
 from flask_login import LoginManager
-from user_login import UserLogin
 
 
 login_manager = LoginManager()
@@ -39,5 +38,5 @@ def create_app(config):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return UserLogin().create(User.get_by_id(user_id))
+    return User.get_by_id(user_id)
 

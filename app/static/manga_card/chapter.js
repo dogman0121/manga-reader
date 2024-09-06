@@ -1,8 +1,7 @@
 class Chapter {
     constructor(chapter) {
         this.id = chapter.id;
-        this.tome = chapter.tome;
-        this.chapter = chapter.tome;
+        this.chapter = chapter.chapter;
         this.date = chapter.date;
 
         this.element = this.renderElement();
@@ -11,9 +10,9 @@ class Chapter {
     renderElement(){
         let chapterHtml = `
             <div class="chapters__item chapter">
-                <a class="chapter__link" href="chapters/${this.id}">
+                <a class="chapter__link" href="/chapters/${this.id}">
                     <div class="chapter__content">
-                        Том ${this.tome} Глава ${this.chapter}
+                        Глава ${this.chapter}
                     </div>
                 </a>
             </div>

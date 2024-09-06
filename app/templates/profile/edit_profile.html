@@ -19,7 +19,7 @@
     <form method="POST" class="general-settings" {% if section == "password" %}hidden{% endif %}
     action="{{ url_for('profile.change_data') }}" enctype="multipart/form-data">
         {{ general_settings.csrf_token(id=False) }}
-        <img class="avatar" src="{{ user_data['avatar'] }}">
+        <img class="avatar" src="{{ user.avatar }}">
         <label>
         <div class="button">
             Изменить
@@ -29,7 +29,7 @@
         </div></label>
         <div class="setting-option">
             Логин
-            {{ general_settings.login(value=user_data['login']) }}
+            {{ general_settings.login(value=user.login) }}
             {% with messages = get_flashed_messages(category_filter=("login_taken")) %}
                 {% if messages %}
                     {% for message in messages %}
@@ -40,7 +40,7 @@
         </div>
         <div class="setting-option">
             E-mail
-            {{ general_settings.email(value=user_data['email']) }}
+            {{ general_settings.email(value=user.email) }}
         </div>
         <div class="button">
             {{ general_settings.submit(value="Сохранить", id=False) }}
