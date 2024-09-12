@@ -225,53 +225,54 @@ class Chapter:
 # ---------------- Title model ----------------
 class Title:
     def __init__(self, title_id=None, title_type=None, status=None, name_russian=None, name_english=None,
-                 genres=[], tags=[], year=None, views=None, saves=None, rating=None, rating_votes=None,
-                 author=None, publisher=None, translator=None):
+                 name_languages=None, poster=None, description=None, genres=[], tags=[], year=None, views=None,
+                 saves=None, rating=None, rating_votes=None, author=None, translator=None):
         self.id = title_id
         self.type = title_type
         self.status = status
         self.name_russian = name_russian
         self.name_english = name_english
+        self.name_languages = name_languages
+        self.poster = poster
+        self.description = description
         self.genres = genres
         self.tags = tags
-        self.genres = genres
         self.year = year
         self.views = views
         self.saves = saves
         self.rating = rating
         self.rating_votes = rating_votes
         self.author = author
-        self.publisher = publisher
         self.translator = translator
 
     @staticmethod
     def create_from_sql(sql_row):
         title = Title()
         title.id = sql_row["id"]
-        title.type = sql_row["type"]
-        title.status = sql_row["status"]
+        title.type = Type.get_by_id(sql_row["type_id"])
+        title.status = Status.get_by_id(sql_row["status_id"])
         title.name_russian = sql_row["name_russian"]
         title.name_english = sql_row["name_english"]
+        title.name_languages = sql_row["name_languages"]
+        title.poster = title.get_poster()
+        title.description = sql_row["description"]
+        title.genres = title.get_genres()
+        title.tags = title.get_tags()
         title.year = sql_row["year"]
         title.views = sql_row["views"]
         title.saves = sql_row["saves"] if sql_row["saves"] else 0
         title.rating = sql_row["rating"] if sql_row["rating"] else 0
         title.rating_votes = sql_row["rating_votes"] if sql_row["rating_votes"] else 0
         title.author = sql_row["author"]
-        title.publisher = sql_row["publisher"]
         title.translator = sql_row["translator"]
         return title
 
     @staticmethod
     def get_by_id(title_id):
         title_row = cursor.execute("""
-                SELECT titles.id, types.name AS type, statuses.name AS status, name_russian, name_english, year, views, 
-                saves, AVG(rating) AS rating, COUNT(rating) AS rating_votes, author, translator, publisher
+                SELECT titles.id, name_russian, name_english, name_languages, description, type_id, status_id, year, 
+                views, saves, AVG(rating) AS rating, COUNT(rating) AS rating_votes, author, translator
                 FROM titles
-                LEFT JOIN types
-                ON titles.type_id = types.id
-                LEFT JOIN statuses
-                ON titles.status_id = statuses.id
                 LEFT JOIN rating
                 ON titles.id = rating.title_id
                 LEFT JOIN
@@ -283,7 +284,7 @@ class Title:
 
     @staticmethod
     def get_with_filter(title_type=None, genres=None, tags=None, status=None, adult=None, rating_from=None,
-                              rating_to=None, year_from=None, year_to=None, sort=None, page=None):
+                        rating_to=None, year_from=None, year_to=None, sort=None, page=None):
         if sort is None or sort == 1:
             titles = cursor.execute(""" SELECT id FROM titles ORDER BY views DESC""").fetchall()
         elif sort == 2:
@@ -363,6 +364,43 @@ class Title:
         else:
             return [Title.get_by_id(i) for i in answer[20 * (page - 1):20 + page]]
 
+    def add(self):
+        cursor.execute(
+            """
+             INSERT INTO titles(type_id, status_id, name_russian, name_english, name_languages, description, year, 
+             author, translator) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+             """,
+            (self.type.id, self.status.id, self.name_russian, self.name_english, self.name_languages, self.description,
+             self.year, self.author, self.translator,)
+        )
+
+        self.id = cursor.lastrowid
+        for i in self.genres:
+            self.add_genre(i)
+
+        connection.commit()
+
+    def update(self):
+        cursor.execute(
+            """
+             UPDATE titles SET type_id=?, status_id=?, name_russian=?, name_english=?, name_languages=?, description=?, 
+             year=?, author=?, translator=? WHERE id=?
+             """,
+            (self.type.id, self.status.id, self.name_russian, self.name_english, self.name_languages, self.description,
+             self.year, self.author, self.translator, self.id,)
+        )
+
+        cursor.execute(""" DELETE FROM titles_genres WHERE title_id=? """, (self.id,))
+
+        for i in self.genres:
+            self.add_genre(i)
+
+        connection.commit()
+
+    def add_genre(self, genre):
+        cursor.execute(""" INSERT INTO titles_genres(genre_id, title_id) VALUES(?, ?) """, (genre.id, self.id,))
+        connection.commit()
+
     def get_genres(self):
         result = cursor.execute(""" 
             SELECT id, name 
@@ -373,6 +411,9 @@ class Title:
             """, (self.id,)).fetchall()
         return [Genre.create_from_sql(i) for i in result]
 
+    def get_poster(self):
+        return url_for("static", filename=f"media/posters/{self.id}.jpg")
+
     def get_tags(self):
         result = cursor.execute(""" 
             SELECT id, name 
@@ -382,17 +423,6 @@ class Title:
             WHERE titles_tags.title_id=?
             """, (self.id,)).fetchall()
         return [Tag.create_from_sql(i) for i in result]
-
-    def add(self):
-        cursor.execute(
-            """
-             INSERT INTO titles(type, status, name_russian, name_english, year, views, author, publisher, translator)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-             """,
-            (self.type, self.status, self.name_russian, self.name_english, self.year, self.views,
-             self.author, self.publisher, self.translator,)
-        )
-        connection.commit()
 
     def add_view(self):
         cursor.execute(""" UPDATE titles SET views=views+1 WHERE id=? """, (self.id,))
@@ -522,6 +552,11 @@ class Status:
         return status
 
     @staticmethod
+    def get_by_id(status_id):
+        status_row = cursor.execute(""" SELECT * FROM statuses WHERE id=? """, (status_id,)).fetchone()
+        return Status.create_from_sql(status_row)
+
+    @staticmethod
     def get_all():
         result = cursor.execute(""" SELECT * FROM statuses """).fetchall()
         return [Status.create_from_sql(i) for i in result]
@@ -538,6 +573,11 @@ class Type:
         type.id = sql_row["id"]
         type.name = sql_row["name"]
         return type
+
+    @staticmethod
+    def get_by_id(status_id):
+        status_row = cursor.execute(""" SELECT * FROM types WHERE id=? """, (status_id,)).fetchone()
+        return Type.create_from_sql(status_row)
 
     @staticmethod
     def get_all():

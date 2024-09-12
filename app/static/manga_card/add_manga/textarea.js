@@ -10,9 +10,11 @@ for (let textarea of textareas){
         });
 
 
-    textarea.addEventListener("input", function(event){
-      event.target.style.height = ``;
-      event.target.style.height = `${event.target.scrollHeight + 2}px`;
-    })
+    textarea.addEventListener("input", autoResize);
+    textarea.addEventListener("resize", autoResize);
 }
 
+function autoResize(event){
+    event.target.style.height = ``;
+    event.target.style.height = `${event.target.scrollHeight + 2}px`;
+}

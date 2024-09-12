@@ -95,11 +95,11 @@ class Comment{
                 <div class="comment__reactions">
                     <div class="comment__rating">
                         <div class="rating__button rating-up${(this.isVotedByUser && this.userVoteType) ? " rating__button_active" : ""}">
-                            <img class="rating-up__image" src="../static/manga_card/images/rating-up.svg">
+                            <img class="rating-up__image" src="../static/manga_card/manga_card/images/rating-up.svg">
                         </div>
                         <span class="rating__text">${this.voteUp - this.voteDown}</span>
                         <div class="rating__button rating-down${(this.isVotedByUser && !this.userVoteType) ? " rating__button_active" : ""}">
-                            <img class="rating-down__image" src="../static/manga_card/images/rating-down.svg">
+                            <img class="rating-down__image" src="../static/manga_card/manga_card/images/rating-down.svg">
                         </div>
                     </div>
                     <span class="comment__answer-button">ответить</span>
@@ -309,7 +309,7 @@ class TitleComment extends Comment {
             let showAnswersButtonHTML = `
                 <span class="comment__show-answers show-answers">
                     ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.answersCount}</span>)
-                    <img class="show-answers__image" src="../static/manga_card/images/rating-down.svg">
+                    <img class="show-answers__image" src="../static/manga_card/manga_card/images/rating-down.svg">
                 </span>
             `;
 
@@ -329,7 +329,7 @@ class TitleComment extends Comment {
             let commentAnswers = this.element.querySelector(".comment__answers");
             commentAnswers.remove();
             let showCommentsButton = this.element.querySelector(".show-answers__image");
-            showCommentsButton.src = "../static/manga_card/images/rating-down.svg";
+            showCommentsButton.src = "../static/manga_card/manga_card/images/rating-down.svg";
             return null;
         }
         if(this.answers.length === 0){
@@ -344,7 +344,7 @@ class TitleComment extends Comment {
             let showAnswersButtonHTML = `
                 <span class="comment__show-answers show-answers">
                     ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.answers.length}</span>)
-                    <img class="show-answers__image" src="../static/manga_card/images/rating-up.svg">
+                    <img class="show-answers__image" src="../static/manga_card/manga_card/images/rating-up.svg">
                 </span>
             `;
             let showAnswerButtonRendered = new DOMParser().parseFromString(showAnswersButtonHTML, "text/html");
@@ -354,7 +354,7 @@ class TitleComment extends Comment {
             commentReactions.append(showAnswerButtonElement);
         }
         let showCommentsButton = this.element.querySelector(".show-answers__image");
-        showCommentsButton.src = "../static/manga_card/images/rating-up.svg";
+        showCommentsButton.src = "../static/manga_card/manga_card/images/rating-up.svg";
         let answersBlockHtml = `
             <div class="comment__answers">
                 <div class="answers__line"></div>

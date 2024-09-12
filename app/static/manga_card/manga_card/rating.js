@@ -7,52 +7,52 @@ ratingButton.addEventListener("click", function(event){
             <ul class="modal__content">
                 <ul class="modal__inner ratings-list">
                     <li class="ratings-list__item rating-option" data-stars="10">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">10</span>
                         <span class="rating-option__description">Превосходно!!!</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="9">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">9</span>
                         <span class="rating-option__description">Превосходно</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="8">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">8</span>
                         <span class="rating-option__description">Супер</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="7">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">7</span>
                         <span class="rating-option__description">Отлично</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="6">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">6</span>
                         <span class="rating-option__description">Хорошо</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="5">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">5</span>
                         <span class="rating-option__description">Неплохо</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="4">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">4</span>
                         <span class="rating-option__description">С пивом пойдет</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="3">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">3</span>
                         <span class="rating-option__description">Плохо</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="2">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">2</span>
                         <span class="rating-option__description">Ужасно</span>
                     </li>
                     <li class="ratings-list__item rating-option" data-stars="1">
-                        <img class="rating-option__image" src="../static/manga_card/images/star.svg">
+                        <img class="rating-option__image" src="../static/manga_card/manga_card/images/star.svg">
                         <span class="rating-option__number">1</span>
                         <span class="rating-option__description">Отвратительно</span>
                     </li>

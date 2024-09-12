@@ -27,8 +27,8 @@ def create_app(config):
     from . import chapters
     app.register_blueprint(chapters.bp, url_prefix="/chapters")
 
-    from . import manga
-    app.register_blueprint(manga.bp, url_prefix="/manga")
+    from . import manga_card
+    app.register_blueprint(manga_card.bp, url_prefix="/manga")
 
     from . import api
     app.register_blueprint(api.bp, url_prefix="/api")

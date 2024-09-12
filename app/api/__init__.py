@@ -8,3 +8,4 @@ import app.api.saves
 import app.api.rating
 import app.api.catalog
 import app.api.chapters
+import app.api.genres

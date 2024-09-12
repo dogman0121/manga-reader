@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     overflow-x: hidden;
     font-family: 'Poppins', sans-serif;
@@ -5,12 +11,10 @@ body {
 }
 
 header {
-    width: 100vw;
     background-color: #FFD600;
 }
 
 main {
-    width:100vw;
     margin-top: 55px;
 }
 
