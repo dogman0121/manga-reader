@@ -41,7 +41,29 @@ def catalog_page():
     page = int(page) if sort else None
 
     titles = Title.get_with_filter(types, genres, tags, status, adult, rating_by, rating_to, year_by, year_to, sort, page)
-    titles_json = json.dumps([i.__dict__ for i in titles], ensure_ascii=False)
+    titles_list = []
+    for title in titles:
+        title_dict = {
+            "id": title.id,
+            "type": title.type.name,
+            "status": title.status.name,
+            "name_russian": title.name_russian,
+            "name_english": title.name_english,
+            "name_languages": title.name_languages,
+            "poster": title.poster,
+            "description": title.description,
+            "genres": [{"id": i.id, "name": i.name} for i in title.genres],
+            "year": title.year,
+            "views": title.views,
+            "saves": title.saves,
+            "title.rating": title.rating,
+            "rating_votes": title.rating_votes,
+            "author": title.author,
+            "translator": title.translator
+        }
+        titles_list.append(title_dict)
+
+    titles_json = json.dumps(titles_list, ensure_ascii=False)
     return render_template("catalog.html", user=current_user, titles=titles,
                            titles_json=titles_json, genres=Genre.get_all(), types=Type.get_all(),
                            tags=Tag.get_all(), statuses=Status.get_all())

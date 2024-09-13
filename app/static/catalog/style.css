@@ -66,6 +66,7 @@ input[type="text"] {
 .title-square__poster {
     border-radius: 7px;
     width: 100%;
+    aspect-ratio: 3/4;
 
 }
 .title-square__name {

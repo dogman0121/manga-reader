@@ -39,4 +39,26 @@ def get_catalog():
     page = int(page) if page else None
 
     titles = Title.get_with_filter(types, genres, tags, status, adult, rating_by, rating_to, year_by, year_to, sort, page)
-    return jsonify([i.__dict__ for i in titles])
+
+    titles_list = []
+    for title in titles:
+        title_dict = {
+            "id": title.id,
+            "type": title.type.name,
+            "status": title.status.name,
+            "name_russian": title.name_russian,
+            "name_english": title.name_english,
+            "name_languages": title.name_languages,
+            "poster": title.poster,
+            "description": title.description,
+            "genres": [{"id": i.id, "name": i.name} for i in title.genres],
+            "year": title.year,
+            "views": title.views,
+            "saves": title.saves,
+            "title.rating": title.rating,
+            "rating_votes": title.rating_votes,
+            "author": title.author,
+            "translator": title.translator
+        }
+        titles_list.append(title_dict)
+    return jsonify(titles_list)

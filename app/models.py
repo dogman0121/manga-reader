@@ -305,7 +305,7 @@ class Title:
             title_id = title["id"]
             if title_type is not None:
                 t_type = cursor.execute(
-                    """ SELECT types.name as type FROM titles LEFT JOIN types ON titles.type_id = types.id 
+                    """ SELECT types.id as type FROM titles LEFT JOIN types ON titles.type_id = types.id 
                     WHERE titles.id=? """, (title_id,)
                 ).fetchone()["type"]
                 if t_type in title_type:
