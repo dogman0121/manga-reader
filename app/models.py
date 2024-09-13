@@ -138,7 +138,7 @@ class Comment:
 
     def get_user_vote(self, user):
         vote_row = cursor.execute(""" SELECT * FROM votes WHERE comment_id=? AND user_id=? """,
-                                (self.id, user.id,)).fetchone()
+                                  (self.id, user.id,)).fetchone()
         if vote_row:
             vote = Vote.create_from_sql(vote_row)
             return vote
@@ -276,9 +276,9 @@ class Title:
                 LEFT JOIN rating
                 ON titles.id = rating.title_id
                 LEFT JOIN
-                (SELECT title_id, COUNT(*) AS saves FROM saves ORDER BY title_id) as t1
+                (SELECT title_id, COUNT(*) AS saves FROM saves WHERE title_id=? ORDER BY title_id) as t1
                 ON titles.id = t1.title_id
-                WHERE titles.id=? """, (title_id,)).fetchone()
+                WHERE titles.id=? """, (title_id, title_id,)).fetchone()
         title = Title.create_from_sql(title_row)
         return title
 
@@ -305,7 +305,8 @@ class Title:
             title_id = title["id"]
             if title_type is not None:
                 t_type = cursor.execute(
-                    """ SELECT types.name as type FROM titles LEFT JOIN types ON titles.type_id = types.id WHERE titles.id=? """, (title_id,)
+                    """ SELECT types.name as type FROM titles LEFT JOIN types ON titles.type_id = types.id 
+                    WHERE titles.id=? """, (title_id,)
                 ).fetchone()["type"]
                 if t_type in title_type:
                     pass

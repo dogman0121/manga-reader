@@ -60,7 +60,6 @@ def add_manga():
 @bp.route("/<int:title_id>/edit", methods=["GET", "POST"])
 def edit_manga(title_id):
     title = Title.get_by_id(title_id)
-    print(title.name_languages)
     adding_manga_form = AddingMangaForm()
     adding_manga_form.genres.choices = [[i.id, i.name] for i in Genre.get_all()]
     adding_manga_form.status.choices = [[i.id, i.name] for i in Status.get_all()]
