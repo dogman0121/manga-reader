@@ -13,12 +13,13 @@ cursor = connection.cursor()
 
 # ---------------- User model ----------------
 class User(UserMixin):
-    def __init__(self, user_id=None, login=None, email=None, password_hash=None, avatar=None):
+    def __init__(self, user_id=None, login=None, email=None, password_hash=None, avatar=None, role=1):
         self.id = user_id
         self.login = login
         self.email = email
         self.password_hash = password_hash
         self.avatar = avatar
+        self.role = role
 
     @staticmethod
     def create_from_sql(sql_row):
@@ -26,7 +27,8 @@ class User(UserMixin):
         login = sql_row["login"]
         email = sql_row["email"]
         password_hash = sql_row["password"]
-        user = User(user_id=user_id, login=login, email=email, password_hash=password_hash)
+        role = sql_row["role"]
+        user = User(user_id=user_id, login=login, email=email, password_hash=password_hash, role=role)
         return user
 
     @staticmethod
@@ -59,8 +61,8 @@ class User(UserMixin):
             return url_for("static", filename=f"media/avatars/default.png")
 
     def add(self):
-        cursor.execute("INSERT INTO users(login, email, password_hash) VALUES(?, ?, ?) ",
-                       (self.login, self.email, self.password_hash,))
+        cursor.execute("INSERT INTO users(login, email, password_hash, role) VALUES(?, ?, ?, ?) ",
+                       (self.login, self.email, self.password_hash, self.role,))
         connection.commit()
 
     def set_password(self, password):
@@ -84,6 +86,10 @@ class User(UserMixin):
                        (new_email, self.id,))
         connection.commit()
         self.login = new_email
+
+    def change_role(self, role):
+        cursor.execute(""" UPDATE users SET role=? WHERE id=? """, (role, self.id,))
+        self.role = role
 
     def get_saves(self):
         result = cursor.execute(""" SELECT * FROM saves WHERE user_id=? """, (self.id,)).fetchall()
