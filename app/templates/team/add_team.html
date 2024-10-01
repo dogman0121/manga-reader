@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block header %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='modules/inputs/inputs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='inputs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='team/add_team/style.css') }}">
+{% endblock %}
+{% block content %}
+    <form class="form" method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token()}}
+        {% if mode == "edit" %}
+            <h1 class="form__header">Редактирование команды</h1>
+        {% else %}
+            <h1 class="form__header">Добавление команды</h1>
+        {% endif %}
+        <div class="form__section form__two">
+            <div class="form__left">
+                <label class="form__poster poster">
+                    {% if team %}
+                        <img class="poster__preview" src="{{ team.poster }}">
+                    {% else %}
+                        <img class="poster__preview">
+                    {% endif %}
+                    {{ form.poster(hidden=true, class_="form-input__file poster__file") }}
+                </label>
+            </div>
+            <div class="form__right">
+                <div class="form-input">
+                    Название
+                    {{ form.name(class_="form-input__input") }}
+                </div>
+                <div class="form-input">
+                    Описание
+                    {{ form.about(class_="form_textarea", rows="6")}}
+                </div>
+            </div>
+        </div>
+        <div class="form__section">
+            <div class="form-input">
+                Ссылка на группу вконтакте
+                {{ form.vk_link(class_="form-input__input") }}
+            </div>
+            <div class="form-input">
+                Ссылка на сервер дискорд
+                {{ form.discord_link(class_="form-input__input") }}
+            </div>
+            <div class="form-input">
+                Ссылка на канал телеграм
+                {{ form.telegram_link(class_="form-input__input") }}
+            </div>
+        </div>
+        <div class="form__footer">
+            {{ form.submit(class_="form__submit") }}
+        </div>
+    </form>
+{% endblock %}
+{% block json_data %}
+{% endblock %}
+{% block footer %}
+    <script src="{{ url_for("static", filename="modules/inputs/inputs.js") }}"></script>
+    <script src="{{ url_for("static", filename="team/add_team/form.js") }}"></script>
+    <script src="{{ url_for("static", filename="team/add_team/preview_poster.js") }}"></script>
+    <script src="{{ url_for("static", filename="team/add_team/textarea.js") }}"></script>
+{% endblock %}

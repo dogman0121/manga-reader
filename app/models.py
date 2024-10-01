@@ -11,15 +11,23 @@ connection.row_factory = sqlite3.Row
 cursor = connection.cursor()
 
 
+def sqlite_lower(value):
+    return value.lower()
+
+
+connection.create_function("LOWER", 1, sqlite_lower)
+
+
 # ---------------- User model ----------------
 class User(UserMixin):
-    def __init__(self, user_id=None, login=None, email=None, password_hash=None, avatar=None, role=1):
+    def __init__(self, user_id=None, login=None, email=None, password_hash=None, avatar=None, role=1, team_id=None):
         self.id = user_id
         self.login = login
         self.email = email
         self.password_hash = password_hash
         self.avatar = avatar
         self.role = role
+        self.team_id = team_id
 
     @staticmethod
     def create_from_sql(sql_row):
@@ -28,7 +36,8 @@ class User(UserMixin):
         email = sql_row["email"]
         password_hash = sql_row["password"]
         role = sql_row["role"]
-        user = User(user_id=user_id, login=login, email=email, password_hash=password_hash, role=role)
+        team_id = sql_row["team_id"]
+        user = User(user_id=user_id, login=login, email=email, password_hash=password_hash, role=role, team_id=team_id)
         return user
 
     @staticmethod
@@ -41,7 +50,7 @@ class User(UserMixin):
     @staticmethod
     def get_by_login(login: str):
         user_row = cursor.execute(""" SELECT * FROM users WHERE login=? """,
-                                (login,)).fetchone()
+                                  (login,)).fetchone()
         user = User.create_from_sql(user_row)
         user.avatar = user.get_avatar()
         return user
@@ -53,6 +62,13 @@ class User(UserMixin):
         user = User.create_from_sql(user_row)
         user.avatar = user.get_avatar()
         return user
+
+    @staticmethod
+    def get_by_email(email):
+        result = cursor.execute(""" SELECT id FROM users WHERE email=? """, (email,)).fetchone()
+        if result:
+            user = User.get_by_id(result["id"])
+            return user
 
     def get_avatar(self):
         if os.path.exists(f"app/static/media/avatars/{self.id}.png"):
@@ -94,6 +110,28 @@ class User(UserMixin):
     def get_saves(self):
         result = cursor.execute(""" SELECT * FROM saves WHERE user_id=? """, (self.id,)).fetchall()
         return result
+
+    def add_team(self, team):
+        cursor.execute(""" UPDATE users SET team_id=? WHERE id=? """, (team.id, self.id,))
+        connection.commit()
+
+    def remove_team(self):
+        cursor.execute(""" UPDATE users SET team_id=NULL WHERE id=? """, (self.id, ))
+        connection.commit()
+
+    def is_team_leader(self):
+        result = cursor.execute(""" SELECT * FROM teams WHERE leader_id=? """, (self.id,)).fetchall()
+        if result:
+            return True
+        return False
+
+    def get_data(self):
+        return {
+            "id": self.id,
+            "login": self.login,
+            "email": self.email,
+            "role": self.role
+        }
 
 
 # ---------------- Comment model ----------------
@@ -143,6 +181,8 @@ class Comment:
         return result["down_votes"]
 
     def get_user_vote(self, user):
+        if not(user.is_authenticated):
+            return
         vote_row = cursor.execute(""" SELECT * FROM votes WHERE comment_id=? AND user_id=? """,
                                   (self.id, user.id,)).fetchone()
         if vote_row:
@@ -151,20 +191,22 @@ class Comment:
 
     def add(self):
         date = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
-        cursor.execute(""" 
-            INSERT INTO comments(text, date, user_id, title_id, root, parent) 
-            VALUES(?, ?, ?, ?, ?, ?) """,
-                       (self.text, date, self.user.id, self.title_id, self.root, self.parent))
+        cursor.execute(""" INSERT INTO comments(text, date, user_id, title_id, root, parent) 
+            VALUES(?, ?, ?, ?, ?, ?) """, (self.text, date, self.user.id, self.title_id, self.root, self.parent))
         connection.commit()
         self.id = cursor.lastrowid
         self.date = date
 
+    def delete(self):
+        cursor.execute(""" DELETE from comments WHERE id=? """, (self.id,))
+        connection.commit()
+
     def add_answer(self, text, user, title):
         date = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
         if self.root is None:
-            cursor.execute(""" 
-            INSERT INTO comments(text, date, user_id, title_id, root, parent) VALUES(?, ?, ?, ?, ?, ?) 
-            """, (text, date, user.id, title.id, self.id, self.id))
+            cursor.execute(
+                """  INSERT INTO comments(text, date, user_id, title_id, root, parent) 
+                VALUES(?, ?, ?, ?, ?, ?) """, (text, date, user.id, title.id, self.id, self.id))
         else:
             cursor.execute(
                 """ INSERT INTO comments(text, date, user_id, title_id, root, parent) VALUES(?, ?, ?, ?, ?, ?) """,
@@ -180,30 +222,40 @@ class Comment:
                                 (self.id,)).fetchone()
         return result["answers_count"]
 
-    def delete(self):
-        cursor.execute(""" DELETE from comments WHERE id=? """, (self.id,))
-        connection.commit()
-
     def add_vote(self, user, vote_type):
-        cursor.execute(""" INSERT INTO votes(user_id, comment_id, type) VALUES(?, ?, ?) """,
-                       (user.id, self.id, vote_type,))
-        connection.commit()
+        vote = Vote(comment_id=self.id, user_id=user.id, vote_type=vote_type)
+        vote.add()
 
     def delete_vote(self, user):
-        cursor.execute(""" DELETE FROM votes WHERE user_id=? AND comment_id=? """, (user.id, self.id,))
-        connection.commit()
+        vote = Vote(comment_id=self.id, user_id=user.id)
+        vote.delete()
 
     def update_vote(self, user, vote_type):
-        cursor.execute(""" UPDATE votes SET type=? WHERE user_id=? AND comment_id=? """, (vote_type, user.id, self.id))
-        connection.commit()
+        vote = Vote(comment_id=self.id, user_id=user.id, vote_type=vote_type)
+        vote.update()
+
+    def get_data(self):
+        return {
+            "id": self.id,
+            "text": self.id,
+            "date": self.date,
+            "user": self.user.get_data(),
+            "title_id": self.title_id,
+            "root": self.root,
+            "parent": self.parent,
+            "up_votes": self.up_votes,
+            "down_votes": self.down_votes,
+            "answers_count": self.answers_count
+        }
 
 
 # ---------------- Chapter model ----------------
 class Chapter:
-    def __init__(self, chapter_id=None, name=None, title_id=None, chapter=None, date=None):
+    def __init__(self, chapter_id=None, name=None, title_id=None, tome=None, chapter=None, date=None):
         self.id = chapter_id
         self.name = name
         self.title_id = title_id
+        self.tome = tome
         self.chapter = chapter
         self.date = date
 
@@ -212,6 +264,7 @@ class Chapter:
         chapter = Chapter()
         chapter.id = sql_row["id"]
         chapter.name = sql_row["name"]
+        chapter.tome = sql_row["tome"]
         chapter.title_id = sql_row["title_id"]
         chapter.chapter = sql_row["chapter"]
         chapter.date = sql_row["date"]
@@ -223,23 +276,32 @@ class Chapter:
         return Chapter.create_from_sql(result)
 
     def add(self):
-        cursor.execute(""" INSERT INTO chapters(name, title_id, chapter, date) VALUES(?, ?, ?) """,
-                       (self.name, self.title_id, self.chapter, self.date))
+        self.date = datetime.utcnow().strftime("%Y-%m-%d")
+        cursor.execute(""" INSERT INTO chapters(name, tome, title_id, chapter, date) VALUES(?, ?, ?, ?, ?) """,
+                       (self.name, self.tome, self.title_id, self.chapter, self.date))
+        self.id = cursor.lastrowid
+        connection.commit()
+
+    def update(self):
+        cursor.execute(""" UPDATE chapters SET tome=?, chapter=?, name=? """, (self.tome, self.chapter, self.name,))
+        connection.commit()
+
+    def delete(self):
+        cursor.execute(""" DELETE FROM chapters WHERE id=? """, (self.id,))
         connection.commit()
 
 
 # ---------------- Title model ----------------
 class Title:
     def __init__(self, title_id=None, title_type=None, status=None, name_russian=None, name_english=None,
-                 name_languages=None, poster=None, description=None, genres=[], tags=[], year=None, views=None,
-                 saves=None, rating=None, rating_votes=None, author=None, translator=None):
+                 name_languages=None, description=None, genres=[], tags=[], year=None, views=None,
+                 saves=None, rating=None, rating_votes=None, author=None):
         self.id = title_id
         self.type = title_type
         self.status = status
         self.name_russian = name_russian
         self.name_english = name_english
         self.name_languages = name_languages
-        self.poster = poster
         self.description = description
         self.genres = genres
         self.tags = tags
@@ -249,7 +311,6 @@ class Title:
         self.rating = rating
         self.rating_votes = rating_votes
         self.author = author
-        self.translator = translator
 
     @staticmethod
     def create_from_sql(sql_row):
@@ -270,14 +331,13 @@ class Title:
         title.rating = sql_row["rating"] if sql_row["rating"] else 0
         title.rating_votes = sql_row["rating_votes"] if sql_row["rating_votes"] else 0
         title.author = sql_row["author"]
-        title.translator = sql_row["translator"]
         return title
 
     @staticmethod
     def get_by_id(title_id):
         title_row = cursor.execute("""
                 SELECT titles.id, name_russian, name_english, name_languages, description, type_id, status_id, year, 
-                views, saves, AVG(rating) AS rating, COUNT(rating) AS rating_votes, author, translator
+                views, saves, AVG(rating) AS rating, COUNT(rating) AS rating_votes, author
                 FROM titles
                 LEFT JOIN rating
                 ON titles.id = rating.title_id
@@ -378,8 +438,7 @@ class Title:
              author, translator) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
              """,
             (self.type.id, self.status.id, self.name_russian, self.name_english, self.name_languages, self.description,
-             self.year, self.author, self.translator,)
-        )
+             self.year, self.author, self.translator,))
 
         self.id = cursor.lastrowid
         for i in self.genres:
@@ -394,8 +453,7 @@ class Title:
              year=?, author=?, translator=? WHERE id=?
              """,
             (self.type.id, self.status.id, self.name_russian, self.name_english, self.name_languages, self.description,
-             self.year, self.author, self.translator, self.id,)
-        )
+             self.year, self.author, self.translator, self.id,))
 
         cursor.execute(""" DELETE FROM titles_genres WHERE title_id=? """, (self.id,))
 
@@ -419,7 +477,8 @@ class Title:
         return [Genre.create_from_sql(i) for i in result]
 
     def get_poster(self):
-        return url_for("static", filename=f"media/posters/{self.id}.jpg")
+        if os.path.exists(f"app/static/media/posters/{self.id}.jpg"):
+            return url_for("static", filename=f"media/posters/{self.id}.jpg")
 
     def get_tags(self):
         result = cursor.execute(""" 
@@ -464,6 +523,55 @@ class Title:
             (self.id,)
         ).fetchall()
         return [Comment.create_from_sql(i) for i in result]
+
+    def check_access(self, user):
+        if user.role > 2:
+            return True
+
+        access_row = cursor.execute(""" SELECT * FROM titles_translators WHERE title_id=? AND team_id=? """,
+                                    (self.id, user.team_id,)).fetchone()
+        if access_row is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def search(s):
+        query_result = cursor.execute(""" SELECT id FROM titles WHERE LOWER(name_russian) LIKE LOWER("%{}%") 
+            ORDER BY views DESC """.format(s)).fetchall()
+        return [Title.get_by_id(i["id"]) for i in query_result]
+
+    def get_data(self):
+        return {
+            "id": self.id,
+            "name_russian": self.name_russian,
+            "name_english": self.name_english,
+            "name_languages": self.name_languages,
+            "type": {
+                "id": self.type.id,
+                "name": self.type.name
+            },
+            "status": {
+                "id": self.status.id,
+                "name": self.status.name
+            },
+            "views": self.views,
+            "description": self.description,
+            "genres": [{
+                "id": i.id,
+                "name": i.name
+            } for i in self.genres],
+            "tags": [{
+                "id": i.id,
+                "name": i.name
+            } for i in self.tags],
+            "year": self.year,
+            "rating": self.rating,
+            "rating_votes": self.rating_votes,
+            "saves": self.saves,
+            "author": self.author,
+            "poster": self.poster
+        }
 
 
 class Rating:
@@ -605,3 +713,100 @@ class Vote:
         vote.user_id = sql_row["user_id"]
         vote.type = sql_row["type"]
         return vote
+
+    def add(self):
+        cursor.execute(""" INSERT INTO votes(user_id, comment_id, type) VALUES(?, ?, ?) """,
+                       (self.user_id, self.comment_id, self.type,))
+        connection.commit()
+
+    def delete(self):
+        cursor.execute(""" DELETE FROM votes WHERE user_id=? AND comment_id=? """, (self.user_id, self.comment_id,))
+        connection.commit()
+
+    def update(self):
+        cursor.execute(""" UPDATE votes SET type=? WHERE user_id=? AND comment_id=? """,
+                       (self.type, self.user_id, self.comment_id))
+        connection.commit()
+
+
+class Team:
+    def __init__(self, id=None, name=None, about=None, leader=None, vk_link=None, discord_link=None,
+                 telegram_link=None):
+        self.id = id
+        self.name = name
+        self.about = about
+        self.leader_id = leader
+        self.vk_link = vk_link
+        self.discord_link = discord_link
+        self.telegram_link = telegram_link
+
+    @staticmethod
+    def create_from_sql(sql_row):
+        team = Team()
+        team.id = sql_row["id"]
+        team.name = sql_row["name"]
+        team.about = sql_row["about"]
+        team.poster = team.get_poster()
+        team.leader_id = sql_row["leader_id"]
+        team.vk_link = sql_row["vk_link"]
+        team.discord_link = sql_row["discord_link"]
+        team.telegram_link = sql_row["telegram_link"]
+        return team
+
+    @staticmethod
+    def get_by_id(team_id):
+        row = cursor.execute(""" SELECT * FROM teams WHERE id=? """, (team_id,)).fetchone()
+        return Team.create_from_sql(row)
+
+    def add(self):
+        cursor.execute(
+            """ INSERT INTO teams(name, about, leader_id, vk_link, discord_link, telegram_link) 
+            VALUES(?, ?, ?, ?, ?, ?) """,
+            (self.name, self.about, self.leader_id, self.vk_link, self.discord_link, self.telegram_link)
+        )
+        self.id = cursor.lastrowid
+        leader = User.get_by_id(self.leader_id)
+        leader.add_team(team=self)
+        connection.commit()
+
+    def update(self):
+        cursor.execute(
+            """ UPDATE teams SET name=?, about=?, leader_id=?, vk_link=?, discord_link=?, telegram_link=? """,
+            (self.name, self.about, self.leader_id, self.vk_link, self.discord_link, self.telegram_link))
+
+        connection.commit()
+
+    def delete(self):
+        cursor.execute(""" DELETE FROM teams WHERE id=? """, (self.id,))
+        connection.commit()
+
+    def get_members(self):
+        members = cursor.execute(""" SELECT id FROM users WHERE team_id=? """, (self.id,)).fetchall()
+        return [User.get_by_id(i["id"]) for i in members]
+
+    def get_poster(self):
+        if os.path.exists(f"app/static/media/teams/{self.id}.jpg"):
+            return url_for('static', filename=f"media/teams/{self.id}.jpg")
+
+    def get_translations(self):
+        titles = cursor.execute(""" SELECT title_id FROM titles_translators WHERE team_id=? """, (self.id,)).fetchall()
+        return [Title.get_by_id(i["title_id"]) for i in titles]
+
+    @staticmethod
+    def search(s):
+        teams = cursor.execute(""" SELECT id FROM teams LEFT JOIN 
+            (SELECT team_id, COUNT(title_id) AS tc FROM titles_translators ORDER BY team_id) AS t 
+            ON id = t.team_id  WHERE teams.name LIKE "%{}%" ORDER BY tc DESC
+            """. format(s)).fetchall()
+        return [Team.get_by_id(i["id"]) for i in teams]
+
+    def get_data(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "about": self.about,
+            "vk_link": self.vk_link,
+            "discord_link": self.discord_link,
+            "telegram_link": self.telegram_link,
+            "poster": self.poster
+        }

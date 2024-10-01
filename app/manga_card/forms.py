@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import FileField, SelectMultipleField, TextAreaField, SelectField, StringField, SubmitField, validators
 
 
-class AddingMangaForm(FlaskForm):
+class AddMangaForm(FlaskForm):
     poster = FileField()
     name_russian = StringField(validators=[validators.InputRequired()])
     name_english = StringField()

@@ -62,6 +62,7 @@ li {
 #poster {
     width: 100%;
     aspect-ratio: 3/4;
+    border-radius: 14px;
 }
 
 #description {
@@ -128,6 +129,19 @@ textarea:focus {
     width: 228px;
     background-color: #FFD600;
     font-size: 20px;
+    border-radius: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-button {
+    margin-top: 5px;
+    height: 40px;
+    width: 100%;
+    background-color: #D9D9D9;
+    font-size: 16px;
     border-radius: 12px;
 
     display: flex;
@@ -218,10 +232,33 @@ textarea:focus {
     margin-top: 17px;
 }
 
-#chapters__header {
+.chapters__header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.chapters-header__buttons {
+    display: flex;
+}
+
+.chapter__icon {
+    width: 15px;
+    height: 15px;
+}
+
+.chapter-icon__link + .chapter-icon__link {
+    margin-left: 10px;
+}
+
+.chapter__content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-chapter {
+    width: 25px;
+    height: 25px;
 }
 
 .chapters__item {
@@ -411,6 +448,18 @@ textarea:focus {
 
 .no-comments__text, .no-chapters__text {
     font-size: 16px;
+}
+
+.no-chapters__add-link {
+    display: inline-block;
+}
+
+.no-chapters__add-button {
+    margin-top: 15px;
+    font-size: 20px;
+    border-radius: 18px;
+    padding: 15px 50px;
+    background-color: #D9D9D9;
 }
 
 .modal {

@@ -2,19 +2,6 @@ body {
     line-height: 20px;
 }
 
-.inputs-input, .select-wrapper__selected-option, textarea {
-    border: 2px solid #B9B9B9;
-    border-radius: 14px;
-    width: 100%;
-    padding: 10px 16px 12px;
-    margin-top: 4px;
-}
-
-.inputs-input {
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .select-wrapper__options {
     margin-top: 4px;
     background-color: #FFFFFF;
@@ -47,16 +34,18 @@ textarea {
     font-size: 16px;
 }
 
-.form__section + .form__section {
+.form__header {
+    font-size: 50px;
+    font-weight: 100;
+    line-height: 50px;
+}
+
+.form__section {
     margin-top: 25px;
 }
 
-.form__header {
+.form__two {
     display: flex;
-}
-
-.form__main {
-    margin-top: 30px;
 }
 
 .form__footer {
@@ -65,7 +54,12 @@ textarea {
     justify-content: center;
 }
 
-.form__names {
+.form__left {
+    max-width: 280px;
+    width: 100%;
+}
+
+.form__right {
     margin-left: 20px;
     width: 100%;
 }
@@ -78,9 +72,8 @@ textarea {
 
 
 .form__poster {
-    max-width: 280px;
+    display: block;
     height: 375px;
-    width: 100%;
     background-color: #D9D9D9;
     border-radius: 14px;
     overflow: hidden;
@@ -107,12 +100,17 @@ textarea {
     font-size: 20px;
 }
 
+.inputs-input {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 5px;
+    column-gap: 4px;
+}
+
 .selected-option {
     font-size: 14px;
     background-color: #D9D9D9;
     padding: 1px 4px 2px 8px;
-    margin-right: 5px;
-    margin-bottom: 4px;
     display: flex;
     align-items: center;
     justify-content: center;

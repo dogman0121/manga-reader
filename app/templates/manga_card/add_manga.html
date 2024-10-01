@@ -1,21 +1,29 @@
 {% extends "base.html" %}
 {% block header %}
     <link rel="stylesheet" href="{{ url_for('static', filename='modules/inputs/inputs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='inputs.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/add_manga/style.css') }}">
 {% endblock %}
 {% block content %}
     <form class="form" method="POST" enctype="multipart/form-data">
         {{ form.csrf_token()}}
-        <div class="form__header">
-            <label class="form__poster poster">
-                {% if title %}
-                    <img class="poster__preview" src="{{ title.poster }}">
-                {% else %}
-                    <img class="poster__preview">
-                {% endif %}
-                {{ form.poster(hidden=true, class_="form-input__file poster__file") }}
-            </label>
-            <div class="form__names">
+        {% if mode == "edit" %}
+            <h1 class="form__header">Редактирование манги</h1>
+        {% else %}
+            <h1 class="form__header">Добавление манги</h1>
+        {% endif %}
+        <div class="form__two">
+            <div class="form__left">
+                <label class="form__poster poster">
+                    {% if title %}
+                        <img class="poster__preview" src="{{ title.poster }}">
+                    {% else %}
+                        <img class="poster__preview">
+                    {% endif %}
+                    {{ form.poster(hidden=true, class_="form-input__file poster__file") }}
+                </label>
+            </div>
+            <div class="form__right">
                 <div class="form-input">
                     Название на русском языке
                     {{ form.name_russian(class_="form-input__input") }}
@@ -30,40 +38,38 @@
                 </div>
             </div>
         </div>
-        <div class="form__main">
         <div class="form__section">
             Описание
             {{ form.description(class_="form_textare", rows="6")}}
         </div>
-            <div class="form__section">
-                <div class="form__three">
-                    <div class="form-input">
-                        Статус
-                        {{ form.status(class_="form-input__select") }}
-                    </div>
-                    <div class="form-input">
-                        Тип
-                        {{ form.type(class_="form-input__select") }}
-                    </div>
-                    <div class="form-input">
-                        Год
-                        {{ form.year(class_="form-input__input") }}
-                    </div>
+        <div class="form__section">
+            <div class="form__three">
+                <div class="form-input">
+                    Статус
+                    {{ form.status(class_="form-input__select") }}
                 </div>
                 <div class="form-input">
-                    Жанры
-                    {{ form.genres(class_="form-input__select_multiple") }}
+                    Тип
+                    {{ form.type(class_="form-input__select") }}
+                </div>
+                <div class="form-input">
+                    Год
+                    {{ form.year(class_="form-input__input") }}
                 </div>
             </div>
-            <div class="form__section">
-                <div class="form-input">
-                    Автор
-                    {{ form.author(class_="form-input__input") }}
-                </div>
-                <div class="form-input">
-                    Перевеодчик
-                    {{ form.translator(class_="form-input__input") }}
-                </div>
+            <div class="form-input">
+                Жанры
+                {{ form.genres(class_="form-input__select_multiple") }}
+            </div>
+        </div>
+        <div class="form__section">
+            <div class="form-input">
+                Автор
+                {{ form.author(class_="form-input__input") }}
+            </div>
+            <div class="form-input">
+                Перевеодчик
+                {{ form.translator(class_="form-input__input") }}
             </div>
         </div>
         <div class="form__footer">
@@ -71,8 +77,9 @@
         </div>
     </form>
 {% endblock %}
+{% block json_data %}
+{% endblock %}
 {% block footer %}
-    <script id="DATA" type="application/json"></script>
     <script src="{{ url_for("static", filename="modules/inputs/inputs.js") }}"></script>
     <script src="{{ url_for("static", filename="manga_card/add_manga/form.js") }}"></script>
     <script src="{{ url_for("static", filename="manga_card/add_manga/preview_poster.js") }}"></script>

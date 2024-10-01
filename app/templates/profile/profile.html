@@ -8,11 +8,32 @@
     <div class="profile__info">
         <span class="name">{{ profile.login }}</span>
     </div>
-    {% if profile.id == user.id %}
-    <a class="profile__settings settings_button" href="{{ url_for('profile.edit_profile') }}">
-        <span class="settings_button__text" >Настройки</span>
-        <img class="settings_button__icon" src="{{ url_for('static', filename='profile/profile/images/settings.svg') }}">
-    </a>
+    {% if user.is_authenticated %}
+        {% if profile.id == user.id %}
+            <div class="profile__options">
+                {% if user.team_id == None %}
+                    <a class="add_team" href="{{ url_for("team.add_team") }}">
+                        <img class="add_team__icon" src="{{ url_for('static', filename="profile/profile/images/plus.png") }}">
+                    </a>
+                {% else %}
+                    <a class="add_team" href="{{ url_for("team.get_team", team_id=user.team_id) }}">
+                        <img class="add_team__icon" src="{{ url_for('static', filename="profile/profile/images/team.svg") }}">
+                    </a>
+                {% endif %}
+                <a class="profile__settings settings_button" href="{{ url_for('profile.edit_profile') }}">
+                    <span class="settings_button__text" >Настройки</span>
+                    <img class="settings_button__icon" src="{{ url_for('static', filename='profile/profile/images/settings.svg') }}">
+                </a>
+            </div>
+        {% elif user.is_team_leader() and profile.team_id == None %}
+            <div class="profile__options">
+                <a class="profile__settings settings_button" href="{{ url_for("team.add_member", member_id=profile.id) }}">Добавить в команду</a>
+            </div>
+        {% elif user.is_team_leader() and profile.team_id == user.team_id %}
+            <div class="profile__options">
+                <a class="profile__settings settings_button" href="{{ url_for("team.remove_member", member_id=profile.id) }}">Выгнать из команды</a>
+            </div>
+        {% endif %}
     {% endif %}
 </div>
 <div class="sections">

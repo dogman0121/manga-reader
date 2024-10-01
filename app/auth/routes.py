@@ -1,24 +1,24 @@
 from flask import render_template, request, redirect, url_for, flash
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from app.models import User
 from flask_login import login_user, logout_user, current_user
 from app.auth import bp
-from app.auth.email import send_password_recovery_mail, check_password_recovery_token
+from app.email import send_password_recovery_mail, check_password_recovery_token
 from app.auth.forms import SendEmailForm, RecoveryPasswordForm
 
 
 @bp.route("/", methods=["GET"])
 def login_form():
     if request.headers.get("Referer") is None and request.args.get("section") is None:
-        return redirect(url_for("auth.login_form") + "?section=login")
+        return redirect(url_for(".login_form") + "?section=login")
 
     if request.headers.get("Referer") and request.args.get("section") is None:
-        return redirect(url_for('auth.login_form') + "?section=login&from=" + request.headers.get("Referer"))
+        return redirect(url_for('.login_form') + "?section=login&from=" + request.headers.get("Referer"))
 
     if request.args.get("section") == "login":
-        return render_template("auth/login.html")
+        return render_template("login.html")
     elif request.args.get("section") == "register":
-        return render_template("auth/register.html")
+        return render_template("register.html")
 
 
 @bp.route("/", methods=["POST"])
@@ -30,23 +30,23 @@ def login():
             user.set_password(user_data["password"])
             user.add()
             if request.args.get("from") is None:
-                return redirect(url_for("index"))
+                return redirect(url_for("index.index"))
             if request.args.get("from"):
                 return redirect(request.args.get("from"))
-            return redirect(url_for("index"))
+            return redirect(url_for("index.index"))
         flash("*Данное имя пользователя занято", "error")
-        return render_template("auth/register.html")
+        return render_template("register.html")
     else:
         user_data = User.get_by_login(request.form.get("login"))
         if user_data and check_password_hash(user_data.password_hash, request.form.get("password")):
             login_user(user_data, remember={"on": True, None: False}[request.form.get("remember")])
             if request.args.get("from") is None:
-                return redirect(url_for("index"))
+                return redirect(url_for("index.index"))
             if request.args.get("from"):
                 return redirect(request.args.get("from"))
-            return redirect(url_for('index'))
+            return redirect(url_for('index.index'))
         flash("*Неправильный логин или пароль!", "error")
-        return render_template("auth/login.html")
+        return render_template("login.html")
 
 
 @bp.route("/logout")
@@ -62,16 +62,20 @@ def recovery():
     send_email_form = SendEmailForm()
     if send_email_form.validate_on_submit():
         email = send_email_form.email.data
-        flash("На ваш адрес электронной почты было отправлено письмо с инструкциями о том, как сбросить пароль.",
-              "info")
-        send_password_recovery_mail(current_user.get_id(), email)
-    return render_template("auth/send_recovery_message.html", email_form=send_email_form)
+        user = User.get_by_email(email)
+        if user:
+            flash("На ваш адрес электронной почты было отправлено письмо с инструкциями о том, как сбросить пароль.",
+                  "info")
+            send_password_recovery_mail(user.id, email)
+        else:
+            flash("Пользователь с такой почтой не найден!", "error")
+    return render_template("send_recovery_message.html", email_form=send_email_form)
 
 
 @bp.route("/recovery/<token>", methods=["GET", "POST"])
 def recovery_password(token):
-    user = check_password_recovery_token(token)
-    if not user:
+    user_id = check_password_recovery_token(token)
+    if not user_id:
         return redirect(url_for("auth.recovery"))
     recovery_password_form = RecoveryPasswordForm()
     if recovery_password_form.validate_on_submit():
@@ -80,5 +84,7 @@ def recovery_password(token):
         if password != repeat_password:
             flash("Пароли не совпадают!", "error")
         else:
-            flash("Пароль успешно изменен", "info")
-    return render_template("auth/recovery_password.html", password_form=recovery_password_form)
+            user = User.get_by_id(user_id)
+            user.change_password(password)
+            return redirect(url_for(".login", section="login"))
+    return render_template("recovery_password.html", password_form=recovery_password_form)

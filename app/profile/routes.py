@@ -31,7 +31,7 @@ def edit_profile():
 def change_password():
     password_settings = ChangePasswordForm()
     if password_settings.validate_on_submit():
-        if (check_password_hash(current_user["password"], password_settings.old_password.data)
+        if (check_password_hash(current_user.password_hash, password_settings.old_password.data)
                 and password_settings.new_password.data == password_settings.new_password_repeat.data):
             if password_settings.new_password.data == password_settings.new_password_repeat.data:
                 current_user.change_password(password_settings.new_password.data)
@@ -40,7 +40,7 @@ def change_password():
                 return redirect(url_for("profile.edit_profile", section="password"))
         else:
             flash("Неправильный пароль", "wrong_password")
-            return redirect(url_for("edit_profile", section="password"))
+            return redirect(url_for("profile.edit_profile", section="password"))
         return redirect(url_for('profile.profile', profile_id=current_user.id))
     else:
         return redirect(url_for("profile.edit_profile", section="password"))
@@ -60,9 +60,9 @@ def change_data():
             return redirect(url_for("profile.edit_profile", section="general"))
 
         if new_avatar.filename != '':
-            new_avatar.save(f"static\\media\\avatars\\{current_user.get_id()}.png")
+            new_avatar.save(f"app\\static\\media\\avatars\\{current_user.get_id()}.png")
         current_user.change_login(new_login)
         current_user.change_email(new_email)
-        return redirect(url_for('profile.profile', profile_id=current_user.get_id()))
+        return redirect(url_for('profile.get_profile', profile_id=current_user.id))
     else:
         return redirect(url_for("profile.edit_profile", section="general"))

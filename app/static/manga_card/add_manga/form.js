@@ -16,8 +16,8 @@ function addSelectedOption(option){
     `, "text/html").querySelector(".selected-option");
 
     selectOption.querySelector(".selected-option__image").addEventListener("click", function (event){
-        let selectedOption = option.closest(".selected-option");
-        let select = option.closest(".inputs-select");
+        let selectedOption = event.target.closest(".selected-option");
+        let select = event.target.closest(".inputs-select");
         option.removeAttribute("selected");
         select.querySelector(`.select-wrapper__option_selected[data-value="${selectedOption.dataset.value}"]`)
             .classList.remove("select-wrapper__option_selected");

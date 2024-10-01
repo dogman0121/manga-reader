@@ -54,15 +54,6 @@ body {
     border-radius: 50%;
 }
 
-.inputs-input {
-    border: 2px solid #B9B9B9;
-    border-radius: 20px;
-    height: 40px;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-}
-
 .setting-option {
     font-size: 18px;
 }

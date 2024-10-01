@@ -1,0 +1,22 @@
+<div class="search hidden">
+    <div class="search__container">
+        <div class="search__header">
+            <div class="search__form">
+                <img src="{{ url_for('static', filename="search/images/search.svg") }}" class="search__search-image">
+                <input class="search__input" placeholder="введите запрос">
+                <img src="{{ url_for('static', filename="search/images/cross.svg") }}" class="search__close_image">
+            </div>
+        </div>
+        <div class="search__main">
+            <div class="search__filters">
+                <div class="search__filter title search__filter_selected">тайтлы</div>
+                <div class="search__filter team">команды</div>
+            </div>
+            <div class="search__results">
+                <div class="results__empty">
+                    По вашему запросу ничего не найдено
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

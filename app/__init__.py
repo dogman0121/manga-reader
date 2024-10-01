@@ -15,6 +15,9 @@ def create_app(config):
     login_manager.init_app(app)
     mail.init_app(app)
 
+    from . import main
+    app.register_blueprint(main.bp, url_prefix="/")
+
     from . import auth
     app.register_blueprint(auth.bp, url_prefix="/auth")
 
@@ -33,10 +36,15 @@ def create_app(config):
     from . import api
     app.register_blueprint(api.bp, url_prefix="/api")
 
+    from . import team
+    app.register_blueprint(team.bp, url_prefix="/team")
+
+    from . import search
+    app.register_blueprint(search.bp, url_prefix="/search")
+
     return app
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.get_by_id(user_id)
-

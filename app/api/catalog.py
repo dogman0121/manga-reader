@@ -58,7 +58,6 @@ def get_catalog():
             "title.rating": title.rating,
             "rating_votes": title.rating_votes,
             "author": title.author,
-            "translator": title.translator
         }
         titles_list.append(title_dict)
     return jsonify(titles_list)

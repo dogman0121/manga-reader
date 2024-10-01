@@ -9,11 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='base/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search/search.css')  }}">
     {% block header %}
     {% endblock %}
     <title>Title</title>
 </head>
 <body>
+    {% include "search.html" %}
     <header>
         <div class="content__inner">
             <div class="header__inner">
@@ -23,7 +25,7 @@
                         <a class="nav__item" href="/catalog">
                             <span class="nav__text">каталог</span>
                         </a>
-                        <a class="nav__item">
+                        <a class="nav__item nav__search">
                             <img class="nav__icon" src="{{ url_for('static', filename='base/images/search.svg') }}">
                             <span class="nav__text nav__icon-text">поиск</span>
                         </a>
@@ -32,29 +34,29 @@
                 <div class="nav-right">
                     <nav>
                         {% if user.is_authenticated %}
-                        <div class="dropdown-panel">
-                            <div class="nav__item dropdown-button">
-                                <img class="user-avatar" src="{{ user.avatar }}">
+                            <div class="dropdown-panel">
+                                <div class="nav__item dropdown-button">
+                                    <img class="user-avatar" src="{{ user.avatar }}">
+                                </div>
+                                <div class="dropdown-menu profile-menu" hidden>
+                                    <a href="{{ url_for('profile.get_profile', profile_id=user.id) }}" class="profile-menu__option">
+                                        <img src="{{ url_for('static', filename='base/images/profile.svg') }}" class="profile-menu__icon">
+                                        Профиль
+                                    </a>
+                                    <a href="{{ url_for('profile.edit_profile') }}" class="profile-menu__option">
+                                        <img src="{{ url_for('static', filename='base/images/settings.svg') }}" class="profile-menu__icon">
+                                        Настройки
+                                    </a>
+                                    <a href="{{ url_for('auth.logout') }}" class="profile-menu__option">
+                                        <img src="{{ url_for('static', filename='base/images/exit.svg') }}" class="profile-menu__icon">
+                                        Выйти
+                                    </a>
+                                </div>
                             </div>
-                            <div class="dropdown-menu profile-menu" hidden>
-                                <a href="{{ url_for('profile.get_profile', profile_id=user.id) }}" class="profile-menu__option">
-                                    <img src="{{ url_for('static', filename='base/images/profile.svg') }}" class="profile-menu__icon">
-                                    Профиль
-                                </a>
-                                <a href="{{ url_for('profile.edit_profile') }}" class="profile-menu__option">
-                                    <img src="{{ url_for('static', filename='base/images/settings.svg') }}" class="profile-menu__icon">
-                                    Настройки
-                                </a>
-                                <a href="{{ url_for('auth.logout') }}" class="profile-menu__option">
-                                    <img src="{{ url_for('static', filename='base/images/exit.svg') }}" class="profile-menu__icon">
-                                    Выйти
-                                </a>
-                            </div>
-                        </div>
                         {% else %}
-                        <a class="nav__item" id="profile" href="{{ url_for('auth.login_form')}}">
-                            <img class="empty-icon" src="{{ url_for("static", filename="media/avatars/default.png") }}">
-                        </a>
+                            <a class="nav__item" id="profile" href="{{ url_for('auth.login_form')}}">
+                                <img class="empty-icon" src="{{ url_for("static", filename="media/avatars/default.png") }}">
+                            </a>
                         {% endif %}
                     </nav>
                 </div>
@@ -70,10 +72,44 @@
         </div>
     </main>
     <footer>
-
+        <div class="content__inner">
+            <div class="footer__inner">
+                <div class="footer__section footer__section_main">
+                    <div class="footer__sub-section">
+                        <span class="site-name">KANWOO</span>
+                        <span class="feedback">Обратная связь</span>
+                    </div>
+                    <div class="footer__sub-section">
+                        <span class="contact-label">Почта для связи</span>
+                        <span class="contact-email">contact@kanwoo.ru</span>
+                    </div>
+                </div>
+                <div class="footer__section">
+                    <span class="footer-section__header">Полезные статьи</span>
+                    <div class="footer-section__main">
+                        <span class="footer-section__item">Как создать мангу</span>
+                        <span class="footer-section__item">Как создать команду</span>
+                        <span class="footer-section__item">Как добавить главу</span>
+                    </div>
+                </div>
+                <div class="footer__section">
+                    <span class="footer-section__header">Инфо</span>
+                    <div class="footer-section__main">
+                        <span class="footer-section__item">Пользовательское соглашение</span>
+                        <span class="footer-section__item">Для правообладателей</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </footer>
+    <script type="application/json">
+        {% block json_data %}
+        {% endblock %}
+    </script>
     {% block footer %}
     {% endblock %}
     <script src="{{ url_for('static', filename='base/dropdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='search/search.js') }}"></script>
+    <script src="{{ url_for('static', filename='base/show-search.js') }}"></script>
 </body>
 </html>

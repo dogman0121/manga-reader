@@ -1,0 +1,11 @@
+.inputs-input, .select-wrapper__selected-option, textarea {
+    border: 2px solid #B9B9B9;
+    border-radius: 14px;
+    width: 100%;
+    padding: 10px 16px 12px;
+    margin-top: 4px;
+}
+
+.inputs-input__input {
+    width: 100%;
+}

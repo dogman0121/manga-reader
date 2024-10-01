@@ -2,8 +2,7 @@ from flask import render_template, redirect, url_for, request
 from app.models import Title, Genre, Status, Type
 from flask_login import current_user
 from app.manga_card import bp
-from app.manga_card.forms import AddingMangaForm
-import os
+from app.manga_card.forms import AddMangaForm
 
 
 @bp.route("/<int:title_id>")
@@ -29,7 +28,7 @@ def manga_page(title_id):
 
 @bp.route("/add", methods=["GET", "POST"])
 def add_manga():
-    adding_manga_form = AddingMangaForm()
+    adding_manga_form = AddMangaForm()
     adding_manga_form.genres.choices = [[i.id, i.name] for i in Genre.get_all()]
     adding_manga_form.status.choices = [[i.id, i.name] for i in Status.get_all()]
     adding_manga_form.type.choices = [[i.id, i.name] for i in Type.get_all()]
@@ -50,17 +49,19 @@ def add_manga():
 
         if request.files["poster"].filename != '':
             request.files["poster"].save(f"app/static/media/posters/{title.id}.jpg")
+
         return redirect(url_for("manga.manga_page", title_id=title.id))
 
     return render_template("manga_card/add_manga.html",
                            user=current_user,
-                           form=adding_manga_form)
+                           form=adding_manga_form,
+                           mode="add")
 
 
 @bp.route("/<int:title_id>/edit", methods=["GET", "POST"])
 def edit_manga(title_id):
     title = Title.get_by_id(title_id)
-    adding_manga_form = AddingMangaForm()
+    adding_manga_form = AddMangaForm()
     adding_manga_form.genres.choices = [[i.id, i.name] for i in Genre.get_all()]
     adding_manga_form.status.choices = [[i.id, i.name] for i in Status.get_all()]
     adding_manga_form.type.choices = [[i.id, i.name] for i in Type.get_all()]
@@ -94,4 +95,5 @@ def edit_manga(title_id):
     return render_template("manga_card/add_manga.html",
                            user=current_user,
                            form=adding_manga_form,
-                           title=title)
+                           title=title,
+                           mode="edit")

@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chapters/chapters/style.css') }}">
+    {% block header %}
+    {% endblock %}
+    <title>Title</title>
+</head>
+<body>
+    <header>
+        <div class="content__inner">
+            <div class="header__inner">
+                <nav class="nav-left">
+                    {% if referer %}
+                        <a href="{{ referer }}">
+                            <img class="nav__icon" src="{{ url_for('static', filename='chapters/chapters/images/image33.svg') }}">
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('index') }}">
+                            <img class="nav__icon" src="{{ url_for('static', filename='chapters/chapters/images/image33.svg') }}">
+                        </a>
+                    {% endif %}
+                </nav>
+                <nav class="nav-middle">
+                    <div class="chapter">Том {{ chapter.tome }} Глава {{ chapter.id}}</div>
+                </nav>
+                <nav class="nav-right">
+                    <img class="nav__icon" src="{{ url_for('static', filename='chapters/chapters/images/image35.svg') }}">
+                </nav>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="content__inner">
+            <div class="main__inner">
+                {% for image in images %}
+                    <div class="img-container">
+                        <img src={{ image }}>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>

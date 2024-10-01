@@ -41,6 +41,11 @@ function previewPhoto(image_url) {
             let file = new File([blob], 'image.png', {type:"image/png"});
             dataTransfer.items.add(file);
             fileInput.files = dataTransfer.files;
+            console.log(fileInput.files);
+            console.log(fileInput);
+            console.log(file);
+            console.log(dataTransfer);
+
         })
 
         modal.close();

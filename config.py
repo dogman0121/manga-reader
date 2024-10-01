@@ -1,5 +1,6 @@
 import os
 
+
 class Config:
     SECRET_KEY = "x#g@LauJd*tTbH&fZX5Cc4tBSW&Vu#s@"
     JSON_AS_ASCII = False

@@ -7,9 +7,12 @@ class Chapters {
         if(this.chapters.length !== 0) {
             chaptersBlockHtml = `
                 <div id="chapters" class="section">
-                    <div id="chapters__header">
+                    <div class="chapters__header chapters-header">
                         Список глав
-                        <img id="chapters__filter" src="/static/manga_card/images/filter.svg">
+                        <div class="chapters-header__buttons">
+                            <img class="add-chapter" src="/static/manga_card/manga_card/images/plus.png">
+                            <img id="chapters__filter" src="/static/manga_card/manga_card/images/filter.svg">
+                        </div>
                     </div>
                     <div class="chapters__list"></div>
                 </div>
@@ -24,6 +27,7 @@ class Chapters {
                             Глав нет
                             </h1>
                             <p class="no-chapters__text">Автор еще не добавил ни одной главы</p>
+                            <a class="no-chapters__add-link"><div class="no-chapters__add-button">Добавить</div></a>
                         </div>
                     </div>
                 `;

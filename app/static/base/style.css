@@ -132,3 +132,72 @@ a {
     height: 20px;
     margin-right: 5px;
 }
+
+footer {
+    margin-top: 20px;
+    background-color: #FFD600;
+}
+
+.footer__inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding: 30px 0 40px;
+}
+
+.footer__section_main {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer__sub-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer__sub-section + .footer__sub-section {
+    margin-top: 30px;
+}
+
+.footer__section {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-section__main {
+    display: flex;
+    flex-direction: column;
+}
+
+.site-name {
+    font-size: 32px;
+}
+
+.feedback {
+    font-size: 16px;
+}
+
+.contact-label {
+    font-size: 24px;
+}
+
+.contact-email {
+    font-size: 16px;
+}
+
+.footer-section__header {
+    font-size: 24px;
+}
+
+.footer-section__main {
+    margin-top: 20px;
+}
+
+.footer-section__item {
+    font-size: 16px;
+}
+
+.footer-section__item + .footer-section__item {
+    margin-top: 10px;
+}
