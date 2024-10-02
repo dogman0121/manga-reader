@@ -41,7 +41,7 @@ def change_password():
         else:
             flash("Неправильный пароль", "wrong_password")
             return redirect(url_for("profile.edit_profile", section="password"))
-        return redirect(url_for('profile.profile', profile_id=current_user.id))
+        return redirect(url_for('profile.get_profile', profile_id=current_user.id))
     else:
         return redirect(url_for("profile.edit_profile", section="password"))
 

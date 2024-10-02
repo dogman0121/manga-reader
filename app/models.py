@@ -78,7 +78,7 @@ class User(UserMixin):
             return url_for("static", filename=f"media/avatars/default.png")
 
     def add(self):
-        cursor.execute("INSERT INTO users(login, email, password_hash, role) VALUES(?, ?, ?, ?) ",
+        cursor.execute("INSERT INTO users(login, email, password, role) VALUES(?, ?, ?, ?) ",
                        (self.login, self.email, self.password_hash, self.role,))
         connection.commit()
 
