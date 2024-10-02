@@ -51,9 +51,10 @@ class User(UserMixin):
     def get_by_login(login: str):
         user_row = cursor.execute(""" SELECT * FROM users WHERE login=? """,
                                   (login,)).fetchone()
-        user = User.create_from_sql(user_row)
-        user.avatar = user.get_avatar()
-        return user
+        if user_row:
+            user = User.create_from_sql(user_row)
+            user.avatar = user.get_avatar()
+            return user
 
     @staticmethod
     def get_by_id(user_id: int):
