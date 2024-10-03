@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: build-image
-      run: docker build -t manga-reader
+      run: docker build -t manga-reader .
 
   deploy:
     name: deploy
