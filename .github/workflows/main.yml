@@ -16,7 +16,7 @@ jobs:
     needs: test
     steps:
       - name: Stop and remove containers, networks
-        run: docker-compose -f /home/runner/work/manga-reader/manga-reader/docker-compose.yml down
+        run: docker-compose down
       - name: Remove unused data
         run: docker system prune -a -f
 
@@ -32,4 +32,4 @@ jobs:
 
     - name: deploy-container
       run: |
-        docker-compose up -f /home/runner/work/manga-reader/manga-reader/docker-compose.yml -d
+        docker-compose up -d
