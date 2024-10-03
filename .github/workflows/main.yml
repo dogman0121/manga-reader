@@ -5,24 +5,31 @@ on:
   workflow_dispatch:
   
 jobs:
-  build:
-    name: build
-    runs-on: self-hosted
-
+  test:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - name: checkout repo
+        uses: actions/checkout@v3
 
-    - name: build-image
-      run: |
-        docker build -t manga-reader .
+  prepare-environment:
+      runs-on: self-hosted
+      needs: built
+      steps:
+        - name: Stop and remove containers, networks
+          run: docker-compose down
+        - name: Remove unused data
+          run: docker system prune -a -f
 
   deploy:
     name: deploy
     runs-on: self-hosted
 
-    needs: build
+    needs: prepare-environment
 
     steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+
     - name: deploy-container
       run: |
-        docker run --rm -d -p 8000:8000 -v /var/www/kanwoo-manga.ru:/flask-app/ manga-reader
+        docker compose up -d
