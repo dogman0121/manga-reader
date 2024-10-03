@@ -10,8 +10,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: update repo
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: build-image
       run: |
