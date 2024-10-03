@@ -6,7 +6,7 @@ import os
 from flask import url_for
 
 
-connection = sqlite3.connect("database.db", check_same_thread=False)
+connection = sqlite3.connect("database/database.db", check_same_thread=False)
 connection.row_factory = sqlite3.Row
 cursor = connection.cursor()
 
