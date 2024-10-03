@@ -598,11 +598,10 @@ class Rating:
         cursor.execute(""" DELETE FROM rating WHERE user_id=? AND title_id=? """, (self.user_id, self.title_id,))
         connection.commit()
 
-    def update(self, new_rating):
+    def update(self):
         cursor.execute(""" UPDATE rating SET rating=? WHERE user_id=? AND title_id=? """,
-                       (new_rating, self.user_id, self.title_id,))
+                       (self.rating, self.user_id, self.title_id,))
         connection.commit()
-        self.rating = new_rating
 
 
 class Save:
