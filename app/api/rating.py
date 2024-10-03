@@ -9,9 +9,12 @@ from app.models import Rating
 def add_rating():
     title_id = request.json["title_id"]
     rating = request.json["rating"]
-    rating_obj = Rating(user_id=current_user.id, title_id=title_id, rating=rating)
-    rating_obj.add()
-    return {"status": "ok"}
+    if 0 <= rating <= 10:
+        rating_obj = Rating(user_id=current_user.id, title_id=title_id, rating=rating)
+        rating_obj.add()
+        return {"status": "ok"}
+    else:
+        return {"status": "error"}
 
 
 @bp.route("/rating", methods=["UPDATE"])
@@ -19,9 +22,12 @@ def add_rating():
 def update_rating():
     title_id = request.json["title_id"]
     rating = request.json["rating"]
-    rating_obj = Rating(user_id=current_user.id, title_id=title_id)
-    rating_obj.update(rating)
-    return {"status": "ok"}
+    if 0 <= rating <= 10:
+        rating_obj = Rating(user_id=current_user.id, title_id=title_id, rating=rating)
+        rating_obj.update()
+        return {"status": "ok"}
+    else:
+        return {"status": "error"}
 
 
 @bp.route("/rating", methods=["DELETE"])
