@@ -12,13 +12,13 @@ jobs:
         uses: actions/checkout@v3
 
   prepare-environment:
-      runs-on: self-hosted
-      needs: built
-      steps:
-        - name: Stop and remove containers, networks
-          run: docker-compose down
-        - name: Remove unused data
-          run: docker system prune -a -f
+    runs-on: self-hosted
+    needs: test
+    steps:
+      - name: Stop and remove containers, networks
+        run: docker-compose down
+      - name: Remove unused data
+        run: docker system prune -a -f
 
   deploy:
     name: deploy
