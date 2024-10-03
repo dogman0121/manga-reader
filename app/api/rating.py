@@ -8,7 +8,7 @@ from app.models import Rating
 @login_required
 def add_rating():
     title_id = request.json["title_id"]
-    rating = request.json["rating"]
+    rating = int(request.json["rating"])
     if 0 <= rating <= 10:
         rating_obj = Rating(user_id=current_user.id, title_id=title_id, rating=rating)
         rating_obj.add()
