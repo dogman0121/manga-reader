@@ -19,6 +19,8 @@ jobs:
     name: deploy
     runs-on: self-hosted
 
+    needs: build
+
     steps:
     - name: deploy-container
       run: docker run --rm -d -p 8000:8000 --name manga-reader -v /var/www/kanwoo-manga.ru:/flask-app/ manga-reader
