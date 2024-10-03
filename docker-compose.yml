@@ -7,4 +7,4 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - /var/www/kanwoo-manga.ru/resources:/flask-app/
+      - /var/www/kanwoo-manga.ru/resources/media:/flask-app/static/media/
