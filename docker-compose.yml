@@ -8,3 +8,4 @@ services:
       - 8000:8000
     volumes:
       - /var/www/kanwoo-manga.ru/resources/media:/flask-app/static/media/
+      - /var/www/kanwoo-manga.ru/resources/database:/flask-app/
