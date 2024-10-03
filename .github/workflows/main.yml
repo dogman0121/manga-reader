@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: build-image
       run: |
-        cd /var/www/kanwoo-manga.ru
+        cd ..
         docker build -t manga-reader .
 
   deploy:
