@@ -60,7 +60,7 @@ def change_data():
             return redirect(url_for("profile.edit_profile", section="general"))
 
         if new_avatar.filename != '':
-            new_avatar.save(f"app\\static\\media\\avatars\\{current_user.get_id()}.png")
+            new_avatar.save(f"app/static/media/avatars/{current_user.id}.png")
         current_user.change_login(new_login)
         current_user.change_email(new_email)
         return redirect(url_for('profile.get_profile', profile_id=current_user.id))
