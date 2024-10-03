@@ -7,5 +7,4 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - .:/flask-app/
-      - /var/db/database.db:/flask-app/
+      - /var/www/kanwoo-manga.ru/resources:/flask-app/
