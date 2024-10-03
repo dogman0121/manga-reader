@@ -2,7 +2,7 @@ version: "3"
 
 services:
   manga-reader:
-    build: manga-reader/
+    build: .
     restart: always
     ports:
       - 8000:8000
