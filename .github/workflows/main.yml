@@ -5,21 +5,18 @@ on:
   workflow_dispatch:
   
 jobs:
-  run_pull:
-    name: run pull
-    runs-on: ubuntu-latest
-    
+  build:
+    name: build
+    runs-on: self-hosted
+
     steps:
-    - name: install ssh keys
-      # check this thread to understand why its needed:
-      # https://stackoverflow.com/a/70447517
-      run: |
-        install -m 600 -D /dev/null ~/.ssh/id_rsa
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-    - name: connect and pull
-      run: |
-        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo $(ls)"
-        ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/wwww/kanwoo-manga.ru && git checkout main && git pull && exit"
-    - name: cleanup
-      run: rm -rf ~/.ssh
+    - name: build-image
+      run: docker build -t manga-reader
+
+  deploy:
+    name: deploy
+    runs-on: self-hosted
+
+    steps:
+    - name: deploy-container
+      run: docker run --rm -d -p 8000:8000 --name manga-reader -v /var/www/kanwoo-manga.ru:/flask-app/ manga-reader
