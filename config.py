@@ -5,8 +5,7 @@ class Config:
     SECRET_KEY = "x#g@LauJd*tTbH&fZX5Cc4tBSW&Vu#s@"
     JSON_AS_ASCII = False
 
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.getcwd() + "\\database\\database.db"
-    print(SQLALCHEMY_DATABASE_URI)
+    SQLALCHEMY_DATABASE_URI = 'postgresql://admin:123456@217.144.189.150:5432/manga-reader'
 
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587

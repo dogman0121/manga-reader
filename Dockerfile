@@ -7,9 +7,8 @@ COPY . /flask-app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENV FLASK_APP=manage.py
 
-RUN flask db upgrade
+RUN flask --app manage db upgrade
 
 EXPOSE 8000
 

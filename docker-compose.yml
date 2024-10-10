@@ -1,11 +1,11 @@
-version: "3"
+version: "3.8"
 
 services:
   manga-reader:
+    container_name: manga-reader
     build: .
     restart: always
     ports:
       - 8000:8000
     volumes:
       - /var/www/kanwoo-manga.ru/resources/media/:/flask-app/app/static/media/
-      - /var/www/kanwoo-manga.ru/resources/database/:/flask-app/database/
