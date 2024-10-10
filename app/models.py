@@ -214,10 +214,10 @@ class Chapter(db.Model):
     __tablename__ = "chapters"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False, unique=True)
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(nullable=True)
     title_id: Mapped[int] = mapped_column(ForeignKey("titles.id"), nullable=False)
     title: Mapped["Title"] = relationship(back_populates="chapters")
-    tome: Mapped[int]
+    tome: Mapped[int] = mapped_column(nullable=False)
     chapter: Mapped[int] = mapped_column(nullable=False)
     date: Mapped[datetime] = mapped_column(default=lambda: datetime.utcnow().strftime("%Y-%m-%d"))
 
