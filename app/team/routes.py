@@ -8,7 +8,8 @@ from app.models import Team, User
 @bp.route("/<int:team_id>")
 def get_team(team_id):
     team = Team.get_by_id(team_id)
-    print(team.get_poster())
+    print(team.members)
+    print(team.leader)
     return render_template("team/team.html", user=current_user, team=team)
 
 
@@ -24,6 +25,9 @@ def add_team():
         team.discord_link = form.discord_link.data
         team.telegram_link = form.telegram_link.data
         team.add()
+
+        current_user.team_id = team.id
+        current_user.update()
 
         if request.files["poster"].filename != '':
             request.files["poster"].save(f"app/static/media/teams/{team.id}.jpg")

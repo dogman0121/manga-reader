@@ -22,7 +22,7 @@
             <div class="members__list">
                 {% for member in team.members %}
                     <a class="member" href="{{ url_for("profile.get_profile", profile_id=member.id) }}">
-                        <img class="member__avatar" src="{{ member.avatar }}">
+                        <img class="member__avatar" src="{{ member.get_avatar() }}">
                         <span class="member__name">{{ member.login }}</span>
                     </a>
                 {% endfor %}
