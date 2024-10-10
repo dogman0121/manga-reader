@@ -3,3 +3,4 @@
 venv/
 database/database.db
 app/static/media/
+migrations/
