@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
     password: Mapped[str] = mapped_column(nullable=False)
     role: Mapped[int] = mapped_column(default=1, nullable=False)
     team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
-    team: Mapped["Team"] = relationship(uselist=False, back_populates="members", primaryjoin="User.team_id == Team.id")
+    team: Mapped["Team"] = relationship(uselist=False, back_populates="members", primaryjoin="users.team_id == teams.id")
     comments: Mapped["Comment"] = relationship(back_populates="user")
     saves: Mapped[list["Title"]] = relationship(uselist=True, secondary="saves")
 
@@ -197,8 +197,8 @@ class Genre(db.Model):
 ratings = Table(
     "ratings",
     db.metadata,
-    Column("user_id", Integer(), ForeignKey("User.id"), nullable=False),
-    Column("title_id", Integer(), ForeignKey("Title.id"), nullable=False),
+    Column("user_id", Integer(), ForeignKey("users.id"), nullable=False),
+    Column("title_id", Integer(), ForeignKey("titles.id"), nullable=False),
     Column("rating", Integer(), nullable=False)
 )
 
