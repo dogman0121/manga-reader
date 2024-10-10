@@ -45,7 +45,7 @@ def create_app(config):
     app.register_blueprint(api.bp, url_prefix="/api")
 
     from . import team
-    app.register_blueprint(team.bp, url_prefix="/team")
+    app.register_blueprint(team.bp, name="team_page", url_prefix="/team")
 
     from . import search
     app.register_blueprint(search.bp, url_prefix="/search")
