@@ -20,6 +20,9 @@ def create_app(config):
     migrate.init_app(app, db)
     mail.init_app(app)
 
+    from . import admin
+    admin.admin.init_app(app)
+
     from . import main
     app.register_blueprint(main.bp, url_prefix="/")
 
