@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_method
 from sqlalchemy import exists, ForeignKey, Table, Column, Integer, Select, and_, func, insert, delete, update
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import Optional
 from app import db, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
@@ -25,7 +26,7 @@ class User(db.Model, UserMixin):
     email: Mapped[str] = mapped_column(nullable=True, unique=True)
     password: Mapped[str] = mapped_column(nullable=False)
     role: Mapped[int] = mapped_column(default=1, nullable=False)
-    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
+    team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("teams.id"), nullable=True)
     team: Mapped["Team"] = relationship(uselist=False, back_populates="members", primaryjoin="User.team_id == Team.id")
     comments: Mapped["Comment"] = relationship(back_populates="user")
     saves: Mapped[list["Title"]] = relationship(uselist=True, secondary="saves")
