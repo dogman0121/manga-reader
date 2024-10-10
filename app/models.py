@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
     password: Mapped[str] = mapped_column(nullable=False)
     role: Mapped[int] = mapped_column(default=1, nullable=False)
     team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
-    team: Mapped["Team"] = relationship(uselist=False, back_populates="members", primaryjoin="users.team_id == teams.id")
+    team: Mapped["Team"] = relationship(uselist=False, back_populates="members", primaryjoin="User.team_id == Team.id")
     comments: Mapped["Comment"] = relationship(back_populates="user")
     saves: Mapped[list["Title"]] = relationship(uselist=True, secondary="saves")
 
@@ -259,6 +259,7 @@ class Title(db.Model):
 
     @staticmethod
     def get_by_id(title_id):
+        print(title_id)
         return db.session.get(Title, title_id)
 
     @hybrid_method

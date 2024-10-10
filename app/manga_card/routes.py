@@ -8,6 +8,7 @@ from app.manga_card.forms import AddMangaForm
 @bp.route("/<int:title_id>")
 def manga_page(title_id):
     title = Title.get_by_id(title_id)
+    print(title)
     rating_s, rating_c = title.get_rating()
     try:
         rating = round(rating_s / rating_c, 2)
