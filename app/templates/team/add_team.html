@@ -16,7 +16,7 @@
             <div class="form__left">
                 <label class="form__poster poster">
                     {% if team %}
-                        <img class="poster__preview" src="{{ team.poster }}">
+                        <img class="poster__preview" src="{{ team.get_poster() }}">
                     {% else %}
                         <img class="poster__preview">
                     {% endif %}

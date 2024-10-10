@@ -8,22 +8,19 @@ from app.manga_card.forms import AddMangaForm
 @bp.route("/<int:title_id>")
 def manga_page(title_id):
     title = Title.get_by_id(title_id)
+    rating_s, rating_c = title.get_rating()
+    rating = round(rating_s / rating_c, 2)
     title.add_view()
-    chapters = title.get_chapters()
-    comments_count = title.get_comments_count()
-    if current_user.is_authenticated:
-        user_rating = title.get_user_rating(current_user)
-        saved = title.is_saved(current_user)
-    else:
-        user_rating = None
-        saved = False
+    user_rating = title.get_user_rating(current_user) if current_user.is_authenticated else None
+    is_saved = title.is_saved_by_user(current_user) if current_user.is_authenticated else False
     return render_template('manga_card/manga_card.html',
-                           chapters=chapters,
                            user=current_user,
                            title=title,
-                           comments_count=comments_count,
+                           rating_sum=rating_s,
+                           rating_count=rating_c,
+                           rating=rating,
                            user_rating=user_rating,
-                           saved=saved)
+                           saved=is_saved)
 
 
 @bp.route("/add", methods=["GET", "POST"])

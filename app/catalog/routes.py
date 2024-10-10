@@ -1,5 +1,7 @@
-from flask import request, render_template, jsonify
-from app.models import Title, Genre, Tag, Status, Type
+import sqlalchemy
+from flask import request, render_template
+from app.models import Title, Genre, Status, Type
+from app import db
 from flask_login import current_user
 import json
 from app.catalog import bp
@@ -7,63 +9,21 @@ from app.catalog import bp
 
 @bp.route("/")
 def catalog_page():
-    types = [int(i) for i in request.args.getlist('types')]
-    types = None if not types else types
-
-    genres = [int(i) for i in request.args.getlist('genres')]
-    genres = None if not genres else genres
-
-    tags = [int(i) for i in request.args.getlist('tags')]
-    tags = None if not tags else tags
-
-    status = [int(i) for i in request.args.getlist('status')]
-    status = None if not status else status
-
-    adult = [int(i) for i in request.args.getlist('adult')]
-    adult = None if not adult else adult
-
-    year_by = request.args.get("year_by")
-    year_by = int(year_by) if year_by else None
-
-    year_to = request.args.get("year_to")
-    year_to = int(year_to) if year_to else None
-
-    rating_by = request.args.get("rating_by")
-    rating_by = int(rating_by) if rating_by else None
-
-    rating_to = request.args.get("rating_to")
-    rating_to = int(rating_to) if rating_to else None
-
-    sort = request.args.get("sort_by")
-    sort = int(sort) if sort else None
-
-    page = request.args.get("page")
-    page = int(page) if sort else None
-
-    titles = Title.get_with_filter(types, genres, tags, status, adult, rating_by, rating_to, year_by, year_to, sort, page)
-    titles_list = []
-    for title in titles:
-        title_dict = {
-            "id": title.id,
-            "type": title.type.name,
-            "status": title.status.name,
-            "name_russian": title.name_russian,
-            "name_english": title.name_english,
-            "name_languages": title.name_languages,
-            "poster": title.poster,
-            "description": title.description,
-            "genres": [{"id": i.id, "name": i.name} for i in title.genres],
-            "year": title.year,
-            "views": title.views,
-            "saves": title.saves,
-            "title.rating": title.rating,
-            "rating_votes": title.rating_votes,
-            "author": title.author,
-        }
-        titles_list.append(title_dict)
-
-    titles_json = json.dumps(titles_list, ensure_ascii=False)
+    types = [Type.get_by_id(i) for i in request.args.getlist("type")]
+    statuses = [Status.get_by_id(i) for i in request.args.getlist("status")]
+    genres = [Genre.get_by_id(i) for i in request.args.getlist("genres")]
+    adult = [int(i) for i in request.args.getlist("adult")]
+    year_from = int(request.args.get("year_by") or 0)
+    year_to = int(request.args.get("year_to") or 10000)
+    rating_from = int(request.args.get("rating_by") or 0)
+    rating_to = int(request.args.get("rating_to") or 10)
+    sort = int(request.args.get("sort_by") or 0)
+    page = int(request.args.get("page") or 0)
+    titles = Title.get_with_filters(types=types, statuses=statuses, genres=genres, year_from=year_from, year_to=year_to,
+                                    page=page, rating_from=rating_from, rating_to=rating_to)
+    titles_json = json.dumps([i.to_dict() for i in titles], ensure_ascii=False)
     return render_template("catalog.html", user=current_user, titles=titles,
-                           titles_json=titles_json, genres=Genre.get_all(), types=Type.get_all(),
-                           tags=Tag.get_all(), statuses=Status.get_all())
+                           titles_json=titles_json, genres=db.session.execute(sqlalchemy.Select(Genre)).scalars(),
+                           types=db.session.execute(sqlalchemy.Select(Type)).scalars(),
+                           statuses=db.session.execute(sqlalchemy.Select(Status)).scalars())
 

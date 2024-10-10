@@ -9,9 +9,10 @@ def search():
     query = request.args.get("q")
     params = request.args.get("p")
     if params == "title":
-        res = [i.get_data() for i in Title.search(query)]
+        res = [i.to_dict() for i in Title.search(query)]
+        print(res)
         return jsonify(res)
     elif params == "team":
-        res = [i.get_data() for i in Team.search(query)]
+        res = [i.to_dict() for i in Team.search(query)]
         return jsonify(res)
     return "null"

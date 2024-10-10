@@ -94,7 +94,6 @@ class Select {
 
 let types = new Select(document.querySelector(".type"));
 let genres = new Select(document.querySelector(".genres"));
-let tags = new Select(document.querySelector(".tags"));
 let statuses = new Select(document.querySelector(".status"));
 
 
@@ -103,8 +102,6 @@ document.body.addEventListener("click", function (event){
         types.closeChoices();
     if (genres.isChoicesOpened && !event.target.closest(".genres"))
         genres.closeChoices();
-    if (tags.isChoicesOpened && !event.target.closest(".tags"))
-        tags.closeChoices();
     if (statuses.isChoicesOpened && !event.target.closest(".status"))
         statuses.closeChoices();
 })
@@ -139,13 +136,6 @@ if (genresParams)
         formData.append("genres", genre);
     }
 
-let tagsParams = params['tags'];
-if (tagsParams)
-    for (let tag of tagsParams){
-        tags.addChoice(tag);
-        formData.append("tags", tag);
-    }
-
 let statusesParams = params['status'];
 if (statusesParams)
     for (let status of statusesParams){
@@ -158,6 +148,5 @@ let cleanButton = document.querySelector(".filters__clean");
 cleanButton.addEventListener("click", function (){
     types.cleanChoices();
     genres.cleanChoices();
-    tags.cleanChoices();
     statuses.cleanChoices();
 });

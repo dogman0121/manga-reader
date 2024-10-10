@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content %}
 <div class="profile">
-    <img class="profile__avatar" src="{{ profile.avatar }}">
+    <img class="profile__avatar" src="{{ profile.get_avatar() }}">
     <div class="profile__info">
         <span class="name">{{ profile.login }}</span>
     </div>

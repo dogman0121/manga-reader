@@ -33,16 +33,16 @@
             </div>
             <div class="catalog__grid catalog__grid_square">
                 {% for title in titles %}
-                <a class="catalog__link" href="/manga/{{ title.id }}">
-                <div class="catalog__item title title-square">
-                    <img class="title-square__poster" src="{{ url_for('static', filename='media/posters/' + title['id']|string +'.jpg') }}">
-                    <span class="title-square__data">
-                        <span class="title-square__type">{{ title.type.name }}</span>
-                        <span class="title-square__year">{{ title.year }}</span>
-                    </span>
-                    <p class="title-square__name">{{ title.name_russian }}</p>
-                </div>
-                </a>
+                    <a class="catalog__link" href="/manga/{{ title.id }}">
+                    <div class="catalog__item title title-square">
+                        <img class="title-square__poster" src="{{ url_for('static', filename='media/posters/' + title['id']|string +'.jpg') }}">
+                        <span class="title-square__data">
+                            <span class="title-square__type">{{ title.type.name }}</span>
+                            <span class="title-square__year">{{ title.year }}</span>
+                        </span>
+                        <p class="title-square__name">{{ title.name_russian }}</p>
+                    </div>
+                    </a>
                 {% endfor %}
             </div>
         </div>
@@ -77,19 +77,6 @@
                         <div class="select-list__inner" hidden>
                             {% for genre in genres %}
                             <div class="select-list__option" data-value="{{ genre.id }}">{{ genre.name }}</div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="filter__block select tags" id="tags">
-                    <div class="select__selected selected"></div>
-                    <div class="select__input-block filter__input-block">
-                        <input type="text" class="select__input filter__input" placeholder="Тэги">
-                    </div>
-                    <div class="select__list select-list">
-                        <div class="select-list__inner" hidden>
-                            {% for tag in tags %}
-                            <div class="select-list__option" data-value="{{ tag.id }}">{{ tag.name }}</div>
                             {% endfor %}
                         </div>
                     </div>

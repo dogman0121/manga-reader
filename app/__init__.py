@@ -1,10 +1,13 @@
 from flask import Flask
 from flask_mail import Mail
-from app.models import User
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_login import LoginManager
 
 
 login_manager = LoginManager()
+migrate = Migrate()
+db = SQLAlchemy()
 mail = Mail()
 
 
@@ -13,6 +16,8 @@ def create_app(config):
     app.config.from_object(config)
 
     login_manager.init_app(app)
+    db.init_app(app)
+    migrate.init_app(app, db)
     mail.init_app(app)
 
     from . import main
@@ -43,8 +48,3 @@ def create_app(config):
     app.register_blueprint(search.bp, url_prefix="/search")
 
     return app
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get_by_id(user_id)

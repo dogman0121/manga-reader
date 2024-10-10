@@ -7,8 +7,7 @@ class Comment{
         this.date = commentData.date;
         this.voteUp = commentData.up_votes;
         this.voteDown = commentData.down_votes;
-        this.isVotedByUser = commentData.is_voted_by_user;
-        this.userVoteType = commentData.user_vote_type;
+        this.userVote = commentData.user_vote;
 
         this.element = this.renderElement();
 
@@ -94,11 +93,11 @@ class Comment{
                 <div class="comment__text">${this.text}</div>
                 <div class="comment__reactions">
                     <div class="comment__rating">
-                        <div class="rating__button rating-up${(this.isVotedByUser && this.userVoteType) ? " rating__button_active" : ""}">
+                        <div class="rating__button rating-up${(this.userVote === 1) ? " rating__button_active" : ""}">
                             <img class="rating-up__image" src="../static/manga_card/manga_card/images/rating-up.svg">
                         </div>
                         <span class="rating__text">${this.voteUp - this.voteDown}</span>
-                        <div class="rating__button rating-down${(this.isVotedByUser && !this.userVoteType) ? " rating__button_active" : ""}">
+                        <div class="rating__button rating-down${(this.userVoteType === 0) ? " rating__button_active" : ""}">
                             <img class="rating-down__image" src="../static/manga_card/manga_card/images/rating-down.svg">
                         </div>
                     </div>
@@ -127,25 +126,23 @@ class Comment{
                     let commentRating = this.comment.element.querySelector(".rating__text");
                     let voteUp = this.comment.element.querySelector(".rating-up");
                     let voteDown = this.comment.element.querySelector(".rating-down");
-                    if (this.comment.isVotedByUser){
-                        if (this.comment.userVoteType === 1){
+                    if (this.comment.userVote != null){
+                        if (this.comment.userVote === 1){
                             commentRating.textContent = parseInt(commentRating.textContent) - 1;
-                            this.comment.isVotedByUser = false;
+                            this.comment.userVote = null;
                             voteUp.classList.remove("rating__button_active");
-                            delete this.comment.userVoteType;
                         }
                         else{
                             commentRating.textContent = parseInt(commentRating.textContent) + 2;
                             voteUp.classList.add("rating__button_active");
                             voteDown.classList.remove("rating__button_active");
-                            this.comment.userVoteType = 1;
+                            this.comment.userVote = 1;
                         }
                     }
                     else{
                         commentRating.textContent = parseInt(commentRating.textContent) + 1;
                         voteUp.classList.add("rating__button_active");
-                        this.comment.isVotedByUser = true;
-                        this.comment.userVoteType = 1;
+                        this.comment.userVote = 1;
                     }
                 }
             });
@@ -169,25 +166,23 @@ class Comment{
                     let commentRating = this.comment.element.querySelector(".rating__text");
                     let voteUp = this.comment.element.querySelector(".rating-up");
                     let voteDown = this.comment.element.querySelector(".rating-down");
-                    if (this.comment.isVotedByUser){
-                        if (this.comment.userVoteType === 0){
+                    if (this.comment.userVote != null){
+                        if (this.comment.userVote === 0){
                             commentRating.textContent = parseInt(commentRating.textContent) + 1;
-                            this.comment.isVotedByUser = false;
+                            this.comment.userVote = null;
                             voteDown.classList.remove("rating__button_active");
-                            delete this.comment.userVoteType;
                         }
                         else{
                             commentRating.textContent = parseInt(commentRating.textContent) - 2;
                             voteDown.classList.add("rating__button_active");
                             voteUp.classList.remove("rating__button_active");
-                            this.comment.userVoteType = 0;
+                            this.comment.userVote = 0;
                         }
                     }
                     else{
-                        commentRating.textContent = parseInt(commentRating.textContent) -1;
-                        this.comment.isVotedByUser = true;
+                        commentRating.textContent = parseInt(commentRating.textContent) - 1;
                         voteDown.classList.add("rating__button_active");
-                        this.comment.userVoteType = 0;
+                        this.comment.userVote = 0;
                     }
                 }
             });

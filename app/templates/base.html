@@ -37,7 +37,7 @@
                         {% if user.is_authenticated %}
                             <div class="dropdown-panel">
                                 <div class="nav__item dropdown-button">
-                                    <img class="user-avatar" src="{{ user.avatar }}">
+                                    <img class="user-avatar" src="{{ user.get_avatar() }}">
                                 </div>
                                 <div class="dropdown-menu profile-menu" hidden>
                                     <a href="{{ url_for('profile.get_profile', profile_id=user.id) }}" class="profile-menu__option">

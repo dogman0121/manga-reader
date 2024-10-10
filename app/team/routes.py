@@ -8,9 +8,8 @@ from app.models import Team, User
 @bp.route("/<int:team_id>")
 def get_team(team_id):
     team = Team.get_by_id(team_id)
-    translated_titles = team.get_translations()
-    return render_template("team/team.html", user=current_user, team=team,
-                           translated_titles=translated_titles)
+    print(team.get_poster())
+    return render_template("team/team.html", user=current_user, team=team)
 
 
 @bp.route("/add", methods=["GET", "POST"])
@@ -65,6 +64,8 @@ def leave_team(team_id):
     team = Team.get_by_id(team_id)
     current_user.remove_team()
     if team.leader_id == current_user.id:
+        for member in team.get_members():
+            member.remove_team()
         team.delete()
         return redirect(url_for("profile.get_profile", profile_id=current_user.id))
     return redirect(url_for("team.get_team", team_id=team_id))

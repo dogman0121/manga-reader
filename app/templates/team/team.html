@@ -5,8 +5,8 @@
 {% block content %}
     <div class="left-side">
         <div class="poster">
-            {% if team.poster %}
-                <img class="poster__image" src="{{ team.poster }}">
+            {% if team.get_poster() %}
+                <img class="poster__image" src="{{ team.get_poster() }}">
             {% else %}
                 <div class="poster__no-poster"></div>
             {% endif %}
@@ -20,7 +20,7 @@
         <div class="members">
             <h3 class="members__header">Участники</h3>
             <div class="members__list">
-                {% for member in team.get_members() %}
+                {% for member in team.members %}
                     <a class="member" href="{{ url_for("profile.get_profile", profile_id=member.id) }}">
                         <img class="member__avatar" src="{{ member.avatar }}">
                         <span class="member__name">{{ member.login }}</span>
@@ -58,9 +58,9 @@
         <div class="titles">
             <h2 class="titles__header">Переводы</h2>
             <div class="titles__list">
-                {% for title in translated_titles %}
-                    <a class="titles__item" src="{{ url_for("manga.manga_card", title_id=title.id) }}">
-                        <img class="titles__poster" src="{{ title.poster }}">
+                {% for title in team.translations %}
+                    <a class="titles__item" src="{{ url_for("manga.manga_page", title_id=title.id) }}">
+                        <img class="titles__poster" src="{{ title.get_poster() }}">
                         <span class="titles__name">{{ title.name }}</span>
                     </a>
                 {% endfor %}

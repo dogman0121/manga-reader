@@ -7,13 +7,13 @@
     {% if user.is_authenticated %}
     let user_id = {{ user.id }};
     {% endif %}
-    let commentsCount = {{ comments_count }};
+    let commentsCount = {{ title.comments | length }};
 </script>
 <title>{{ title.name_russian }}</title>
 {% endblock %}
 {% block content %}
 <div id="left-side">
-    <img id="poster" src="{{ title.poster }}">
+    <img id="poster" src="{{ title.get_poster() }}">
     {% if user.is_authenticated and user.role > 1 %}
         <a class="edit-button" href="{{ url_for("manga.edit_manga", title_id=title.id) }}">
             Редактировать
@@ -68,7 +68,7 @@
                 <li class="stats-option rating">
                     <div class="stats-option__header">
                         <img class="stats-option__icon" src="{{ url_for('static', filename='manga_card/manga_card/images/rating.svg') }}">
-                        <span class="stats-option__text">{{title.rating}}</span>
+                        <span class="stats-option__text">{{ rating }}</span>
                         {% if user_rating %}
                             {% if user_rating < 4 %}
                                 <span class="user-rating user-rating_bad" data-stars="{{ user_rating }}">
@@ -84,13 +84,13 @@
                         {% endif %}
                     </div>
                     <div class="stats-option__caption">
-                        (голосов: <span class="stats-option__votes">{{ title.rating_votes}}</span>)
+                        (голосов: <span class="stats-option__votes">{{ rating_count }}</span>)
                     </div>
                 </li>
                 <li class="stats-option saved">
                     <div class="stats-option__header">
                         <img class="stats-option__icon" src="{{ url_for('static', filename='manga_card/manga_card/images/saved.svg') }}">
-                        <span class="stats-option__text">{{ title.saves }}</span>
+                        <span class="stats-option__text">{{ title.get_saves_count() }}</span>
                     </div>
                     {% if saved %}
                         <div class="stats-option__caption">(сохранено)</div>
@@ -120,7 +120,7 @@
         </div>
         <section id="sections-content">
             <div id="chapters" class="section">
-                {% if chapters|length > 0 %}
+                {% if title.chapters|length > 0 %}
                     <div class="chapters__header chapters-header">
                         Список глав
                         <div class="chapters-header__buttons">
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <div class="chapters__list">
-                        {% for chapter in title.get_chapters() %}
+                        {% for chapter in title.chapters %}
                         <div class="chapters__item chapter" data-id="{{ chapter.id }}">
                             <a class="chapter__link" href="{{ url_for('chapters.chapter', chapter_id=chapter.id) }}">
                                 <div class="chapter__content">

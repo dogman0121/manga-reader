@@ -4,36 +4,6 @@ from app.models import Comment, Title
 from app.api import bp
 
 
-def comment_to_dict(comment: Comment):
-
-    comment_dict = {
-        "id": comment.id,
-        "text": comment.text,
-        "date": comment.date,
-        "user": {
-            "id": comment.user.id,
-            "login": comment.user.login,
-            "email": comment.user.email,
-            "avatar": comment.user.avatar
-        },
-        "title_id": comment.title_id,
-        "root": comment.root,
-        "parent": comment.parent,
-        "up_votes": comment.up_votes,
-        "down_votes": comment.down_votes,
-        "answers_count": comment.answers_count
-    }
-
-    user_vote = comment.get_user_vote(current_user)
-    if user_vote:
-        comment_dict["is_voted_by_user"] = True
-        comment_dict["user_vote_type"] = user_vote.type
-    else:
-        comment_dict["is_voted_by_user"] = False
-
-    return comment_dict
-
-
 @bp.route("/comments", methods=["GET"])
 def get_comments():
     if request.args.get("page"):
@@ -53,7 +23,12 @@ def get_comments():
 
     comments_list = []
     for comment in comments_obj:
-        comments_list.append(comment_to_dict(comment))
+        comment_dict = comment.to_dict()
+        if current_user.is_authenticated:
+            comment_dict["user_vote"] = comment.get_user_vote(current_user)
+        else:
+            comment_dict["user_vote"] = None
+        comments_list.append(comment_dict)
 
     return jsonify(comments_list)
 
@@ -66,7 +41,7 @@ def add_comment():
     parent = request.json.get("parent")
     root = request.json.get("root")
 
-    comment = Comment(text=text, user=current_user, title_id=title_id, root=root, parent=parent)
+    comment = Comment(text=text, user_id=current_user.id, title_id=title_id, root_id=root, parent_id=parent)
     comment.add()
 
-    return jsonify(comment_to_dict(comment))
+    return jsonify(comment.to_dict())

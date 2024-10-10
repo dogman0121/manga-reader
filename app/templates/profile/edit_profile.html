@@ -20,7 +20,7 @@
     <form method="POST" class="general-settings" {% if section == "password" %}hidden{% endif %}
     action="{{ url_for('profile.change_data') }}" enctype="multipart/form-data">
         {{ general_settings.csrf_token(id=False) }}
-        <img class="avatar" src="{{ user.avatar }}">
+        <img class="avatar" src="{{ user.get_avatar() }}">
         <label>
         <div class="button">
             Изменить

@@ -38,7 +38,7 @@ def login():
         return render_template("register.html")
     else:
         user_data = User.get_by_login(request.form.get("login"))
-        if user_data and check_password_hash(user_data.password_hash, request.form.get("password")):
+        if user_data and check_password_hash(user_data.password, request.form.get("password")):
             login_user(user_data, remember={"on": True, None: False}[request.form.get("remember")])
             if request.args.get("from") is None:
                 return redirect(url_for("index.index"))
