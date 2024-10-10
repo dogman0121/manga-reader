@@ -83,7 +83,9 @@ class User(db.Model, UserMixin):
         self.update()
 
     def is_team_leader(self):
-        return self.id == self.team.leader_id
+        if self.team_id:
+            return self.id == self.team.leader_id
+        return False
 
     def get_avatar(self):
         if os.path.exists(f"app/static/media/avatars/{self.id}.png"):
