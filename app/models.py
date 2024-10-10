@@ -44,7 +44,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def is_login_taken(login):
-        return db.session.execute(Select(exists().where(User.login == login)))
+        return db.session.execute(Select(exists().where(User.login == login))).scalar()
 
     def add(self):
         db.session.add(self)
