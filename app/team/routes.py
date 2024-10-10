@@ -8,8 +8,6 @@ from app.models import Team, User
 @bp.route("/<int:team_id>")
 def get_team(team_id):
     team = Team.get_by_id(team_id)
-    print(team.members)
-    print(team.leader)
     return render_template("team/team.html", user=current_user, team=team)
 
 

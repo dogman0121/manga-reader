@@ -20,9 +20,6 @@ def create_app(config):
     migrate.init_app(app, db)
     mail.init_app(app)
 
-    from . import admin
-    admin.admin.init_app(app)
-
     from . import main
     app.register_blueprint(main.bp, url_prefix="/")
 
@@ -45,9 +42,12 @@ def create_app(config):
     app.register_blueprint(api.bp, url_prefix="/api")
 
     from . import team
-    app.register_blueprint(team.bp, name="team_page", url_prefix="/team")
+    app.register_blueprint(team.bp, url_prefix="/team")
 
     from . import search
     app.register_blueprint(search.bp, url_prefix="/search")
+
+    from . import admin
+    admin.admin.init_app(app)
 
     return app
