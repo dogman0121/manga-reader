@@ -9,7 +9,10 @@ from app.manga_card.forms import AddMangaForm
 def manga_page(title_id):
     title = Title.get_by_id(title_id)
     rating_s, rating_c = title.get_rating()
-    rating = round(rating_s / rating_c, 2)
+    try:
+        rating = round(rating_s / rating_c, 2)
+    except ZeroDivisionError:
+        rating = 0
     title.add_view()
     user_rating = title.get_user_rating(current_user) if current_user.is_authenticated else None
     is_saved = title.is_saved_by_user(current_user) if current_user.is_authenticated else False

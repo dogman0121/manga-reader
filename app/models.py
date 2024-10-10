@@ -337,8 +337,8 @@ class Title(db.Model):
         return sum(rating), len(rating)
 
     def get_user_rating(self, user):
-        user_rating = db.session.execute(Select(ratings.c.rating).where(
-            user.id == ratings.c.user_id and self.id == ratings.c.title_id)).scalar()
+        user_rating = db.session.execute(Select(ratings.c.rating).where(and_(
+            ratings.c.user_id == user.id, self.id == ratings.c.title_id))).scalar()
         return user_rating
 
     def get_chapters(self):
