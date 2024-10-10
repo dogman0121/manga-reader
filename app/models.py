@@ -39,6 +39,10 @@ class User(db.Model, UserMixin):
         return db.session.execute(Select(User).where(User.login == login)).scalar()
 
     @staticmethod
+    def get_by_email(email: str):
+        return db.session.execute(Select(User).where(User.email == email)).scalar()
+
+    @staticmethod
     def is_login_taken(login):
         return db.session.execute(Select(exists().where(User.login == login)))
 
