@@ -1,0 +1,44 @@
+<div class="content__inner">
+    <div class="header__inner">
+        <div class="nav-left">
+            <img id="logo" src="{{ url_for('static', filename="base/images/icon-96.png") }}">
+            <nav class="nav-left__nav">
+                <a class="nav__item nav__catalog" href="/catalog">
+                    <span class="nav__text">каталог</span>
+                </a>
+                <a class="nav__item nav__search">
+                    <span class="nav__text">поиск</span>
+                </a>
+            </nav>
+        </div>
+        <div class="nav-right">
+            <nav class="nav-right__nav">
+                {% if user.is_authenticated %}
+                    <div class="dropdown-panel">
+                        <div class="nav__item dropdown-button">
+                            <img class="user-avatar" src="{{ user.get_avatar() }}">
+                        </div>
+                        <div class="dropdown-menu profile-menu" hidden>
+                            <a href="{{ url_for('profile.get_profile', profile_id=user.id) }}" class="profile-menu__option">
+                                <img src="{{ url_for('static', filename='base/images/profile.svg') }}" class="profile-menu__icon">
+                                Профиль
+                            </a>
+                            <a href="{{ url_for('profile.edit_profile') }}" class="profile-menu__option">
+                                <img src="{{ url_for('static', filename='base/images/settings.svg') }}" class="profile-menu__icon">
+                                Настройки
+                            </a>
+                            <a href="{{ url_for('auth.logout') }}" class="profile-menu__option">
+                                <img src="{{ url_for('static', filename='base/images/exit.svg') }}" class="profile-menu__icon">
+                                Выйти
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a class="nav__item" id="profile" href="{{ url_for('auth.login_form')}}">
+                        <img class="empty-icon" src="{{ url_for("static", filename="media/avatars/default.png") }}">
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</div>

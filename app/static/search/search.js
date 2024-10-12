@@ -7,8 +7,9 @@ const searchCloseButton = searchEl.querySelector(".search__close_image");
 let chosenSection = 'title';
 
 searchEl.addEventListener("click", function (event){
-    if (!event.target.closest(".search__container"))
+    if (!event.target.closest(".search__container")) {
         close();
+    }
 })
 
 searchCloseButton.addEventListener("click", close);
@@ -37,10 +38,12 @@ searchFilters.addEventListener("click", function (event){
 
 function open() {
     searchEl.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
 }
 
 function close() {
     searchEl.classList.add("hidden");
+    document.body.style.overflow = null;
 }
 
 function search(query, section=null) {
