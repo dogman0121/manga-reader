@@ -9,7 +9,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 import os
 
-
 saves = Table(
     "saves",
     db.metadata,
@@ -27,7 +26,8 @@ class User(db.Model, UserMixin):
     password: Mapped[str] = mapped_column(nullable=False)
     role: Mapped[int] = mapped_column(default=1, nullable=False)
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("teams.id"), nullable=True)
-    team: Mapped["Team"] = relationship(uselist=False, back_populates="members", primaryjoin="User.team_id == Team.id")
+    team: Mapped[Optional["Team"]] = relationship(uselist=False, back_populates="members",
+                                                  primaryjoin="User.team_id == Team.id")
     comments: Mapped["Comment"] = relationship(back_populates="user")
     saves: Mapped[list["Title"]] = relationship(uselist=True, secondary="saves")
 
@@ -304,7 +304,7 @@ class Title(db.Model):
                 Title.validate_genres(genres),
                 Title.validate_year(year_from, year_to)
             )
-        ).limit(20).offset(20 * (page-1))).scalars().all()
+        ).limit(20).offset(20 * (page - 1))).scalars().all()
 
     @staticmethod
     def search(query):
@@ -337,7 +337,9 @@ class Title(db.Model):
         db.session.commit()
 
     def update_rating(self, user, new_rating):
-        db.session.execute(update(ratings).where(and_(ratings.c.user_id == user.id, ratings.c.title_id == self.id)).values(rating=new_rating))
+        db.session.execute(
+            update(ratings).where(and_(ratings.c.user_id == user.id, ratings.c.title_id == self.id)).values(
+                rating=new_rating))
         db.session.commit()
 
     def get_rating(self):
@@ -445,7 +447,7 @@ class Comment(db.Model):
     def update_vote(self, user, new_vote_type):
         db.session.execute(update(votes).where(
             and_(votes.c.comment_id == self.id, votes.c.user_id == user.id)).values(type=new_vote_type)
-        )
+                           )
         db.session.commit()
 
     def get_user_vote(self, user):
@@ -483,15 +485,15 @@ class Team(db.Model):
     __tablename__ = "teams"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column()
-    about: Mapped[str] = mapped_column()
-    leader_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    leader: Mapped[User] = relationship(primaryjoin="Team.leader_id == User.id")
-    vk_link: Mapped[str] = mapped_column()
-    discord_link: Mapped[str] = mapped_column()
-    telegram_link: Mapped[str] = mapped_column()
-    members: Mapped[list["User"]] = relationship(uselist=True, back_populates="team",
-                                                 primaryjoin="Team.id == User.team_id")
+    name: Mapped[str] = mapped_column(nullable=False)
+    about: Mapped[str] = mapped_column(nullable=True)
+    leader_id: Mapped[int] = mapped_column(nullable=False)
+    leader: Mapped["User"] = relationship("User", foreign_keys=[User.id], primaryjoin="Team.leader_id == User.id")
+    vk_link: Mapped[str] = mapped_column(nullable=True)
+    discord_link: Mapped[str] = mapped_column(nullable=True)
+    telegram_link: Mapped[str] = mapped_column(nullable=True)
+    members: Mapped[Optional["User"]] = relationship(uselist=True, back_populates="team",
+                                                     primaryjoin="Team.id == User.team_id")
     translations: Mapped[list["Title"]] = relationship(uselist=True, secondary="titles_translators")
 
     @staticmethod

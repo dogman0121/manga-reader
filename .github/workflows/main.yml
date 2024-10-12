@@ -6,10 +6,12 @@ on:
   
 jobs:
   test:
-    runs-on: self-hosted
+    runs-on: ubuntu
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
+      - name: run pytest
+        run: pytest
 
   prepare-environment:
     runs-on: self-hosted
@@ -19,6 +21,8 @@ jobs:
         run: docker-compose down
       - name: Remove unused data
         run: docker system prune -a -f
+      - name: checkout repo
+        uses: actions/checkout@v3
 
   deploy:
     name: deploy
@@ -27,9 +31,6 @@ jobs:
     needs: prepare-environment
 
     steps:
-    - name: checkout repo
-      uses: actions/checkout@v3
-
     - name: deploy-container
       run: |
         docker-compose up -d
