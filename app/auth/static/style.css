@@ -12,8 +12,12 @@ body {
     min-height: 100vh;
 }
 
+main {
+    width: min(420px, calc(100% - 20px*2));
+    margin: 0 20px;
+}
+
 .main__inner {
-    width: 420px;
     border-radius: 10px;
     border: 2px solid #B9B9B9;
     padding: 30px 40px;
