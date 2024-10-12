@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
+      - name: install modules
+        run: pip install --no-cached-dir -r requirements.txt
       - name: run pytest
         run: pytest
 
