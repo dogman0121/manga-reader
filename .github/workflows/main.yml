@@ -8,10 +8,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: python
+        uses: actions/setup-python@v5
       - name: checkout repo
         uses: actions/checkout@v3
       - name: install modules
-        run: pip install --no-cached-dir -r requirements.txt
+        run: pip install --no-cache-dir -r requirements.txt
       - name: run pytest
         run: pytest
 
