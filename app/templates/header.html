@@ -1,7 +1,9 @@
 <div class="content__inner">
     <div class="header__inner">
         <div class="nav-left">
-            <img id="logo" src="{{ url_for('static', filename="base/images/icon-96.png") }}">
+            <a href="{{ url_for('index.index') }}">
+                <img id="logo" src="{{ url_for('static', filename="base/images/icon-96.png") }}">
+            </a>
             <nav class="nav-left__nav">
                 <a class="nav__item nav__catalog" href="/catalog">
                     <span class="nav__text">каталог</span>
