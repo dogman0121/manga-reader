@@ -492,7 +492,7 @@ class Team(db.Model):
     vk_link: Mapped[str] = mapped_column(nullable=True)
     discord_link: Mapped[str] = mapped_column(nullable=True)
     telegram_link: Mapped[str] = mapped_column(nullable=True)
-    members: Mapped[Optional["User"]] = relationship(uselist=True, back_populates="team",
+    members: Mapped[list["User"]] = relationship(uselist=True, back_populates="team",
                                                      primaryjoin="Team.id == User.team_id")
     translations: Mapped[list["Title"]] = relationship(uselist=True, secondary="titles_translators")
 
