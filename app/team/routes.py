@@ -64,10 +64,9 @@ def edit_team(team_id):
 @bp.route("<int:team_id>/leave")
 def leave_team(team_id):
     team = Team.get_by_id(team_id)
-    current_user.remove_team()
     if team.leader_id == current_user.id:
-        for member in team.get_members():
-            member.remove_team()
+        # for member in team.members:
+        #     member.remove_team()
         team.delete()
         return redirect(url_for("profile.get_profile", profile_id=current_user.id))
     return redirect(url_for("team.get_team", team_id=team_id))
@@ -77,8 +76,7 @@ def leave_team(team_id):
 def add_member():
     member_id = int(request.args.get("member_id"))
     member = User.get_by_id(member_id)
-    team = Team.get_by_id(current_user.team_id)
-    member.add_team(team)
+    member.add_team(current_user.team_id)
     return redirect(url_for("profile.get_profile", profile_id=member_id))
 
 

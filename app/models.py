@@ -76,7 +76,8 @@ class User(db.Model, UserMixin):
         self.email = email
 
     def add_team(self, team_id):
-        pass
+        self.team_id = team_id
+        self.update()
 
     def remove_team(self):
         self.team_id = None
@@ -488,12 +489,11 @@ class Team(db.Model):
     name: Mapped[str] = mapped_column(nullable=False)
     about: Mapped[str] = mapped_column(nullable=True)
     leader_id: Mapped[int] = mapped_column(nullable=False)
-    leader: Mapped["User"] = relationship("User", foreign_keys=[User.id], primaryjoin="Team.leader_id == User.id")
     vk_link: Mapped[str] = mapped_column(nullable=True)
     discord_link: Mapped[str] = mapped_column(nullable=True)
     telegram_link: Mapped[str] = mapped_column(nullable=True)
     members: Mapped[list["User"]] = relationship(uselist=True, back_populates="team",
-                                                     primaryjoin="Team.id == User.team_id")
+                                                 primaryjoin="Team.id == User.team_id")
     translations: Mapped[list["Title"]] = relationship(uselist=True, secondary="titles_translators")
 
     @staticmethod
