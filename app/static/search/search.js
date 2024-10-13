@@ -3,12 +3,16 @@ const searchInput = searchEl.querySelector(".search__input");
 const searchResults = searchEl.querySelector(".search__results");
 const searchResultsEmpty = searchEl.querySelector(".results__empty");
 const searchFilters = searchEl.querySelector(".search__filters");
+const searchCloseButton = searchEl.querySelector(".search__close_image");
 let chosenSection = 'title';
 
 searchEl.addEventListener("click", function (event){
-    if (!event.target.closest(".search__container"))
+    if (!event.target.closest(".search__container")) {
         close();
+    }
 })
+
+searchCloseButton.addEventListener("click", close);
 
 searchInput.addEventListener("input", (event) => {
     debounceSearch(event.target.value, chosenSection);
@@ -34,10 +38,12 @@ searchFilters.addEventListener("click", function (event){
 
 function open() {
     searchEl.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
 }
 
 function close() {
     searchEl.classList.add("hidden");
+    document.body.style.overflow = null;
 }
 
 function search(query, section=null) {
@@ -46,12 +52,11 @@ function search(query, section=null) {
         .then(items => {
             searchResults.innerHTML = '';
             if (items.length === 0){
-                searchResultsEmpty.classList.remove("hidden");
+                searchResults.append(searchResultsEmpty)
                 return;
             }
+            searchResultsEmpty.remove()
             for (let item of items) {
-                if (searchResultsEmpty.classList.contains("hidden"))
-                    searchResultsEmpty.classList.remove("hidden");
                 searchResults.innerHTML += renderSearchResult(item);
             }
         });

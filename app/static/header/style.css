@@ -1,0 +1,104 @@
+.header__inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 9px 0;
+}
+
+.content__inner {
+    max-width: 1200px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+#logo {
+    width: 40px;
+    height: 40px;
+    margin: auto 0 auto;
+}
+
+.empty-icon {
+    color: #D9D9D9;
+    display: block;
+}
+
+.nav-left {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.nav-left__nav {
+    margin-left: 24px;
+}
+
+.nav-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin: auto 0;
+}
+
+.nav__item {
+    display: block;
+    font-size: 20px;
+    color: #000000;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.nav__item + .nav__item {
+    margin-left: 24px;
+}
+
+.user-avatar, .empty-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.dropdown-panel{
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    z-index: 1001;
+}
+
+.profile-menu {
+    padding: 5px 10px;
+    background: #FFFFFF;
+    font-size: 16px;
+    border-radius: 12px;
+    min-width: 200px;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2)
+}
+
+.profile-menu__option {
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.profile-menu__icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+@media (max-width: 700px) {
+    .nav__icon {
+        width: 30px;
+        height: 30px;
+        margin-right: 15px;
+    }
+}
