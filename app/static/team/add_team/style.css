@@ -129,6 +129,24 @@ textarea {
 .poster__preview {
     width: 100%;
     height: 100%;
+    aspect-ratio: 3/4;
 }
 
 
+@media (max-width: 700px){
+    .form__two {
+        flex-direction: column;
+    }
+
+    .form__right {
+        margin-left: 0;
+    }
+
+    .form__left {
+        width: 100%;
+    }
+
+    .form__header {
+        font-size: 44px;
+    }
+}

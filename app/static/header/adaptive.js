@@ -1,12 +1,13 @@
-window.onresize = () => {
+window.addEventListener("resize", () => {
     if (window.innerWidth <= 700){
-        adapt_smartphone();
+        adapt_header();
     }
-}
+})
 
-function adapt_smartphone(){
+function adapt_header(){
     let navCatalog = document.querySelector(".nav__catalog");
-    navCatalog.remove();
+    if (navCatalog)
+        navCatalog.remove();
     // navCatalog.innerHTML = "<img class='nav__icon' src='/static/header/images/catalog.png'>"
 
     let navSearch = document.querySelector(".nav__search");
