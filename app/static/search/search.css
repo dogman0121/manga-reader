@@ -136,4 +136,12 @@ body {
         height: 100%;
         border-radius: 0;
     }
+
+    .search__form {
+        padding: 20px 15px 10px;
+    }
+
+    .search__filter {
+        font-size: 18px;
+    }
 }
