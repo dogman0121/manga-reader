@@ -4,6 +4,11 @@ window.addEventListener("resize", () => {
     }
 });
 
+if (window.innerWidth <= 700){
+    adapt_team();
+}
+
+
 function adapt_team(){
     const name = document.querySelector(".name");
     const about = document.querySelector(".about");

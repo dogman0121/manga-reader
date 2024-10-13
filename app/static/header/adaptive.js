@@ -4,6 +4,9 @@ window.addEventListener("resize", () => {
     }
 })
 
+if (window.innerWidth <= 700){
+    adapt_header();
+}
 function adapt_header(){
     let navCatalog = document.querySelector(".nav__catalog");
     if (navCatalog)
