@@ -65,8 +65,8 @@ def edit_team(team_id):
 def leave_team(team_id):
     team = Team.get_by_id(team_id)
     if team.leader_id == current_user.id:
-        # for member in team.members:
-        #     member.remove_team()
+        for member in team.members:
+            member.remove_team()
         team.delete()
         return redirect(url_for("profile.get_profile", profile_id=current_user.id))
     return redirect(url_for("team.get_team", team_id=team_id))
