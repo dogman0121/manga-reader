@@ -528,6 +528,6 @@ class Team(db.Model):
             "vk_link": self.vk_link,
             "discord_link": self.discord_link,
             "telegram_link": self.telegram_link,
-            "leader": User.get_by_id(self.leader_id),
+            "leader": User.get_by_id(self.leader_id).to_dict(),
             "poster": self.get_poster()
         }
