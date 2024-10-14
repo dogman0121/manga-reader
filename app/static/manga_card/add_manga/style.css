@@ -132,6 +132,10 @@ textarea {
         flex-direction: column;
     }
 
+    .form__header{
+        font-size: 42px;
+    }
+
     .form__three {
         display: flex;
         flex-direction: column;
