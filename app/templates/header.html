@@ -29,6 +29,10 @@
                                 <img src="{{ url_for('static', filename='base/images/settings.svg') }}" class="profile-menu__icon">
                                 Настройки
                             </a>
+                            <a href="{{ url_for('manga.add_manga') }}" class="profile-menu__option">
+                                <img src="{{ url_for('static', filename='header/images/plus.svg') }}" class="profile-menu__icon">
+                                Добавить тайтл
+                            </a>
                             <a href="{{ url_for('auth.logout') }}" class="profile-menu__option">
                                 <img src="{{ url_for('static', filename='base/images/exit.svg') }}" class="profile-menu__icon">
                                 Выйти

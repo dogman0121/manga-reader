@@ -299,7 +299,7 @@ input[type="text"] {
 
 .title-rectangle__name {
     font-size: 18px;
-    margin-top: -5px;
+    margin-top: 5px;
 }
 
 .title-rectangle__genres {
