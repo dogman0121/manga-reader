@@ -34,14 +34,14 @@ def get_comments():
 
 
 @bp.route("/comments", methods=["POST"])
-@login_required
 def add_comment():
-    title_id = request.json.get("title_id")
     text = request.json.get("text")
-    parent = request.json.get("parent")
-    root = request.json.get("root")
+    title_id = int(request.json.get("title_id"))
+    user_id = int(request.json.get("user_id"))
+    parent_id = int(request.json.get("parent_id"))
+    root_id = int(request.json.get("root_id"))
 
-    comment = Comment(text=text, user_id=current_user.id, title_id=title_id, root_id=root, parent_id=parent)
+    comment = Comment(text=text, user_id=user_id, title_id=title_id, root_id=root_id, parent_id=parent_id)
     comment.add()
 
     return jsonify(comment.to_dict())

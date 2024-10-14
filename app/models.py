@@ -22,7 +22,7 @@ class User(db.Model, UserMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False, autoincrement=True, unique=True)
     login: Mapped[str] = mapped_column(unique=True, nullable=False)
-    email: Mapped[str] = mapped_column(nullable=True, unique=True)
+    email: Mapped[str] = mapped_column(nullable=False, unique=True)
     password: Mapped[str] = mapped_column(nullable=False)
     role: Mapped[int] = mapped_column(default=1, nullable=False)
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("teams.id"), nullable=True)
@@ -121,6 +121,14 @@ class Type(db.Model):
                                     unique=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
 
+    @staticmethod
+    def get_all():
+        return db.session.execute(Select(Type)).scalars()
+
+    @staticmethod
+    def get_by_id(type_id):
+        return db.session.execute(Select(Type).where(Type.id == type_id)).scalar()
+
     def add(self):
         db.session.add(self)
         db.session.commit()
@@ -145,6 +153,14 @@ class Status(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False, unique=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
+
+    @staticmethod
+    def get_all():
+        return db.session.execute(Select(Status)).scalars()
+
+    @staticmethod
+    def get_by_id(status_id):
+        return db.session.execute(Select(Status).where(Status.id == status_id)).scalar()
 
     def add(self):
         db.session.add(self)
@@ -178,6 +194,14 @@ class Genre(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False, unique=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
+
+    @staticmethod
+    def get_all():
+        return db.session.execute(Select(Genre)).scalars()
+
+    @staticmethod
+    def get_by_id(genre_id):
+        return db.session.execute(Select(Genre).where(Genre.id == genre_id)).scalar()
 
     def add(self):
         db.session.add(self)
@@ -245,25 +269,24 @@ class Title(db.Model):
     __tablename__ = "titles"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False, unique=True)
-    type_id: Mapped[int] = mapped_column(ForeignKey("types.id"))
+    type_id: Mapped[int] = mapped_column(ForeignKey("types.id"), nullable=True)
     type: Mapped["Type"] = relationship()
-    status_id: Mapped[int] = mapped_column(ForeignKey("statuses.id"))
+    status_id: Mapped[int] = mapped_column(ForeignKey("statuses.id"), nullable=True)
     status: Mapped["Status"] = relationship()
     name_russian: Mapped[str] = mapped_column(nullable=False)
-    name_english: Mapped[str]
-    name_languages: Mapped[str]
-    description: Mapped[str]
-    year: Mapped[int]
+    name_english: Mapped[str] = mapped_column(nullable=True)
+    name_languages: Mapped[str] = mapped_column(nullable=True)
+    description: Mapped[str] = mapped_column(nullable=True)
+    year: Mapped[int] = mapped_column(nullable=True)
     views: Mapped[int] = mapped_column(default=0)
     genres: Mapped[list["Genre"]] = relationship(secondary="titles_genres")
-    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
     author: Mapped[User] = relationship("User")
     chapters: Mapped[list["Chapter"]] = relationship(uselist=True, back_populates="title")
     comments: Mapped[list["Comment"]] = relationship(uselist=True, back_populates="title")
 
     @staticmethod
     def get_by_id(title_id):
-        print(title_id)
         return db.session.get(Title, title_id)
 
     @hybrid_method
@@ -325,6 +348,11 @@ class Title(db.Model):
         self.views += 1
         self.update()
 
+    # ----- Rating -----
+    def get_rating(self):
+        rating = db.session.execute(Select(ratings.c.rating).where(ratings.c.title_id == self.id)).scalars().all()
+        return sum(rating), len(rating)
+
     def add_rating(self, user, rating):
         db.session.execute(insert(ratings).values(user_id=user.id, title_id=self.id, rating=rating))
         db.session.remove()
@@ -338,10 +366,6 @@ class Title(db.Model):
             update(ratings).where(and_(ratings.c.user_id == user.id, ratings.c.title_id == self.id)).values(
                 rating=new_rating))
         db.session.commit()
-
-    def get_rating(self):
-        rating = db.session.execute(Select(ratings.c.rating).where(ratings.c.title_id == self.id)).scalars().all()
-        return sum(rating), len(rating)
 
     def get_user_rating(self, user):
         user_rating = db.session.execute(Select(ratings.c.rating).where(and_(
@@ -404,8 +428,8 @@ class Comment(db.Model):
     user: Mapped["User"] = relationship(back_populates="comments")
     title_id: Mapped[int] = mapped_column(ForeignKey("titles.id"), nullable=False)
     title: Mapped["Title"] = relationship(back_populates="comments")
-    root_id: Mapped[int]
-    parent_id: Mapped[int]
+    root_id: Mapped[Optional[int]] = mapped_column(nullable=True)
+    parent_id: Mapped[Optional[int]] = mapped_column(nullable=True)
 
     @staticmethod
     def get_by_id(comment_id):

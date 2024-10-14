@@ -250,8 +250,8 @@ class Comment{
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                parent: parent,
-                root: root,
+                parent_id: parent,
+                root_id: root,
                 user_id: user_id,
                 title_id: title_id,
                 text: text,

@@ -17,7 +17,7 @@
             <div class="form__left">
                 <label class="form__poster poster">
                     {% if title %}
-                        <img class="poster__preview" src="{{ title.poster }}">
+                        <img class="poster__preview" src="{{ title.get_poster() }}">
                     {% else %}
                         <img class="poster__preview">
                     {% endif %}
@@ -61,16 +61,6 @@
             <div class="form-input">
                 Жанры
                 {{ form.genres(class_="form-input__select_multiple") }}
-            </div>
-        </div>
-        <div class="form__section">
-            <div class="form-input">
-                Автор
-                {{ form.author(class_="form-input__input") }}
-            </div>
-            <div class="form-input">
-                Перевеодчик
-                {{ form.translator(class_="form-input__input") }}
             </div>
         </div>
         <div class="form__footer">
