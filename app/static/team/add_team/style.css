@@ -144,6 +144,15 @@ textarea {
 
     .form__left {
         width: 100%;
+        max-width: none;
+        display: flex;
+        justify-content: center;
+    }
+
+    .form__poster {
+        aspect-ratio: 3/4;
+        width: 60%;
+        height: auto;
     }
 
     .form__header {
