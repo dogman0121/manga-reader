@@ -127,3 +127,33 @@ textarea {
     height: 100%;
 }
 
+<<<<<<< HEAD
+=======
+@media (max-width: 700px) {
+    .form__two {
+        flex-direction: column;
+    }
+
+    .form__three {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form__left {
+        margin: auto;
+        width: 100%;
+        max-width: none;
+        display: flex;
+        justify-content: center;
+    }
+
+    .form__poster {
+        aspect-ratio: 3/4;
+        height: auto;
+        width: 60%;
+    }
+
+    .form__right {
+        margin-left: 0;
+    }
+}
