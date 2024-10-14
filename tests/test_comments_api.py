@@ -1,7 +1,7 @@
 from app.models import Title, User, Comment
 
 
-def test_adding_comments(app, client):
+def test_adding_full_params_comments(app, client):
     with app.app_context():
         user = User(login="aboba", email="a@mail.ru")
         user.set_password("123456")
@@ -15,6 +15,24 @@ def test_adding_comments(app, client):
             "title_id": 1,
             "root_id": 1,
             "parent_id": 1,
+            "text": "хехехе"
+        })
+
+        assert response.status_code == 200
+
+
+def test_adding_semi_params_comments(app, client):
+    with app.app_context():
+        user = User(login="aboba", email="a@mail.ru")
+        user.set_password("123456")
+        user.add()
+
+        title = Title(name_russian="Qwerty")
+        title.add()
+
+        response = client.post("/api/comments", json={
+            "user_id": 1,
+            "title_id": 1,
             "text": "хехехе"
         })
 

@@ -38,8 +38,8 @@ def add_comment():
     text = request.json.get("text")
     title_id = int(request.json.get("title_id"))
     user_id = int(request.json.get("user_id"))
-    parent_id = int(request.json.get("parent_id"))
-    root_id = int(request.json.get("root_id"))
+    parent_id = int(request.json.get("parent_id")) if request.json.get("parent_id") is not None else None
+    root_id = int(request.json.get("root_id")) if request.json.get("root_id") is not None else None
 
     comment = Comment(text=text, user_id=user_id, title_id=title_id, root_id=root_id, parent_id=parent_id)
     comment.add()
