@@ -127,8 +127,6 @@ textarea {
     height: 100%;
 }
 
-<<<<<<< HEAD
-=======
 @media (max-width: 700px) {
     .form__two {
         flex-direction: column;
