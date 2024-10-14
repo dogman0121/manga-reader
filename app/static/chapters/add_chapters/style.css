@@ -81,3 +81,14 @@
     min-height: 200px;
     display: flex;
 }
+
+@media (max-width: 700px) {
+    .form__three {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-input + .form-input {
+        margin-top: 15px;
+    }
+}
