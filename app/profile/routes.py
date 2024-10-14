@@ -30,13 +30,11 @@ def edit_profile():
 @login_required
 def change_password():
     password_settings = ChangePasswordForm()
-    print(password_settings.old_password.data)
-    print(password_settings.new_password.data)
-    print(password_settings.new_password_repeat.data)
     if password_settings.validate_on_submit():
         if current_user.check_password(password_settings.old_password.data):
             if password_settings.new_password.data == password_settings.new_password_repeat.data:
-                current_user.change_password(password_settings.new_password.data)
+                current_user.set_password(password_settings.new_password.data)
+                current_user.update()
             else:
                 flash("Пароли не совпадают", "passwords_not_matches")
                 return redirect(url_for("profile.edit_profile", section="password"))
@@ -62,8 +60,9 @@ def change_data():
 
         if new_avatar.filename != '':
             new_avatar.save(f"app/static/media/avatars/{current_user.id}.png")
-        current_user.change_login(new_login)
-        current_user.change_email(new_email)
+        current_user.set_login(new_login)
+        current_user.set_email(new_email)
+        current_user.update()
         return redirect(url_for('profile.get_profile', profile_id=current_user.id))
     else:
         return redirect(url_for("profile.edit_profile", section="general"))
