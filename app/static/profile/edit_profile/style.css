@@ -41,7 +41,7 @@ body {
     display: none;
 }
 
-.right_side {
+.right-side {
     max-width: 858px;
     min-width: 500px;
     margin-left: 42px;
@@ -114,5 +114,21 @@ input[type="submit"] {
     color: #FF0000;
     font-size: 14px;
     margin: 5px 0;
+}
+
+@media (max-width: 700px) {
+    .main__inner {
+        flex-direction: column;
+    }
+
+    .right-side {
+        margin: 0;
+        max-width: none;
+        min-width: auto;
+        width: 100%;
+    }
+
+    .avatar {
+    }
 }
 

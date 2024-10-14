@@ -16,7 +16,7 @@
         Смена пароля
     </div>
 </div>
-<div class="right_side">
+<div class="right-side">
     <form method="POST" class="general-settings" {% if section == "password" %}hidden{% endif %}
     action="{{ url_for('profile.change_data') }}" enctype="multipart/form-data">
         {{ general_settings.csrf_token(id=False) }}

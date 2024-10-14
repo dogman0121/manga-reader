@@ -115,7 +115,7 @@ h3 {
 
 @media (max-width: 700px) {
     h1 {
-        font-size: 36px;
+        font-size: 32px;
     }
 
     h3, h2 {
@@ -129,6 +129,16 @@ h3 {
     .left-side {
         width: 100%;
         max-width: none;
+    }
+
+    .poster {
+        width: 100%;
+        display: flex;
+        justify-content: center ;
+    }
+
+    .poster__image{
+        width: 80%;
     }
 
     .edit {
