@@ -85,6 +85,7 @@ def recovery_password(token):
             flash("Пароли не совпадают!", "error")
         else:
             user = User.get_by_id(user_id)
-            user.change_password(password)
+            user.set_password(password)
+            user.update()
             return redirect(url_for(".login", section="login"))
     return render_template("recovery_password.html", password_form=recovery_password_form)
