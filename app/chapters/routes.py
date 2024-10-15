@@ -8,8 +8,17 @@ import os
 import shutil
 
 
+def clean_folder(path):
+    try:
+        shutil.rmtree(os.path.join(os.getcwd(), path))
+        os.makedirs(os.path.join(os.getcwd(), path))
+    except:
+        for file in listdir(os.path.join(os.getcwd(), path)):
+            os.remove(os.path.join(os.getcwd(), path, file))
+
+
 @bp.route("/<int:chapter_id>")
-def chapter(chapter_id):
+def get_chapter(chapter_id):
     images_list = list()
     for i in range(len(listdir(f"app/static/media/chapters/{chapter_id}"))):
         images_list.append(url_for("static", filename=f"media/chapters/{chapter_id}/{i+1}.jpeg"))
@@ -33,12 +42,7 @@ def edit_chapter(chapter_id):
         chapter.update()
 
         if os.path.exists(f"app/static/media/chapters/{chapter.id}"):
-            try:
-                shutil.rmtree(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
-            except:
-                os.remove(os.path.join(os.getcwd(), f"app/static/media/chapters/{chapter.id}"))
-
-        os.makedirs(f"app/static/media/chapters/{chapter.id}")
+            clean_folder(f"app/static/media/chapters/{chapter.id}")
 
         for page in request.files.getlist("file"):
             page.save(f"app/static/media/chapters/{chapter.id}/{page.filename}")
@@ -58,10 +62,8 @@ def edit_chapter(chapter_id):
 def delete_chapter(chapter_id):
     chapter = Chapter.get_by_id(chapter_id)
     chapter.delete()
-    try:
-        shutil.rmtree(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
-    except:
-        os.remove(os.path.join(os.getcwd(), f"app/static/media/chapters/{chapter.id}"))
+
+    clean_folder(f"app/static/media/chapters/{chapter.id}")
 
     return redirect(url_for("manga.manga_page", title_id=chapter.title_id))
 
