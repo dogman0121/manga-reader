@@ -36,7 +36,7 @@ def edit_chapter(chapter_id):
             try:
                 shutil.rmtree(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
             except:
-                os.remove(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
+                os.remove(os.path.join(os.getcwd(), f"app/static/media/chapters/{chapter.id}"))
 
         os.makedirs(f"app/static/media/chapters/{chapter.id}")
 
@@ -61,7 +61,7 @@ def delete_chapter(chapter_id):
     try:
         shutil.rmtree(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
     except:
-        os.remove(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
+        os.remove(os.path.join(os.getcwd(), f"app/static/media/chapters/{chapter.id}"))
 
     return redirect(url_for("manga.manga_page", title_id=chapter.title_id))
 
