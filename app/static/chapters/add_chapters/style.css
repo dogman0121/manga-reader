@@ -31,14 +31,16 @@
 }
 
 .pages__page, .pages__add {
-    aspect-ratio: 3/4;
     width: 154px;
     overflow: hidden;
-    border-radius: 8px;
 }
 
 .pages__page {
     position: relative;
+}
+
+.dragging {
+    cursor: move;
 }
 
 .page__delete {
@@ -55,11 +57,15 @@
     border: 2px #B9B9B9 dashed;
     font-size: 14px;
     vertical-align: center;
+    aspect-ratio: 3/4;
+    border-radius: 8px;
 }
 
 .page__image {
     width: 100%;
+    aspect-ratio: 3/4;
     object-fit: cover;
+    border-radius: 8px;
 }
 
 .pages__text {

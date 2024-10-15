@@ -2,6 +2,8 @@ let dragNDropZone = document.querySelector(".upload-zone");
 let inputFile = document.querySelector("input[type='file']");
 let submitButton = document.querySelector("input[type='submit']")
 let form = document.querySelector("form");
+let swapElement;
+
 
 if (dragNDropZone)
     addDragNDropEvents(dragNDropZone);
@@ -11,9 +13,7 @@ if (document.querySelector(".pages__pages")){
     let addPage = container.querySelector(".pages__add");
     addDragNDropEvents(addPage);
     for (let i of container.querySelectorAll(".pages__page")){
-        i.querySelector(".page__delete").addEventListener("click", function (event){
-            event.target.closest(".pages__page").remove();
-        });
+        registerPageEvents(i);
     }
 }
 
@@ -71,13 +71,13 @@ function extractFiles(file){
                 for(let i in zip.files){
                     zip.files[i].async("blob").
                         then((blob) => {
-                            blankAddImage(container, createImage(blob));
+                            blankAddImage(container, createImage(blob), i);
                     })
                 }
         })
     }
     else if (file.type === "image/png" || file.type === "image/jpeg"){
-        blankAddImage(container, createImage(file));
+        blankAddImage(container, createImage(file), file.name);
     }
 
     if (!document.querySelector(".pages__pages"))
@@ -94,28 +94,53 @@ function createImagePreviewContainer(){
     return blank;
 }
 
-function blankAddImage(blank, image){
+function createEmptyList(){
+    let blank = document.querySelector(".pages__pages");
+    let uploadZone = new DOMParser().parseFromString(`
+        <div class="upload-zone">
+            <p class="pages__text">Выберите .ZIP архивы или обычные изображения</p>
+        </div>
+    `, "text/html").querySelector(".upload-zone");
+    addDragNDropEvents(uploadZone);
+    blank.replaceWith(uploadZone);
+}
+
+function registerPageEvents(page){
+    page.querySelector(".page__delete").addEventListener("click", function (){
+        page.closest(".pages__page").remove();
+
+        if (document.querySelector(".pages__pages").childElementCount === 1){
+            createEmptyList();
+        }
+    })
+
+    page.addEventListener("dragstart", (event) => {
+        event.target.classList.add("dragging");
+    })
+
+    page.addEventListener("dragover", (event) => {
+        swapElement = event.target.closest(".pages__page");
+    })
+
+    page.addEventListener("dragend", (event) => {
+        event.target.classList.remove("dragging");
+        swapElement.before(event.target.closest(".pages__page"));
+    })
+}
+
+function blankAddImage(blank, image, name){
     let page = new DOMParser().parseFromString(`
         <div class="pages__page">
             <img src="/static/chapters/add_chapters/images/close.svg" class="page__delete">
         </div>
     `, "text/html").querySelector(".pages__page");
 
-    page.querySelector(".page__delete").addEventListener("click", function (){
-        page.closest(".pages__page").remove();
-
-        if (blank.childElementCount === 1){
-            let uploadZone = new DOMParser().parseFromString(`
-                <div class="upload-zone">
-                    <p class="pages__text">Выберите .ZIP архивы или обычные изображения</p>
-                </div>
-            `, "text/html").querySelector(".upload-zone");
-            addDragNDropEvents(uploadZone);
-            blank.replaceWith(uploadZone);
-        }
-    })
+    registerPageEvents(page);
 
     page.append(image);
+    let pageNum = document.createElement("span");
+    pageNum.textContent = name;
+    page.append(pageNum);
     let addPage = blank.querySelector(".pages__add");
     addPage.before(page);
 }

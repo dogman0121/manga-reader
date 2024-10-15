@@ -1,6 +1,6 @@
 from flask import request, render_template, url_for, redirect
 from flask_login import current_user
-from app.models import Chapter, Title
+from app.models import Chapter
 from os import listdir
 from app.chapters import bp
 from app.chapters.forms import ChapterForm
@@ -32,6 +32,12 @@ def edit_chapter(chapter_id):
         chapter.name = form.name.data
         chapter.update()
 
+        if os.path.exists(f"app/static/media/chapters/{chapter.id}"):
+            try:
+                shutil.rmtree(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
+            except:
+                os.remove(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
+
         os.makedirs(f"app/static/media/chapters/{chapter.id}")
 
         for page in request.files.getlist("file"):
@@ -52,8 +58,11 @@ def edit_chapter(chapter_id):
 def delete_chapter(chapter_id):
     chapter = Chapter.get_by_id(chapter_id)
     chapter.delete()
-    if os.path.exists(f"app/static/media/chapters/{chapter.id}"):
+    try:
         shutil.rmtree(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
+    except:
+        os.remove(os.path.join(os.getcwd(), f"app\\static\\media\\chapters\\{chapter.id}"))
+
     return redirect(url_for("manga.manga_page", title_id=chapter.title_id))
 
 
