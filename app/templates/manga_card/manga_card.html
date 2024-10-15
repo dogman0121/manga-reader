@@ -135,7 +135,7 @@
                     <div class="chapters__list">
                         {% for chapter in title.chapters %}
                         <div class="chapters__item chapter" data-id="{{ chapter.id }}">
-                            <a class="chapter__link" href="{{ url_for('chapters.chapter', chapter_id=chapter.id) }}">
+                            <a class="chapter__link" href="{{ url_for('chapters.get_chapter', chapter_id=chapter.id) }}">
                                 <div class="chapter__content">
                                     Том {{ chapter.tome }} Глава {{ chapter.chapter }}
                                     <div class="chapter__icons">
