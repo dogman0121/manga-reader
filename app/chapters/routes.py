@@ -11,8 +11,8 @@ import shutil
 @bp.route("/<int:chapter_id>")
 def chapter(chapter_id):
     images_list = list()
-    for i in listdir(f"app/static/media/chapters/{chapter_id}"):
-        images_list.append(url_for("static", filename=f"media/chapters/{chapter_id}/{i}"))
+    for i in range(len(listdir(f"app/static/media/chapters/{chapter_id}"))):
+        images_list.append(url_for("static", filename=f"media/chapters/{chapter_id}/{i+1}.jpeg"))
 
     referer = request.headers.get("Referer")
     chapter_info = Chapter.get_by_id(chapter_id)
