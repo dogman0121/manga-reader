@@ -236,6 +236,8 @@ class Comment{
 
     sendAnswer(event) {
         let text = this.comment.answerForm.querySelector(".comments__input").value;
+        if (!text)
+            return;
         let parent = this.comment.id;
         let root;
         if (this.comment.rootId)
