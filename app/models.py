@@ -242,6 +242,10 @@ class Chapter(db.Model):
     chapter: Mapped[int] = mapped_column(nullable=False)
     date: Mapped[datetime] = mapped_column(default=lambda: datetime.utcnow().strftime("%Y-%m-%d"))
 
+    @staticmethod
+    def get_by_id(chapter_id):
+        return db.session.execute(Select(Chapter).where(Chapter.id == chapter_id)).scalar()
+
     def add(self):
         db.session.add(self)
         db.session.commit()
