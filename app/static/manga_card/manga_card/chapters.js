@@ -57,8 +57,8 @@ class Chapters {
                 chaptersList.append(chapter.element);
         }
         //console.log(chaptersBlockElement);
-        let section = document.querySelector(".section");
-        section.replaceWith(chaptersBlockElement);
+        let sectionBlock = document.querySelector("#sections-content");
+        sectionBlock.append(chaptersBlockElement);
     }
 }
 

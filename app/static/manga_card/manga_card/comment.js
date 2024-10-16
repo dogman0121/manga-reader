@@ -8,6 +8,8 @@ class Comment{
         this.voteUp = commentData.up_votes;
         this.voteDown = commentData.down_votes;
         this.userVote = commentData.user_vote;
+        this.parent = parentComment;
+        this.root = rootComment;
 
         this.element = this.renderElement();
 

@@ -380,7 +380,10 @@ class Title(db.Model):
         return self.chapters
 
     def get_comments(self, page):
-        return self.comments
+        comments = db.session.execute(
+            Select(Comment).where(Comment.title_id == self.id).offset(20 * (page-1)).limit(20)
+        ).scalars()
+        return comments
 
     def is_saved_by_user(self, user):
         saved = db.session.execute(Select(

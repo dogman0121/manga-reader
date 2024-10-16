@@ -61,6 +61,10 @@ li {
 
 #poster {
     width: 100%;
+}
+
+#poster__image {
+    width: 100%;
     aspect-ratio: 3/4;
     border-radius: 14px;
 }
@@ -209,6 +213,14 @@ textarea:focus {
 
 #sections {
     margin-top: 20px;
+}
+
+.section {
+    display: none;
+}
+
+.section_selected {
+    display: block;
 }
 
 #section-buttons {
@@ -526,4 +538,40 @@ textarea:focus {
 
 .user-rating_excellent{
     background: #339900;
+}
+
+@media (max-width: 700px){
+    #right-side {
+        display: none;
+    }
+
+    #left-side {
+        min-width: auto;
+        max-width: none;
+        width: 100%;
+        justify-content: center;
+    }
+
+    #poster {
+        display: flex;
+        justify-content: center;
+    }
+
+    #poster__image {
+        width: 60%;
+    }
+
+    .manga-names__russian {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .manga-names__languages {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #stats {
+        justify-content: center;
+    }
 }

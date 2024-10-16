@@ -13,7 +13,9 @@
 {% endblock %}
 {% block content %}
 <div id="left-side">
-    <img id="poster" src="{{ title.get_poster() }}">
+    <div id="poster">
+        <img id="poster__image" src="{{ title.get_poster() }}">
+    </div>
     {% if user.is_authenticated and user.role > 1 %}
         <a class="edit-button" href="{{ url_for("manga.edit_manga", title_id=title.id) }}">
             Редактировать
@@ -119,7 +121,7 @@
             <div class="section-buttons__item" id="comments-button">Комментарии</div>
         </div>
         <section id="sections-content">
-            <div id="chapters" class="section">
+            <div id="chapters" class="section section_selected">
                 {% if title.chapters|length > 0 %}
                     <div class="chapters__header chapters-header">
                         Список глав
@@ -182,4 +184,5 @@
     <script src="{{ url_for('static', filename='manga_card/manga_card/chapters.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/scroll_loading.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/sections.js') }}"></script>
+    <script src="{{ url_for('static', filename='manga_card/manga_card/adaptive.js') }}"></script>
 {% endblock %}

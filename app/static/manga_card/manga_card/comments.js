@@ -60,10 +60,13 @@ class Comments {
             `
             let commentsList = this.commentsBlock.querySelector(".comments__list");
             commentsList.innerHTML = messageHTML;
-            let section = document.querySelector("#chapters");
-            section.replaceWith(this.commentsBlock);
+            let sectionBlock = document.querySelector("#sections-content");
+            sectionBlock.append(this.commentsBlock);
             return null;
         }
+        let sectionBlock = document.querySelector("#sections-content");
+        sectionBlock.append(this.commentsBlock);
+
         if (this.commentsList.length === 0) {
             this.download(1)
                 .then(comments => {
@@ -80,14 +83,11 @@ class Comments {
         for (let comment of this.commentsList)
             commentsList.append(comment.element);
 
-        let section = document.querySelector(".section");
-        section.replaceWith(this.commentsBlock);
-
     }
 
     sendComment() {
         let commentInput = this.comment.commentsBlock.querySelector(".comments__input");
-        if (!commentInput.textContent)
+        if (!commentInput.value)
             return;
         fetch("../api/comments", {
             method: "POST",
