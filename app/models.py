@@ -359,7 +359,7 @@ class Title(db.Model):
 
     def add_rating(self, user, rating):
         db.session.execute(insert(ratings).values(user_id=user.id, title_id=self.id, rating=rating))
-        db.session.remove()
+        db.session.commit()
 
     def remove_rating(self, user):
         db.session.execute(delete(ratings).where(and_(ratings.c.user_id == user.id, ratings.c.title_id == self.id)))
