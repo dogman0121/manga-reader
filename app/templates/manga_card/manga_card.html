@@ -16,7 +16,7 @@
     <div id="poster">
         <img id="poster__image" src="{{ title.get_poster() }}">
     </div>
-    {% if user.is_authenticated and user.role > 1 %}
+    {% if user.is_authenticated and (user.role > 1 or title.author_id == user.id) %}
         <a class="edit-button" href="{{ url_for("manga.edit_manga", title_id=title.id) }}">
             Редактировать
         </a>
