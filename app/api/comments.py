@@ -6,20 +6,19 @@ from app.api import bp
 
 @bp.route("/comments", methods=["GET"])
 def get_comments():
-    page = request.json.get("page") or 1
-    if request.json.get("parent_id"):
+    page = int(request.args.get("page") or 1)
+    if request.args.get("parent_id"):
         pass
 
-    if request.json.get("root_id"):
-        root = Comment.get_by_id(request.json.get("root_id"))
+    if request.args.get("root_id"):
+        root = Comment.get_by_id(request.args.get("root_id"))
         return jsonify([i.to_dict() for i in root.get_answers()])
 
-    if request.json.get("title_id"):
-        title = Title.get_by_id(request.json.get("title_id"))
+    if request.args.get("title_id"):
+        title = Title.get_by_id(request.args.get("title_id"))
         return jsonify([i.to_dict() for i in title.get_comments(page)])
 
     return jsonify([])
-
 
 
 @bp.route("/comments", methods=["POST"])
