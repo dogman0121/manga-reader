@@ -573,5 +573,10 @@ textarea:focus {
 
     #stats {
         justify-content: center;
+        align-items: center;
+    }
+
+    #stats-option {
+        flex-direction: column;
     }
 }
