@@ -391,7 +391,7 @@ class Title(db.Model):
         return saved
 
     def get_saves_count(self):
-        return db.session.execute(func.count(Select(saves.c.title_id).where(saves.c.title_id == self.id))).fetchone()[0]
+        return db.session.execute(Select(func.count(saves.c.title_id).filter(saves.c.title_id == self.id))).scalar()
 
     def get_poster(self):
         if os.path.exists(f"app/static/media/posters/{self.id}.jpg"):
