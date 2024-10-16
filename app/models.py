@@ -86,9 +86,9 @@ class User(db.Model, UserMixin):
 
     def get_avatar(self):
         if os.path.exists(f"app/static/media/avatars/{self.id}.png"):
-            return url_for("static", filename=f"media/avatars/{self.id}.png")
+            return url_for("static", filename=f"media/avatars/{self.id}.png", _external=True)
         else:
-            return url_for("static", filename=f"media/avatars/default.png")
+            return url_for("static", filename=f"media/avatars/default.png", _external=True)
 
     def add_save(self, title):
         db.session.execute(insert(saves).values(user_id=self.id, title_id=title.id))
@@ -381,7 +381,8 @@ class Title(db.Model):
 
     def get_comments(self, page):
         comments = db.session.execute(
-            Select(Comment).where(Comment.title_id == self.id).offset(20 * (page-1)).limit(20)
+            Select(Comment).where(and_(Comment.title_id == self.id, Comment.root_id == None)
+                                  ).offset(20 * (page - 1)).limit(20)
         ).scalars()
         return comments
 
@@ -395,7 +396,7 @@ class Title(db.Model):
 
     def get_poster(self):
         if os.path.exists(f"app/static/media/posters/{self.id}.jpg"):
-            return url_for("static", filename=f"media/posters/{self.id}.jpg")
+            return url_for("static", filename=f"media/posters/{self.id}.jpg", _external=True)
 
     def to_dict(self):
         return {
@@ -545,7 +546,7 @@ class Team(db.Model):
 
     def get_poster(self):
         if os.path.exists(f"app/static/media/teams/{self.id}.jpg"):
-            return url_for("static", filename=f"media/teams/{self.id}.jpg")
+            return url_for("static", filename=f"media/teams/{self.id}.jpg", _external=True)
 
     def to_dict(self):
         return {
