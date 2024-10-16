@@ -576,7 +576,7 @@ textarea:focus {
         align-items: center;
     }
 
-    #stats-option {
+    .stats-option {
         flex-direction: column;
     }
 }
