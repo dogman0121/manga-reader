@@ -325,7 +325,6 @@ class Title(db.Model):
             and_(
                 Title.validate_types(types),
                 Title.validate_statuses(statuses),
-                Title.validate_genres(genres),
                 Title.validate_year(year_from, year_to)
             )
         ).limit(20).offset(20 * (page - 1))).scalars().all()
