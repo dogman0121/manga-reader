@@ -456,13 +456,13 @@ class Comment(db.Model):
 
     def get_up_votes(self):
         return db.session.execute(
-            func.count(Select(votes.c.type).where(and_(votes.c.comment_id == self.id, votes.c.type == 1)))
-        ).fetchone()[0]
+            Select(func.count(votes.c.type).filter(and_(votes.c.comment_id == self.id, votes.c.type == 1)))
+        ).scalar()
 
     def get_down_votes(self):
         return db.session.execute(
-            func.count(Select(votes.c.type).where(and_(votes.c.comment_id == self.id, votes.c.type == 0)))
-        ).fetchone()[0]
+            Select(func.count(votes.c.type).filter(and_(votes.c.comment_id == self.id, votes.c.type == 0)))
+        ).scalar()
 
     def add_vote(self, user, vote_type):
         db.session.execute(insert(votes).values(comment_id=self.id, user_id=user.id, type=vote_type))
