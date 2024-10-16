@@ -371,7 +371,7 @@ class TitleComment extends Comment {
 
 
     loadAnswers(commentId) {
-        return fetch("../api/comments?"+ new URLSearchParams({root: commentId}))
+        return fetch("../api/comments?"+ new URLSearchParams({root_id: commentId}))
             .then(response => response.json());
     }
 }

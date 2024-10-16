@@ -7,7 +7,7 @@
     {% if user.is_authenticated %}
     let user_id = {{ user.id }};
     {% endif %}
-    let commentsCount = {{ title.comments | length }};
+    let commentsCount = {{ title.get_comments_count() }};
 </script>
 <title>{{ title.name_russian }}</title>
 {% endblock %}

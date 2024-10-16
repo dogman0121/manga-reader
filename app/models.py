@@ -386,6 +386,10 @@ class Title(db.Model):
         ).scalars()
         return comments
 
+    def get_comments_count(self):
+        return db.session.execute(Select(func.count(Comment.id).filter(
+            and_(Comment.title_id == self.id, Comment.root_id == None)))).scalar()
+
     def is_saved_by_user(self, user):
         saved = db.session.execute(Select(
             exists().where(user.id == saves.c.user_id and self.id == saves.c.titles_id))).scalar()
@@ -412,7 +416,6 @@ class Title(db.Model):
             "genres": [i.to_dict() for i in self.genres],
             "views": self.views,
             "saves": self.get_saves_count()
-
         }
 
 
