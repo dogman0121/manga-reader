@@ -59,8 +59,7 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
     font-size: 14px;
-    max-width: 100%;
-    min-width: 150px;
+    width: 100%;
 }
 
 .title-square__poster {
@@ -330,10 +329,6 @@ input[type="text"] {
         top: 10px;
     }
 
-    .title-square {
-        min-width: auto;
-        max-width: none;
-    }
 
     .catalog__grid_square {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));

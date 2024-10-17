@@ -36,13 +36,19 @@
         {% endif %}
     {% endif %}
 </div>
-<div class="sections">
-    <button class="sections__button">читаю</button>
-    <button class="sections__button">прочитанные</button>
-    <button class="sections__button">закладки</button>
-    <button class="sections__button">комментарии</button>
+<div class="saved-titles">
+    <h2 class="saved-titles__header">Сохраненные тайтлы</h2>
+    <div class="saved_titles__titles">
+        {% for title in user.saves %}
+            <a href="{{ url_for("manga.manga_page", title_id=title.id) }}">
+                <div class="saved-title">
+                    <img class="saved-title__poster" src="{{ title.get_poster() }}">
+                    <span class="saved-title__name">{{ title.name_russian }}</span>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
 </div>
-<div class="section__inner"></div>
 {% endblock %}
 {% block footer %}
 {% endblock %}

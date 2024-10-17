@@ -108,6 +108,30 @@ li {
     height: 20px;
 }
 
+.saved-titles {
+    margin-top: 50px;
+}
+
+.saved-titles__header {
+    font-size: 24px;
+}
+
+.saved_titles__titles {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-column-gap: 15px;
+}
+
+.saved-title {
+    max-width: 100%;
+}
+
+.saved-title__poster {
+    width: 100%;
+    border-radius: 12px;
+}
+
 @media (max-width: 700px) {
     .profile {
         flex-direction: column;
