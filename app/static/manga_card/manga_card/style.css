@@ -578,6 +578,6 @@ textarea:focus {
 
     .stats-option {
         flex-direction: column;
-        width: 80px;
+        width: 100px;
     }
 }
