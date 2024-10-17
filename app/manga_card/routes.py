@@ -15,7 +15,7 @@ def manga_page(title_id):
         rating = 0
     title.add_view()
     user_rating = title.get_user_rating(current_user) if current_user.is_authenticated else None
-    is_saved = title.is_saved_by_user(current_user) if current_user.is_authenticated else False
+    is_saved = title in current_user.saves if current_user.is_authenticated else False
     return render_template('manga_card/manga_card.html',
                            user=current_user,
                            title=title,
