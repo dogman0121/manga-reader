@@ -305,3 +305,36 @@ input[type="text"] {
 .title-rectangle__genres {
     margin-top: 5px;
 }
+
+@media (max-width: 700px) {
+    .filters {
+        position: fixed;
+        right: 0;
+        top: 0;
+        background-color: #FFFFFF;
+        width: 80%;
+        height: 100%;
+        max-width: none;
+        padding: 50px 15px;
+        display: none;
+    }
+
+    .catalog {
+        position: relative;
+    }
+
+    .filters__title {
+        position: absolute;
+        right: 0;
+        top: 10px;
+    }
+
+    .title-square {
+        min-width: auto;
+        max-width: none;
+    }
+
+    .catalog__grid_square {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
