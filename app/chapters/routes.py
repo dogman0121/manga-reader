@@ -28,7 +28,8 @@ def get_chapter(chapter_id):
     return render_template("chapters/chapter.html",
                            chapter=chapter_info,
                            images=images_list,
-                           referer=referer)
+                           referer=referer,
+                           user=current_user)
 
 
 @bp.route("/<int:chapter_id>/edit", methods=["GET", "POST"])
