@@ -572,11 +572,12 @@ textarea:focus {
     }
 
     #stats {
-        justify-content: center;
+        justify-content: space-around;
         align-items: center;
     }
 
     .stats-option {
         flex-direction: column;
+        width: 80px;
     }
 }
