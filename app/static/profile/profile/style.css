@@ -130,6 +130,7 @@ li {
 .saved-title__poster {
     width: 100%;
     border-radius: 12px;
+    aspect-ratio: 3/4;
 }
 
 @media (max-width: 700px) {
