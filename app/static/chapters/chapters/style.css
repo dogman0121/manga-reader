@@ -11,4 +11,15 @@ main {
 .img-container {
     display: flex;
     justify-content: space-around;
+    max-width: 100%;
+}
+
+@media (max-width: 700px) {
+    main > .content__inner {
+        padding: 0;
+    }
+
+    img {
+        width: 100%;
+    }
 }
