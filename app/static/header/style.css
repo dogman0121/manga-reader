@@ -54,6 +54,10 @@ nav {
     margin-bottom: auto;
 }
 
+.nav__text {
+    cursor: pointer;
+}
+
 .nav__item + .nav__item {
     margin-left: 24px;
 }
