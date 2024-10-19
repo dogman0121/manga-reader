@@ -3,7 +3,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='modules/inputs/inputs.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='inputs.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/add_manga/style.css') }}">
-    <title>Добавить мангу</title>
+    {% if mode == "edit" %}
+        <title>Редактирование манги</title>
+    {% else %}
+        <title>Добавление манги</h1>
+    {% endif %}
 {% endblock %}
 {% block content %}
     <form class="form" method="POST" enctype="multipart/form-data">

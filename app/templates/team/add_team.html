@@ -3,6 +3,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='modules/inputs/inputs.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='inputs.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='team/add_team/style.css') }}">
+    {% if mode == "edit" %}
+        <title>Редактирование команды</title>
+    {% else %}
+        <title>Добавление команды</h1>
+    {% endif %}
 {% endblock %}
 {% block content %}
     <form class="form" method="POST" enctype="multipart/form-data">

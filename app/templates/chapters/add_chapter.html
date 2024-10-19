@@ -3,6 +3,11 @@
     <link rel="stylesheet" href="{{ url_for("static", filename="modules/inputs/inputs.css") }}">
     <link rel="stylesheet" href="{{ url_for("static", filename="inputs.css") }}">
     <link rel="stylesheet" href="{{ url_for("static", filename="chapters/add_chapters/style.css") }}">
+    {% if mode == "edit" %}
+        <title>Редактирование главы</title>
+    {% else %}
+        <title>Добавление главы</title>
+    {% endif %}
 {% endblock %}
 {% block content %}
     <form method="POST" enctype="multipart/form-data">

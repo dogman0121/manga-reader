@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='header/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='chapters/chapters/style.css') }}">
+<title>Читать бесплатно том {{ chapter.tome }} глава {{ chapter.chapter }} {{ chapter.title.name_russian }}</title>
 {% endblock %}
 {% block content %}
 {% for image in images %}
