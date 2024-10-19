@@ -11,7 +11,7 @@
         {% endif %}
     {% endfor %}
     <div class="input-box">
-        {{ email_form.email(placeholder="E-mail") }}
+        {{ email_form.email(placeholder="Почта") }}
         <img class="input-box__images" src="{{ url_for('auth.static', filename='images/email.svg') }}">
     </div>
     {% for category, message in get_flashed_messages(with_categories=true) %}
