@@ -1,52 +1,52 @@
 from flask import render_template, request, redirect, url_for, flash
 from werkzeug.security import check_password_hash
 from app.models import User
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user
 from app.auth import bp
 from app.email import send_password_recovery_mail, check_password_recovery_token
-from app.auth.forms import SendEmailForm, RecoveryPasswordForm
+from app.auth.forms import SendEmailForm, RecoveryPasswordForm, RegisterForm, LoginForm
 
 
-@bp.route("/", methods=["GET"])
-def login_form():
-    if request.headers.get("Referer") is None and request.args.get("section") is None:
-        return redirect(url_for(".login_form") + "?section=login")
-
-    if request.headers.get("Referer") and request.args.get("section") is None:
-        return redirect(url_for('.login_form') + "?section=login&from=" + request.headers.get("Referer"))
+@bp.route("/", methods=["GET", "POST"])
+def auth():
+    if request.args.get("section") == "register":
+        return register()
 
     if request.args.get("section") == "login":
-        return render_template("login.html")
-    elif request.args.get("section") == "register":
-        return render_template("register.html")
+        return login()
+
+    return redirect(url_for(".auth", section="login"))
 
 
-@bp.route("/", methods=["POST"])
-def login():
-    if request.args.get("section") == "register":
-        if not User.is_login_taken(request.form.get("login")):
-            user_data = request.form
-            user = User(login=user_data["login"], email=user_data["email"])
-            user.set_password(user_data["password"])
+def register():
+    form = RegisterForm()
+    if request.method == "GET":
+        return render_template("register.html", form=form)
+    elif request.method == "POST":
+        if form.validate_on_submit():
+            user = User()
+            user.set_login(form.login.data)
+            user.set_email(form.email.data)
+            user.set_password(form.password.data)
             user.add()
-            if request.args.get("from") is None:
-                return redirect(url_for("index.index"))
-            if request.args.get("from"):
-                return redirect(request.args.get("from"))
+
             return redirect(url_for("index.index"))
-        flash("*Данное имя пользователя занято", "error")
-        return render_template("register.html")
-    else:
-        user_data = User.get_by_login(request.form.get("login"))
-        if user_data and check_password_hash(user_data.password, request.form.get("password")):
-            login_user(user_data, remember={"on": True, None: False}[request.form.get("remember")])
-            if request.args.get("from") is None:
+
+    return render_template("register.html", form=form)
+
+
+def login():
+    form = LoginForm()
+    if request.method == "GET":
+        return render_template("login.html", form=form)
+    elif request.method == "POST":
+        if form.validate_on_submit():
+            user = User.get_by_login(form.login.data)
+            if check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember.data)
                 return redirect(url_for("index.index"))
-            if request.args.get("from"):
-                return redirect(request.args.get("from"))
-            return redirect(url_for('index.index'))
-        flash("*Неправильный логин или пароль!", "error")
-        return render_template("login.html")
+            flash("Неправильный логин или пароль!", "error")
+    return render_template("login.html", form=form)
 
 
 @bp.route("/logout")

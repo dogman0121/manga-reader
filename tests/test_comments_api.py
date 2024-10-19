@@ -71,3 +71,43 @@ def test_parse_comment_data(app):
         assert parent_id == 1
         assert root_id == 1
         assert comment == Comment.get_by_id(comment.id)
+
+
+def test_get_title_comment(app, client):
+    with app.app_context():
+        user = User(login="qwerty", email="e@mail.com")
+        user.set_password("123456")
+        user.add()
+
+        title = Title(name_russian="abaga")
+        title.add()
+
+        comment = Comment(text="123456", user_id=user.id, title_id=title.id)
+        comment.add()
+
+        answer = Comment(text="654321", user_id=user.id, title_id=title.id, root_id=comment.id, parent_id=comment.id)
+        answer.add()
+
+        response = client.get("/api/comments", query_string={"title_id": title.id, "page": 1})
+
+        assert response.json == [comment.to_dict()]
+
+
+def test_get_answer_comment(app, client):
+    with app.app_context():
+        user = User(login="qwerty", email="e@mail.com")
+        user.set_password("123456")
+        user.add()
+
+        title = Title(name_russian="abaga")
+        title.add()
+
+        comment = Comment(text="123456", user_id=user.id, title_id=title.id)
+        comment.add()
+
+        answer = Comment(text="654321", user_id=user.id, title_id=title.id, root_id=comment.id, parent_id=comment.id)
+        answer.add()
+
+        response = client.get("/api/comments", query_string={"root_id": title.id, "page": 1})
+
+        assert response.json == [answer.to_dict()]

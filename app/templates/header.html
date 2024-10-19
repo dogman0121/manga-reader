@@ -40,7 +40,7 @@
                         </div>
                     </div>
                 {% else %}
-                    <a class="nav__item" id="profile" href="{{ url_for('auth.login_form')}}">
+                    <a class="nav__item" id="profile" href="{{ url_for('auth.auth')}}">
                         <img class="empty-icon" src="{{ url_for("static", filename="media/avatars/default.png") }}">
                     </a>
                 {% endif %}
