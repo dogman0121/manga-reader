@@ -20,3 +20,9 @@ class TestConfig:
     JSON_AS_ASCII = False
 
     SQLALCHEMY_DATABASE_URI = 'postgresql://test:123456@217.144.189.150:5433/manga-reader_test'
+
+    SERVER_NAME = "127.0.0.1:8000"
+    APPLICATION_ROOT = "/"
+    PREFERRED_URL_SCHEME = "http"
+
+    WTF_CSRF_ENABLED = False
