@@ -11,10 +11,10 @@ def test_adding_full_params_comments(app, client):
         title.add()
 
         response = client.post("/api/comments", json={
-            "user_id": 1,
-            "title_id": 1,
-            "root_id": 1,
-            "parent_id": 1,
+            "user": 1,
+            "title": 1,
+            "root": 1,
+            "parent": 1,
             "text": "хехехе"
         })
 
@@ -31,8 +31,8 @@ def test_adding_semi_params_comments(app, client):
         title.add()
 
         response = client.post("/api/comments", json={
-            "user_id": 1,
-            "title_id": 1,
+            "user": 1,
+            "title": 1,
             "text": "хехехе"
         })
 
@@ -49,18 +49,18 @@ def test_parse_comment_data(app):
         title.add()
 
         dct = {
-            "user_id": 1,
-            "title_id": 1,
-            "root_id": 1,
-            "parent_id": 1,
+            "user": 1,
+            "title": 1,
+            "root": 1,
+            "parent": 1,
             "text": "хехехе"
         }
 
         text = dct.get("text")
-        title_id = int(dct.get("title_id"))
-        user_id = int(dct.get("user_id"))
-        parent_id = int(dct.get("parent_id"))
-        root_id = int(dct.get("root_id"))
+        title_id = int(dct.get("title"))
+        user_id = int(dct.get("user"))
+        parent_id = int(dct.get("parent"))
+        root_id = int(dct.get("root"))
 
         comment = Comment(text=text, title_id=title_id, user_id=user_id, parent_id=parent_id, root_id=root_id)
         comment.add()
@@ -88,7 +88,7 @@ def test_get_title_comment(app, client):
         answer = Comment(text="654321", user_id=user.id, title_id=title.id, root_id=comment.id, parent_id=comment.id)
         answer.add()
 
-        response = client.get("/api/comments", query_string={"title_id": title.id, "page": 1})
+        response = client.get("/api/comments", query_string={"title": title.id, "page": 1})
 
         assert response.json == [comment.to_dict()]
 
@@ -108,6 +108,6 @@ def test_get_answer_comment(app, client):
         answer = Comment(text="654321", user_id=user.id, title_id=title.id, root_id=comment.id, parent_id=comment.id)
         answer.add()
 
-        response = client.get("/api/comments", query_string={"root_id": title.id, "page": 1})
+        response = client.get("/api/comments", query_string={"root": title.id, "page": 1})
 
         assert response.json == [answer.to_dict()]
