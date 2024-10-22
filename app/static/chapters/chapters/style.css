@@ -19,7 +19,7 @@ main {
         padding: 0;
     }
 
-    page__image {
+    .page__image {
         width: 100%;
     }
 }
