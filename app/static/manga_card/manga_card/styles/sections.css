@@ -1,0 +1,32 @@
+.sections {
+    margin-top: 20px;
+}
+
+.section {
+    display: none;
+}
+
+.section_selected {
+    display: block;
+}
+
+.sections__buttons {
+    display: flex;
+    flex-direction: row;
+}
+
+.sections-buttons__item {
+    width: 160px;
+    height: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sections-buttons__item_active {
+    border-bottom: 2px solid #FFD600;
+}
+
+.sections__content {
+    margin-top: 17px;
+}

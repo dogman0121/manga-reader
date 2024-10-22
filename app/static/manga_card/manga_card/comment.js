@@ -1,387 +1,474 @@
-class Comment{
-    constructor(commentData, parentComment=undefined, rootComment=undefined) {
-        this.id = commentData.id;
-        this.parent = commentData.parent;
-        this.text = commentData.text;
-        this.user = commentData.user;
-        this.date = commentData.date;
-        this.voteUp = commentData.up_votes;
-        this.voteDown = commentData.down_votes;
-        this.userVote = commentData.user_vote;
-        this.parent = parentComment;
-        this.root = rootComment;
-
-        this.element = this.renderElement();
-
-        let voteUp = this.element.querySelector(".rating-up");
-        voteUp.addEventListener("click", {handleEvent: this.ratingUp, comment: this});
-
-        let voteDown = this.element.querySelector(".rating-down");
-        voteDown.addEventListener("click", {handleEvent: this.ratingDown, comment: this});
-
-        let answerButton = this.element.querySelector(".comment__answer-button");
-        answerButton.addEventListener("click", {handleEvent: this.addAnswer, comment: this});
+class CommentBody extends Component{
+    constructor(comment) {
+        super();
+        this.comment = comment;
     }
 
-    renderElement() {
-        let dateComment = new Date(Date.parse(this.date));
-        let dateNow = new Date(Date.now());
-        let dateNowUTC = new Date(dateNow.getUTCFullYear(), dateNow.getUTCMonth(),
-            dateNow.getUTCDate(), dateNow.getUTCHours(), dateNow.getUTCMinutes(),
-            dateNow.getUTCSeconds(), dateNow.getUTCMilliseconds())
-        let timeDelta = dateNowUTC - dateComment;
+    render() {
+        let dateUTC = new Date().getTime() + new Date().getTimezoneOffset() * 60000;
+        let commentDate = this.comment.date;
+        let howOld = this.formatTimedelta(dateUTC - commentDate);
 
-        let years = Math.floor(timeDelta / 31104000000);
-        let month = Math.floor(timeDelta / 2592000000 % 12);
-        let days = Math.floor(timeDelta / 86400000 % 30);
-        let hours = Math.floor(timeDelta / 3600000 % 24);
-        let minutes = Math.floor(timeDelta / 60000 % 60);
-        let seconds = Math.floor(timeDelta / 1000 % 60);
-
-        let howOld;
-        if (years !== 0){
-            if (years === 1 || (years/ 10 >= 2 && years % 10 === 1))
-                howOld = years + " год назад";
-            else if (2 <= years%10 && years%10 <= 4 && years !== 11 && years !== 12)
-                howOld = years + " года назад";
-            else
-                howOld = years + " лет назад";
-        } else if (month !== 0){
-            if (month === 1)
-                howOld = month + " месяц назад";
-            else if (2 <= month <= 4)
-                howOld = month + " месяца назад";
-            else
-                howOld = month + " месяцев назад";
-        } else if (days !== 0) {
-            if (days === 1 || (days/10 >= 2 && days % 10 === 1))
-                howOld = days + " день назад";
-            else if (2 <= days%10 && days%10 <= 4 && days !== 11 && days !== 12)
-                howOld = days + " дня назад";
-            else
-                howOld = days + " дней назад";
-        } else if (hours !== 0) {
-            if (hours === 1 || (hours / 10 >= 2 && hours % 10 === 1))
-                howOld = hours + " час назад";
-            else if (2 <= hours%10 && hours%10 <= 4 && hours !== 11 && hours !== 12)
-                howOld = hours + " часа назад";
-            else
-                howOld = hours + " часов назад";
-        } else if (minutes !== 0){
-            if (minutes === 1 || (minutes / 10 >= 2 && minutes % 10 === 1))
-                howOld = minutes + " минута назад";
-            else if (2 <= minutes%10 && minutes%10 <= 4 && minutes !== 11 && minutes !== 12)
-                howOld = minutes + " минуты назад";
-            else
-                howOld = minutes + " минут назад";
-        } else {
-            if (seconds === 1 || (seconds / 10 >= 2 && seconds % 10 === 1))
-                howOld = seconds + " секунда назад";
-            else if (2 <= seconds%10 && seconds <= 4 && seconds !== 11 && seconds !== 12)
-                howOld = seconds + " секунды назад";
-            else
-                howOld = seconds + " секунд назад";
-        }
-
-         let elementHTML = `
-            <div class="comment">
-                <div class="comment__user">
-                    <img class="user__avatar" src="${this.user.avatar}">
+        return `
+            <div class="comment__body">
+                <div class="comment__user user">
+                    <img class="user__avatar" src="${this.comment.user.avatar}">
                     <div class="user__info">
-                        <span class="user__name">${this.user.login}</span>
+                        <span class="user__name">${this.comment.user.login}</span>
                         <span class="comment__date">${howOld}</span>
                     </div>
                 </div>
-                <div class="comment__text">${this.text}</div>
-                <div class="comment__reactions">
-                    <div class="comment__rating">
-                        <div class="rating__button rating-up${(this.userVote === 1) ? " rating__button_active" : ""}">
-                            <img class="rating-up__image" src="../static/manga_card/manga_card/images/rating-up.svg">
-                        </div>
-                        <span class="rating__text">${this.voteUp - this.voteDown}</span>
-                        <div class="rating__button rating-down${(this.userVoteType === 0) ? " rating__button_active" : ""}">
-                            <img class="rating-down__image" src="../static/manga_card/manga_card/images/rating-down.svg">
-                        </div>
-                    </div>
-                    <span class="comment__answer-button">ответить</span>
-                </div>
+                <div class="comment__text">${this.comment.text}</div>
             </div>
-        `
-        let elementRendered = new DOMParser().parseFromString(elementHTML, "text/html");
-        return elementRendered.querySelector(".comment");
+        `;
     }
 
-    ratingUp(event) {
-        if (auth) {
-            fetch("../api/vote", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    commentId: this.comment.id,
-                    type: 1,
-                }),
-            }).then((response) => {
-                if (response.ok) {
-                    let commentRating = this.comment.element.querySelector(".rating__text");
-                    let voteUp = this.comment.element.querySelector(".rating-up");
-                    let voteDown = this.comment.element.querySelector(".rating-down");
-                    if (this.comment.userVote != null){
-                        if (this.comment.userVote === 1){
-                            commentRating.textContent = parseInt(commentRating.textContent) - 1;
-                            this.comment.userVote = null;
-                            voteUp.classList.remove("rating__button_active");
-                        }
-                        else{
-                            commentRating.textContent = parseInt(commentRating.textContent) + 2;
-                            voteUp.classList.add("rating__button_active");
-                            voteDown.classList.remove("rating__button_active");
-                            this.comment.userVote = 1;
-                        }
-                    }
-                    else{
-                        commentRating.textContent = parseInt(commentRating.textContent) + 1;
-                        voteUp.classList.add("rating__button_active");
-                        this.comment.userVote = 1;
-                    }
-                }
-            });
-        }
-    }
+    formatTimedelta(timeDelta) {
+        let yearsEnd = {1: "год", 2: "года", 3: "лет"}
+        let monthsEnd = {1: "месяц", 2: "месяца", 3: "месяцев"}
+        let weeksEnd = {1: "неделя", 2: "недели", 3: "недель"}
+        let daysEnd = {1: "день", 2: "дня", 3: "дней"}
+        let hoursEnd = {1: "час", 2: "часа", 3: "часов"}
+        let minutesEnd = {1: "минута", 2: "минуты", 3: "минут"}
+        let secondsEnd = {1: "секунда", 2: "секунды", 3: "секунд"}
 
-    ratingDown(event) {
-        if (auth) {
-            fetch("../api/vote", {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    commentId: this.comment.id,
-                    type: 0,
-                }),
-            }).then((response) => {
-                if (response.ok) {
-                    let commentRating = this.comment.element.querySelector(".rating__text");
-                    let voteUp = this.comment.element.querySelector(".rating-up");
-                    let voteDown = this.comment.element.querySelector(".rating-down");
-                    if (this.comment.userVote != null){
-                        if (this.comment.userVote === 0){
-                            commentRating.textContent = parseInt(commentRating.textContent) + 1;
-                            this.comment.userVote = null;
-                            voteDown.classList.remove("rating__button_active");
-                        }
-                        else{
-                            commentRating.textContent = parseInt(commentRating.textContent) - 2;
-                            voteDown.classList.add("rating__button_active");
-                            voteUp.classList.remove("rating__button_active");
-                            this.comment.userVote = 0;
-                        }
-                    }
-                    else{
-                        commentRating.textContent = parseInt(commentRating.textContent) - 1;
-                        voteDown.classList.add("rating__button_active");
-                        this.comment.userVote = 0;
-                    }
-                }
-            });
-        }
-    }
-
-    addAnswer(event){
-        if (this.comment.answerForm){
-            this.comment.answerForm.remove();
-            delete this.comment.answerForm;
-        }
-        else {
-            let answerForm;
-            if (auth)
-                answerForm = `
-                <textarea class="comments__input" placeholder="Введите текст"></textarea>
-                <div class="comments__send">Отправить</div>
-            `;
+        let findEnd = (n) => {
+            if ((n % 10 > 4) || (20 < n < 10) || (n % 10 === 0))
+                return 3
+            else if (1 < n % 10 < 5)
+                return 2
             else
-                answerForm = `
-                <p class="comments-not-auth__text">Чтобы написать комментарий необходимо авторизироваться</p>
-                <div class="comments-not-auth__button">
-                    <a href="login" class="comments-not-auth__login">Войти</a>
-                </div>
-            `;
-            let answerFormHtml = `
-            <div class="comments__form answer__form">
-                ${answerForm}
-            </div>
-            `;
-            let answerFormRendered = new DOMParser().parseFromString(answerFormHtml, "text/html");
-            let answerFormElement = answerFormRendered.querySelector(".comments__form");
+                return 1
+        }
 
-            this.comment.answerForm = answerFormElement;
-            if (auth) {
-                let answerFormInput = answerFormElement.querySelector(".comments__input");
-                answerFormElement.addEventListener("click", function () {
-                    answerFormInput.focus();
-                });
-                answerFormInput.addEventListener("input", function () {
-                    this.style.height = 'auto';
-                    this.style.height = this.scrollHeight + 'px';
-                }, false);
-            }
-            let commentReactions = this.comment.element.querySelector(".comment__reactions");
-            commentReactions.after(answerFormElement);
-            let sendAnswerButton = this.comment.element.querySelector(".comments__send");
-            sendAnswerButton.addEventListener("click", {handleEvent: this.comment.sendAnswer, comment: this.comment});
+        if (timeDelta / 31536000000 >= 1){ // Проверяем если прошел хотя бы год после публикации
+            let years = parseInt(timeDelta / 31536000000);
+            return years.toString() + " " + yearsEnd[findEnd(years)];
+        }
+        else if (timeDelta / 2692000000 >= 1) { // Проверяем если прошел хотя бы месяц после публикации
+            let months = parseInt(timeDelta / 2692000000);
+            return months.toString() + " " + monthsEnd[findEnd(months)];
+        }
+        else if (timeDelta / 604800000 >= 1) { // Проверяем если прошел хотя бы месяц после публикации
+            let weeks = parseInt(timeDelta / 604800000);
+            return weeks.toString() + " " + monthsEnd[findEnd(weeks)];
+        }
+        else if (timeDelta / 86400000 >= 1) { // Проверяем если прошел хотя бы месяц после публикации
+            let days = parseInt(timeDelta / 86400000);
+            return days.toString() + " " + daysEnd[findEnd(days)];
+        }
+        else if (timeDelta / 3600000 >= 1) { // Проверяем если прошел хотя бы месяц после публикации
+            let hours = parseInt(timeDelta / 3600000);
+            return hours.toString() + " " + hoursEnd[findEnd(hours)];
+        }
+        else if (timeDelta / 60000 >= 1) { // Проверяем если прошел хотя бы месяц после публикации
+            let minutes = parseInt(timeDelta / 60000);
+            return minutes.toString() + " " + minutesEnd[findEnd(minutes)];
+        }
+        else { // Обрабатываем секунды
+            let seconds = parseInt(timeDelta / 1000);
+            return seconds.toString() + " " + secondsEnd[findEnd(seconds)];
         }
     }
 
-    sendAnswer(event) {
-        let text = this.comment.answerForm.querySelector(".comments__input").value;
-        if (!text)
-            return;
-        let parent = this.comment.id;
-        let root;
-        if (this.comment.rootId)
-            root = this.comment.rootId;
-        else
-            root = this.comment.id;
+}
 
-        fetch("../api/comments", {
+class CommentPanel extends Component{
+    constructor(comment) {
+        super();
+        this.comment = comment;
+        this.answersOpened = 0;
+        this.formOpened = 0;
+    }
+
+    render() {
+        let html = `
+            <div class="comment__panel">
+                <div class="comment__rating">
+                    <div class="rating__button rating-up ${(this.comment.userVote === 1) ? " rating__button_active" : ""}">
+                        <img class="rating-up__image" src="../static/manga_card/manga_card/images/rating-up.svg">
+                    </div>
+                    <span class="rating__text">${this.comment.upVotes - this.comment.downVotes}</span>
+                    <div class="rating__button rating-down${(this.comment.userVote === 0) ? " rating__button_active" : ""}">
+                        <img class="rating-down__image" src="../static/manga_card/manga_card/images/rating-down.svg">
+                    </div>
+                </div>
+                <span class="comment__answer-button">ответить</span>
+        `
+
+        if (this.comment.answersCount)
+            html += `
+                <span class="comment__show-answers show-answers">
+                    ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.comment.answersCount}</span>)
+                    <img class="show-answers__image" src="../static/manga_card/manga_card/images/rating-down.svg">
+                </span>
+            `
+        html += `</div>`
+
+        return html;
+    }
+
+    registerEvents(element) {
+        this.element.querySelector(".rating-up").addEventListener("click", this.voteUp.bind(this));
+        this.element.querySelector(".rating-down").addEventListener("click", this.voteDown.bind(this));
+        this.element.querySelector(".comment__answer-button").addEventListener("click", this.commentFormListener.bind(this));
+        this.element.querySelector(".show-answers")?.addEventListener("click", this.answersListener.bind(this));
+    }
+
+    voteDown() {
+        if (this.voteWork)
+            return null;
+
+        this.voteWork = true;
+        this.sendVote(0)
+            .then(() => {
+                const voteUpButton = this.element.querySelector(".rating-up");
+                const voteDownButton = this.element.querySelector(".rating-down");
+                const votesCounter = this.element.querySelector(".rating__text");
+                if (this.comment.userVote === 0){
+                    voteDownButton.classList.remove("rating__button_active");
+                    votesCounter.textContent = parseInt(votesCounter.textContent) + 1;
+                    this.comment.downVotes--;
+                    this.comment.userVote = undefined;
+                }
+                else if (this.comment.userVote === 1) {
+                    voteUpButton.classList.remove("rating__button_active");
+                    voteDownButton.classList.add("rating__button_active");
+                    votesCounter.textContent = parseInt(votesCounter.textContent) - 2;
+                    this.comment.upVotes--;
+                    this.comment.downVotes++;
+                    this.comment.userVote = 0;
+                } else {
+                    voteDownButton.classList.add("rating__button_active");
+                    votesCounter.textContent = parseInt(votesCounter.textContent) - 1;
+                    this.comment.downVotes++;
+                    this.comment.userVote = 0;
+                }
+        })
+            .then(() => {this.voteWork = false});
+    }
+
+    voteUp() {
+        if (this.voteWork)
+            return null;
+
+        this.voteWork = true;
+        this.sendVote(1)
+            .then(() => {
+                const voteUpButton = this.element.querySelector(".rating-up");
+                const voteDownButton = this.element.querySelector(".rating-down");
+                const votesCounter = this.element.querySelector(".rating__text");
+                if (this.comment.userVote === 1){
+                    voteUpButton.classList.remove("rating__button_active");
+                    votesCounter.textContent = parseInt(votesCounter.textContent) - 1;
+                    this.comment.upVotes--;
+                    this.comment.userVote = undefined;
+                }
+                else if (this.comment.userVote === 0) {
+                    voteDownButton.classList.remove("rating__button_active");
+                    voteUpButton.classList.add("rating__button_active");
+                    votesCounter.textContent = parseInt(votesCounter.textContent) + 2;
+                    this.comment.upVotes++;
+                    this.comment.downVotes--;
+                    this.comment.userVote = 1;
+                } else {
+                    voteUpButton.classList.add("rating__button_active");
+                    votesCounter.textContent = parseInt(votesCounter.textContent) + 1;
+                    this.comment.upVotes++;
+                    this.comment.userVote = 1;
+                }
+        })
+            .then(() => {this.voteWork = false});
+    }
+
+    sendVote(voteType){
+        return fetch("../api/vote", {
             method: "POST",
             headers: {
-                'Accept': 'application/json',
+                "Accept": "application/json",
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                parent_id: parent,
-                root_id: root,
-                user_id: user_id,
-                title_id: title_id,
-                text: text,
+                comment: this.comment.id,
+                type: voteType,
+            })
+        })
+    }
+
+    answersListener(event) {
+        if (this.answersOpened)
+            this.closeAnswers();
+        else
+            this.showAnswers();
+    }
+
+    commentFormListener(event) {
+        if (this.commentFormOpened)
+            this.closeCommentForm();
+        else
+            this.showCommentForm();
+    }
+
+    showAnswers() {
+        this.answersOpened = true;
+        let event = new CustomEvent("answersOpened", {detail: {"comment": this.comment}});
+        this.dispatchEvent(event);
+    }
+
+    closeAnswers() {
+        this.answersOpened = false;
+        let event = new CustomEvent("answersClosed", {detail: {"comment": this.comment}});
+        this.dispatchEvent(event);
+    }
+
+    showCommentForm() {
+        this.commentFormOpened = true;
+        let event = new CustomEvent("formOpened", {detail: {"comment": this.comment}});
+        this.dispatchEvent(event);
+    }
+
+    closeCommentForm() {
+        this.commentFormOpened = false;
+        let event = new CustomEvent("formClosed", {detail: {"comment": this.comment}});
+        this.dispatchEvent(event);
+    }
+}
+
+class CommentForm extends Component{
+    constructor(comment) {
+        super();
+        this.comment = comment;
+    }
+
+    render() {
+        let html;
+        if (auth)
+            html = `
+                <div class="comment__form">
+                    <textarea class="comments__input" placeholder="Введите текст"></textarea>
+                    <div class="comments__send">Отправить</div>
+                </div>
+            `
+        else
+            html = `
+                <div class="comment__form">
+                    <p class="comments-not-auth__text">Чтобы написать комментарий необходимо авторизоваться</p>
+                    <div class="comments-not-auth__button">
+                        <a href="/auth" class="comments-not-auth__login">Войти</a>
+                    </div>
+                </div>
+            `
+        return html;
+    }
+
+    registerEvents(element) {
+        element.querySelector(".comments__send")?.addEventListener("click", this.sendAnswer.bind(this));
+    }
+
+    sendAnswer(){
+        let textarea = this.element.querySelector(".comments__input");
+        let text = textarea.value;
+        textarea.value = "";
+
+        fetch("/api/comments", {
+            method: "POST",
+             headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "title": title_id,
+                "text": text,
+                "user": user_id,
+                "root": this.comment.root ? this.comment.root : this.comment.id,
+                "parent": this.comment.id
             })
         })
             .then((response) => response.json())
             .then((comment) => {
-                let commentObject = new CommentAnswer(comment, this.comment, this.comment.root);
-                if (this.comment.root){
-                    // Проверяем, показаны ли ответы на комментарий и если нет, то показываем
-                    if (!commentObject.root.element.querySelector(".answers__list"))
-                        commentObject.root.showAnswers();
-                    let answerList = commentObject.root.element.querySelector(".answers__list");
-                    answerList.append(commentObject.element);
-                }
-                else {
-                    this.comment.answersCount += 1;
-                    if (this.comment.element.querySelector(".show-answers__answers-count")){
-                        let answersCount = this.comment.element.querySelector(".show-answers__answers-count");
-                        answersCount.textContent = this.comment.answersCount;
-                    }
-                    if (this.comment.id == comment.root && this.comment.answers.length === 0){
-                        this.comment.loadAnswers(this.comment.id).then(answers => {
-                            let answersObjects = answers.map(answer => new CommentAnswer(answer, this.comment));
-                            this.comment.answers = this.comment.answers.concat(answersObjects);
-                            this.comment.showAnswers();
-                        })
-                    }
-                    else {
-                        if (this.comment.id == comment.root && !this.comment.element.querySelector(".answers__list"))
-                            this.comment.showAnswers();
-                        let answerList = this.comment.element.querySelector(".answers__list");
-                        this.comment.answers.push(commentObject);
-                        answerList.append(commentObject.element);
-                    }
-                }
-                let commentForm = this.comment.element.querySelector(".comments__form");
-                commentForm.remove();
+                let commentObj = Comment.createFromObj(comment);
+
+                let event = new CustomEvent("commentSend", {detail: {"comment": commentObj}});
+                this.dispatchEvent(event);
             })
+    }
+
+    show() {
+        this.element.classList.add("comment__form_visible");
+    }
+
+    hide() {
+        this.element.classList.remove("comment__form_visible");
     }
 }
 
-class TitleComment extends Comment {
-    constructor(commentData) {
-        super(commentData);
-        this.answersCount = commentData.answers_count;
+class CommentAnswers extends Component{
+    constructor(comment) {
+        super();
+        this.comment = comment;
         this.answers = [];
-        if (this.answersCount > 0){
-            let commentReactions = this.element.querySelector(".comment__reactions");
-            let showAnswersButtonHTML = `
-                <span class="comment__show-answers show-answers">
-                    ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.answersCount}</span>)
-                    <img class="show-answers__image" src="../static/manga_card/manga_card/images/rating-down.svg">
-                </span>
-            `;
-
-            let showAnswersButtonRendered = new DOMParser().parseFromString(showAnswersButtonHTML, "text/html");
-            let showAnswersButton = showAnswersButtonRendered.querySelector(".show-answers");
-            showAnswersButton.addEventListener("click", {handleEvent: function(){
-                this.comment.showAnswers();
-                }, comment: this});
-
-            commentReactions.append(showAnswersButton);
-        }
     }
 
-
-    showAnswers() {
-        if (this.element.querySelector(".comment__answers")){
-            let commentAnswers = this.element.querySelector(".comment__answers");
-            commentAnswers.remove();
-            let showCommentsButton = this.element.querySelector(".show-answers__image");
-            showCommentsButton.src = "../static/manga_card/manga_card/images/rating-down.svg";
-            return null;
-        }
-        if(this.answers.length === 0){
-            this.loadAnswers(this.id).then(answers => {
-                let answersObjects = answers.map(answer => new CommentAnswer(answer, null, this));
-                this.answers = this.answers.concat(answersObjects);
-                this.showAnswers();
-            });
-            return null;
-        }
-        if (!this.element.querySelector(".show-answers") && this.answers.length != 0) {
-            let showAnswersButtonHTML = `
-                <span class="comment__show-answers show-answers">
-                    ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.answers.length}</span>)
-                    <img class="show-answers__image" src="../static/manga_card/manga_card/images/rating-up.svg">
-                </span>
-            `;
-            let showAnswerButtonRendered = new DOMParser().parseFromString(showAnswersButtonHTML, "text/html");
-            let showAnswerButtonElement = showAnswerButtonRendered.querySelector(".show-answers");
-
-            let commentReactions = this.element.querySelector(".comment__reactions");
-            commentReactions.append(showAnswerButtonElement);
-        }
-        let showCommentsButton = this.element.querySelector(".show-answers__image");
-        showCommentsButton.src = "../static/manga_card/manga_card/images/rating-up.svg";
-        let answersBlockHtml = `
+    render() {
+        let html = `
             <div class="comment__answers">
-                <div class="answers__line"></div>
                 <div class="answers__list">
                 </div>
             </div>
-        `;
-        let answerBlockRendered = new DOMParser().parseFromString(answersBlockHtml, "text/html");
-        let answerBlockElement = answerBlockRendered.querySelector(".comment__answers");
-        let answersList = answerBlockElement.querySelector(".answers__list");
-        for(let answer of this.answers)
-            answersList.append(answer.element);
-        this.element.append(answerBlockElement);
+        `
+        return html;
     }
 
+    addBack(comment) {
+        this.answers.push(comment);
+        this.element.querySelector(".answers__list").append(comment.renderDOM());
+        this.comment.answersCount ++;
+    }
 
-    loadAnswers(commentId) {
-        return fetch("../api/comments?"+ new URLSearchParams({root_id: commentId}))
-            .then(response => response.json());
+    addFront(comment){
+        this.answers.push(comment);
+        this.element.querySelector(".answers__list").prepend(comment.renderDOM());
+        this.comment.answersCount ++;
+    }
+
+    load(){
+        if (this.comment.answersCount === this.answers.length)
+            return null;
+
+        fetch("/api/comments?" + new URLSearchParams({parent: this.comment.id}))
+            .then((response) => response.json())
+            .then((comments) => {
+                for (let comment of comments){
+                    this.addBack(Comment.createFromObj(comment));
+                }
+            })
+    }
+
+    show() {
+        if (this.answers.length === 0)
+            this.load();
+        this.element.classList.add("comment__answers_visible");
+    }
+
+    hide() {
+        this.element.classList.remove("comment__answers_visible");
     }
 }
 
-class CommentAnswer extends Comment{
-    constructor(commentData, parent=undefined, root=undefined) {
-        super(commentData);
-        this.parentId = commentData.parent;
-        this.rootId = commentData.root;
-        this.parent = parent;
+class Comment extends Component{
+    constructor(id, title, user, text, date=new Date(), upVotes=0, downVotes=0,
+                userVote=undefined, answersCount=0, root=undefined,
+                parent=undefined) {
+        super();
+        this.id = id;
+        this.title = title;
+        this.user = user;
+        this.text = text;
+        this.date = date;
+        this.upVotes = upVotes;
+        this.downVotes = downVotes;
+        this.userVote = userVote;
+        this.answersCount = answersCount
         this.root = root;
+        this.parent = parent;
+
+        this.commentBody = new CommentBody(this);
+        this.commentPanel = new CommentPanel(this);
+        this.commentForm = new CommentForm(this);
+        this.commentAnswers = new CommentAnswers(this);
     }
+
+    static createFromObj(obj) {
+        let comment = new Comment(
+            obj.id,
+            obj.title,
+            obj.user,
+            obj.text,
+            new Date(obj.date),
+            obj.up_votes,
+            obj.down_votes,
+            obj.user_vote,
+            obj.answers_count,
+            obj.root,
+            obj.parent
+        )
+
+        return comment;
+    }
+
+    render() {
+        return `
+            <div data-id="${this.id}" class="comment">
+                {{ this.commentBody }}
+                {{ this.commentPanel }}
+                {{ this.commentForm }}
+                {{ this.commentAnswers }}
+            </div>
+        `
+    }
+
+    registerEvents(element) {
+        this.commentPanel.addEventListener("answersOpened", this.commentAnswers.show.bind(this.commentAnswers));
+        this.commentPanel.addEventListener("answersClosed", this.commentAnswers.hide.bind(this.commentAnswers));
+        this.commentPanel.addEventListener("formOpened", this.commentForm.show.bind(this.commentForm));
+        this.commentPanel.addEventListener("formClosed", this.commentForm.hide.bind(this.commentForm));
+        this.commentForm.addEventListener("commentSend", (e) => this.commentAnswers.addFront(e.detail.comment));
+        this.commentForm.addEventListener("commentSend", this.commentPanel.showAnswers.bind(this.commentPanel));
+    }
+}
+
+
+class TitleComment extends Comment {
+    constructor() {
+        super(undefined, DATA.title, {}, "");
+        this.page = 1;
+        this.loadComments();
+    }
+
+    render() {
+        return `
+            <div class="title__comments">
+                {{ this.commentForm }}
+                {{ this.commentAnswers }}
+            </div>
+        `
+    }
+
+    registerEvents(){
+        this.commentForm.addEventListener("commentSend", (e) => this.commentAnswers.addFront(e.detail.comment));
+        window.addEventListener("scroll", () => {
+            let commentsList = document.querySelector(".comment__answers");
+            let commentsCords = commentsList.getBoundingClientRect();
+            let commentsBottom = commentsCords.bottom;
+            if((commentsBottom - document.documentElement.clientHeight) < 10)
+                this.loadComments();
+        })
+    }
+
+    loadComments() {
+        if (this.cantLoad)
+            return null;
+
+        if (this.loadProcess)
+            return null;
+
+        this.loadProcess = true;
+        fetch("../api/comments?"+ new URLSearchParams({page: this.page, title: this.title.id}))
+            .then((response) => response.json())
+            .then((comments) => {
+                if (comments.length === 0){
+                    this.cantLoad = true;
+                    return null;
+                }
+                else {
+                    for (let comment of comments){
+                        this.commentAnswers.addBack(Comment.createFromObj(comment));
+                    }
+                    this.page += 1
+                }
+            })
+            .then(() => {this.loadProcess = false})
+
+    }
+
 }

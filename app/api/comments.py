@@ -7,15 +7,16 @@ from app.api import bp
 @bp.route("/comments", methods=["GET"])
 def get_comments():
     page = int(request.args.get("page") or 1)
-    if request.args.get("parent_id"):
-        pass
+    if request.args.get("parent"):
+        parent = Comment.get_by_id(request.args.get("parent"))
+        return jsonify([i.to_dict() for i in parent.get_answers()])
 
-    if request.args.get("root_id"):
-        root = Comment.get_by_id(request.args.get("root_id"))
+    if request.args.get("root"):
+        root = Comment.get_by_id(request.args.get("root"))
         return jsonify([i.to_dict() for i in root.get_answers()])
 
-    if request.args.get("title_id"):
-        title = Title.get_by_id(request.args.get("title_id"))
+    if request.args.get("title"):
+        title = Title.get_by_id(request.args.get("title"))
         return jsonify([i.to_dict() for i in title.get_comments(page)])
 
     return jsonify([])
@@ -24,10 +25,10 @@ def get_comments():
 @bp.route("/comments", methods=["POST"])
 def add_comment():
     text = request.json.get("text")
-    title_id = int(request.json.get("title_id"))
-    user_id = int(request.json.get("user_id"))
-    parent_id = int(request.json.get("parent_id")) if request.json.get("parent_id") is not None else None
-    root_id = int(request.json.get("root_id")) if request.json.get("root_id") is not None else None
+    title_id = int(request.json.get("title"))
+    user_id = int(request.json.get("user"))
+    parent_id = int(request.json.get("parent")) if request.json.get("parent") is not None else None
+    root_id = int(request.json.get("root")) if request.json.get("root") is not None else None
 
     comment = Comment(text=text, user_id=user_id, title_id=title_id, root_id=root_id, parent_id=parent_id)
     comment.add()

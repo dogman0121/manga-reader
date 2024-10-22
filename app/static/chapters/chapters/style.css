@@ -8,7 +8,7 @@ main {
     margin-top: 0;
 }
 
-.img-container {
+.page {
     display: flex;
     justify-content: space-around;
     max-width: 100%;
@@ -19,7 +19,7 @@ main {
         padding: 0;
     }
 
-    img {
+    page__image {
         width: 100%;
     }
 }

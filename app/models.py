@@ -254,6 +254,12 @@ class Chapter(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+    def get_pages(self) -> list[str]:
+        images_list = []
+        for i in range(len(os.listdir(f"app/static/media/chapters/{self.id}"))):
+            images_list.append(url_for("static", filename=f"media/chapters/{self.id}/{i + 1}.jpeg"))
+        return images_list
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -261,7 +267,7 @@ class Chapter(db.Model):
             "title_id": self.title_id,
             "tome": self.tome,
             "chapter": self.chapter,
-            "date": self.date
+            "date": self.date.strftime("%Y-%m-%d")
         }
 
 
@@ -405,7 +411,8 @@ class Title(db.Model):
             "year": self.year,
             "genres": [i.to_dict() for i in self.genres],
             "views": self.views,
-            "saves": self.get_saves_count()
+            "saves": self.get_saves_count(),
+            "chapters": [chapter.to_dict() for chapter in self.chapters]
         }
 
 
@@ -478,7 +485,7 @@ class Comment(db.Model):
         ).scalar()
 
     def get_answers(self):
-        return db.session.execute(Select(Comment).where(Comment.root_id == self.id)).scalars().all()
+        return db.session.execute(Select(Comment).where(Comment.parent_id == self.id)).scalars().all()
 
     def to_dict(self):
         return {

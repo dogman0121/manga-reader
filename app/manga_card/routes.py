@@ -1,3 +1,5 @@
+import json
+
 from flask import render_template, redirect, url_for, request
 from app.models import Title, Genre, Status, Type
 from flask_login import current_user
@@ -14,11 +16,13 @@ def manga_page(title_id):
     except ZeroDivisionError:
         rating = 0
     title.add_view()
+    title_json = json.dumps(title.to_dict(), ensure_ascii=False)
     user_rating = title.get_user_rating(current_user) if current_user.is_authenticated else None
     is_saved = title in current_user.saves if current_user.is_authenticated else False
     return render_template('manga_card/manga_card.html',
                            user=current_user,
                            title=title,
+                           title_json=title_json,
                            rating_sum=rating_s,
                            rating_count=rating_c,
                            rating=rating,

@@ -8,14 +8,14 @@ from app.models import Comment
 @login_required
 def vote_up():
     vote_type = request.json["type"]
-    comment_id = request.json["commentId"]
+    comment_id = request.json["comment"]
     comment = Comment.get_by_id(comment_id)
     user_vote = comment.get_user_vote(current_user)
     if user_vote is not None:
         if user_vote == vote_type:
             comment.remove_vote(current_user)
         else:
-            comment.update_vote(current_user, not user_vote)
+            comment.update_vote(current_user, int(not user_vote))
     else:
         comment.add_vote(current_user, vote_type)
     return {"status": "ok"}

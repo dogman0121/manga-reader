@@ -12,16 +12,16 @@ function adapt_manga_page(){
     const leftSide = document.querySelector("#left-side");
     const mangaNames = document.querySelector("#manga-names");
     const stats = document.querySelector("#stats");
-    const sectionButtons = document.querySelector("#section-buttons");
-    const sections = document.querySelector("#sections");
-    const sectionContent = document.querySelector("#sections-content");
+    const sectionButtons = document.querySelector(".sections__buttons");
+    const sections = document.querySelector(".sections");
+    const sectionContent = document.querySelector(".sections__content");
 
     if (document.querySelector("#read-button"))
         document.querySelector("#read-button").remove();
 
     if (!sectionButtons.querySelector("#info-button")) {
         sectionButtons.innerHTML = `
-            <div class="section-buttons__item" id="info-button">Информация</div>
+            <div class="sections-buttons__item" id="info-button">Информация</div>
         ` + sectionButtons.innerHTML;
         underLineSection(document.querySelector("#info-button"));
     }

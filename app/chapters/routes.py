@@ -6,6 +6,7 @@ from app.chapters import bp
 from app.chapters.forms import ChapterForm
 import os
 import shutil
+import json
 
 
 def clean_folder(path):
@@ -19,17 +20,18 @@ def clean_folder(path):
 
 @bp.route("/<int:chapter_id>")
 def get_chapter(chapter_id):
-    images_list = list()
-    for i in range(len(listdir(f"app/static/media/chapters/{chapter_id}"))):
-        images_list.append(url_for("static", filename=f"media/chapters/{chapter_id}/{i+1}.jpeg"))
-
+    chapter = Chapter.get_by_id(chapter_id)
+    title_json = json.dumps(chapter.title.to_dict(), ensure_ascii=False)
+    chapter_json = json.dumps(chapter.to_dict(), ensure_ascii=False)
     referer = request.headers.get("Referer")
-    chapter_info = Chapter.get_by_id(chapter_id)
+    pages = chapter.get_pages()
     return render_template("chapters/chapter.html",
-                           chapter=chapter_info,
-                           images=images_list,
+                           chapter=chapter,
+                           pages=pages,
                            referer=referer,
-                           user=current_user)
+                           user=current_user,
+                           title_json=title_json,
+                           chapter_json=chapter_json)
 
 
 @bp.route("/<int:chapter_id>/edit", methods=["GET", "POST"])

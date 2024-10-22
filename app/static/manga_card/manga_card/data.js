@@ -1,0 +1,1 @@
+let DATA = JSON.parse(document.querySelector(".DATA").textContent);

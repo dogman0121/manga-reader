@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/styles/sections.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/styles/comments.css') }}">
 <script>
     let auth = {{ 'true' if user.is_authenticated else 'false' }};
     let title_id = {{ title.id }};
@@ -115,12 +117,12 @@
             </ul>
         </div>
     </div>
-    <div id="sections">
-        <div id="section-buttons">
-            <div class="section-buttons__item section-buttons__item_active" id="chapters-button">Главы</div>
-            <div class="section-buttons__item" id="comments-button">Комментарии</div>
+    <div class="sections">
+        <div class="sections__buttons sections-buttons">
+            <div class="sections-buttons__item sections-buttons__item_active" id="chapters-button">Главы</div>
+            <div class="sections-buttons__item" id="comments-button">Комментарии</div>
         </div>
-        <section id="sections-content">
+        <section class="sections__content">
             <div id="chapters" class="section section_selected">
                 {% if title.chapters|length > 0 %}
                     <div class="chapters__header chapters-header">
@@ -174,15 +176,16 @@
 </div>
 {% endblock %}
 {% block json_data %}
+    {"title": {{ title_json | safe }}}
 {% endblock %}
 {% block footer %}
+    <script src="{{ url_for('static', filename='manga_card/manga_card/data.js') }}"></script>
+    <script src="{{ url_for('static', filename='manga_card/manga_card/adaptive.js') }}"></script>
+    <script src="{{ url_for('static', filename='manga_card/manga_card/Component.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/rating.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/saves.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/comment.js') }}"></script>
-    <script src="{{ url_for('static', filename='manga_card/manga_card/comments.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/chapter.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/chapters.js') }}"></script>
-    <script src="{{ url_for('static', filename='manga_card/manga_card/scroll_loading.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/sections.js') }}"></script>
-    <script src="{{ url_for('static', filename='manga_card/manga_card/adaptive.js') }}"></script>
 {% endblock %}
