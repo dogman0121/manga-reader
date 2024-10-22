@@ -173,7 +173,7 @@ textarea:focus {
 }
 
 .stats-option__caption {
-    margin: auto 0;
+    margin: auto;
 }
 
 .stats-option + .stats-option {
