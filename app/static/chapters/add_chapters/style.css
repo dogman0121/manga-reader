@@ -53,12 +53,17 @@
     top: 5px;
 }
 
-.pages__add {
+.pages__add, .pages__buffer {
+    width: 154px;
     border: 2px #B9B9B9 dashed;
     font-size: 14px;
     vertical-align: center;
     aspect-ratio: 3/4;
     border-radius: 8px;
+}
+
+.dragging {
+    cursor: pointer;
 }
 
 .page__image {

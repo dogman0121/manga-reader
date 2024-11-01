@@ -4,7 +4,7 @@ class CommentBody extends Component{
         this.comment = comment;
     }
 
-    render() {
+    html() {
         let dateUTC = new Date().getTime() + new Date().getTimezoneOffset() * 60000;
         let commentDate = this.comment.date;
         let howOld = this.formatTimedelta(dateUTC - commentDate);
@@ -81,8 +81,17 @@ class CommentPanel extends Component{
         this.formOpened = 0;
     }
 
-    render() {
-        let html = `
+    html() {
+        let answersButton = "";
+        if (this.comment.answersCount)
+            answersButton += `
+                <span class="comment__show-answers show-answers">
+                    ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.comment.answersCount}</span>)
+                    <img class="show-answers__image" src="../static/manga_card/manga_card/images/rating-down.svg">
+                </span>
+            `
+
+        const html = `
             <div class="comment__panel">
                 <div class="comment__rating">
                     <div class="rating__button rating-up ${(this.comment.userVote === 1) ? " rating__button_active" : ""}">
@@ -94,21 +103,14 @@ class CommentPanel extends Component{
                     </div>
                 </div>
                 <span class="comment__answer-button">ответить</span>
+                ${answersButton};
+            </div>
         `
-
-        if (this.comment.answersCount)
-            html += `
-                <span class="comment__show-answers show-answers">
-                    ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.comment.answersCount}</span>)
-                    <img class="show-answers__image" src="../static/manga_card/manga_card/images/rating-down.svg">
-                </span>
-            `
-        html += `</div>`
 
         return html;
     }
 
-    registerEvents(element) {
+    events(element) {
         this.element.querySelector(".rating-up").addEventListener("click", this.voteUp.bind(this));
         this.element.querySelector(".rating-down").addEventListener("click", this.voteDown.bind(this));
         this.element.querySelector(".comment__answer-button").addEventListener("click", this.commentFormListener.bind(this));
@@ -240,7 +242,7 @@ class CommentForm extends Component{
         this.comment = comment;
     }
 
-    render() {
+    html() {
         let html;
         if (auth)
             html = `
@@ -261,7 +263,7 @@ class CommentForm extends Component{
         return html;
     }
 
-    registerEvents(element) {
+    events(element) {
         element.querySelector(".comments__send")?.addEventListener("click", this.sendAnswer.bind(this));
     }
 
@@ -303,13 +305,14 @@ class CommentForm extends Component{
 }
 
 class CommentAnswers extends Component{
+    answers = [];
+
     constructor(comment) {
         super();
         this.comment = comment;
-        this.answers = [];
     }
 
-    render() {
+    html() {
         let html = `
             <div class="comment__answers">
                 <div class="answers__list">
@@ -321,13 +324,13 @@ class CommentAnswers extends Component{
 
     addBack(comment) {
         this.answers.push(comment);
-        this.element.querySelector(".answers__list").append(comment.renderDOM());
+        this.element.querySelector(".answers__list").append(comment.render());
         this.comment.answersCount ++;
     }
 
     addFront(comment){
         this.answers.push(comment);
-        this.element.querySelector(".answers__list").prepend(comment.renderDOM());
+        this.element.querySelector(".answers__list").prepend(comment.render());
         this.comment.answersCount ++;
     }
 
@@ -396,7 +399,7 @@ class Comment extends Component{
         return comment;
     }
 
-    render() {
+    html() {
         return `
             <div data-id="${this.id}" class="comment">
                 {{ this.commentBody }}
@@ -407,7 +410,7 @@ class Comment extends Component{
         `
     }
 
-    registerEvents(element) {
+    events(element) {
         this.commentPanel.addEventListener("answersOpened", this.commentAnswers.show.bind(this.commentAnswers));
         this.commentPanel.addEventListener("answersClosed", this.commentAnswers.hide.bind(this.commentAnswers));
         this.commentPanel.addEventListener("formOpened", this.commentForm.show.bind(this.commentForm));
@@ -425,7 +428,7 @@ class TitleComment extends Comment {
         this.loadComments();
     }
 
-    render() {
+    html() {
         return `
             <div class="title__comments">
                 {{ this.commentForm }}
@@ -434,7 +437,7 @@ class TitleComment extends Comment {
         `
     }
 
-    registerEvents(){
+    events(){
         this.commentForm.addEventListener("commentSend", (e) => this.commentAnswers.addFront(e.detail.comment));
         window.addEventListener("scroll", () => {
             let commentsList = document.querySelector(".comment__answers");
@@ -462,6 +465,7 @@ class TitleComment extends Comment {
                 }
                 else {
                     for (let comment of comments){
+                        console.log(this.commentAnswers);
                         this.commentAnswers.addBack(Comment.createFromObj(comment));
                     }
                     this.page += 1

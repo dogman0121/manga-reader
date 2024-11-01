@@ -43,7 +43,8 @@ function chooseSection(sectionName){
 
     if (sectionName === "comments") {
         if (!document.querySelector("#comments"))
-            document.querySelector(".sections__content").append(new Section("comments", new TitleComment()).renderDOM());
+            document.querySelector(".sections__content").append(new Section("comments", new TitleComment()).render());
+
         selectSection("comments");
     }
 
@@ -59,7 +60,7 @@ class Section extends Component {
         this.sectionName = sectionName;
     }
 
-    render () {
+    html() {
         return `
             <div id="${this.sectionName}" class="section">
                 {{ this.content }}

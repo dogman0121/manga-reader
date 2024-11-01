@@ -1,158 +1,454 @@
-let dragNDropZone = document.querySelector(".upload-zone");
-let inputFile = document.querySelector("input[type='file']");
-let submitButton = document.querySelector("input[type='submit']")
-let form = document.querySelector("form");
-let swapElement;
+class PagesWithPagesSection extends Component {
+    pages = [];
+    addingPage = new AddingPagesPage();
 
-
-if (dragNDropZone)
-    addDragNDropEvents(dragNDropZone);
-
-if (document.querySelector(".pages__pages")){
-    let container = document.querySelector(".pages__pages");
-    let addPage = container.querySelector(".pages__add");
-    addDragNDropEvents(addPage);
-    for (let i of container.querySelectorAll(".pages__page")){
-        registerPageEvents(i);
-    }
-}
-
-
-submitButton.addEventListener("click", async function (event){
-    let dataTransfer = new DataTransfer();
-    let images = document.querySelectorAll(".page__image");
-    for (let i = 0; i < images.length; i++){
-        await fetch(images[i].src)
-            .then(response => response.blob())
-            .then(blob => {
-                let file = new File([blob], `${i+1}.jpeg`, {type:"image/jpeg"});
-                dataTransfer.items.add(file);
-            });
-    }
-    event.preventDefault();
-    inputFile.files = dataTransfer.files;
-    form.submit();
-})
-
-
-inputFile.addEventListener('change', function (event){
-    extractFiles(event.target.files[0]);
-    event.target.value = "";
-})
-
-function addDragNDropEvents(element){
-    element.addEventListener("click", function (){
-        inputFile.click();
-    })
-
-    element.addEventListener("dragover", function (event){
-        event.preventDefault();
-    });
-
-    element.addEventListener("drop", function (event){
-        event.preventDefault();
-
-        let file = event.dataTransfer.files[0];
-        extractFiles(file);
-    });
-}
-
-
-function extractFiles(file){
-    let container;
-    if (document.querySelector(".pages__pages"))
-        container = document.querySelector(".pages__pages");
-    else
-        container = createImagePreviewContainer();
-    if (file.type === "application/x-zip-compressed"){
-        let zip = JSZip();
-        zip.loadAsync(file).
-            then((zip) => {
-                for(let i in zip.files){
-                    zip.files[i].async("blob").
-                        then((blob) => {
-                            blankAddImage(container, createImage(blob), i);
-                    })
-                }
-        })
-    }
-    else if (file.type === "image/png" || file.type === "image/jpeg"){
-        blankAddImage(container, createImage(file), file.name);
+    constructor(pages=[]) {
+        super();
+        this.pages = pages;
     }
 
-    if (!document.querySelector(".pages__pages"))
-        showContainer(container);
-}
+    html(){
+        return `
+            <div class="pages__pages">
+                {{ this.pages }}
+                {{ this.addingPage }}
+            </div>
+        `
+    }
 
-function createImagePreviewContainer(){
-    let blank = document.createElement("div");
-    blank.classList.add("pages__pages");
-    let addPage = document.createElement("div");
-    addDragNDropEvents(addPage);
-    addPage.classList.add("pages__add");
-    blank.append(addPage);
-    return blank;
-}
+    events(element) {
+        this.addingPage.addEventListener("filesDragged", this.dispatchEvent.bind(this));
+        this.addingPage.addEventListener("fileOpened", this.dispatchEvent.bind(this));
+    }
 
-function createEmptyList(){
-    let blank = document.querySelector(".pages__pages");
-    let uploadZone = new DOMParser().parseFromString(`
-        <div class="upload-zone">
-            <p class="pages__text">Выберите .ZIP архивы или обычные изображения</p>
-        </div>
-    `, "text/html").querySelector(".upload-zone");
-    addDragNDropEvents(uploadZone);
-    blank.replaceWith(uploadZone);
-}
+    onInit(){
+        let pages = this.element.querySelectorAll(".pages__page");
 
-function registerPageEvents(page){
-    page.querySelector(".page__delete").addEventListener("click", function (){
-        page.closest(".pages__page").remove();
+        for(let page of pages) {
+            let tempPage = new Page();
+            this.registerPageEvents(tempPage);
 
-        if (document.querySelector(".pages__pages").childElementCount === 1){
-            createEmptyList();
+            tempPage.init(page);
+            this.pages.push(tempPage);
         }
-    })
 
-    page.addEventListener("dragstart", (event) => {
-        event.target.classList.add("dragging");
-    })
+        let addPage = this.element.querySelector(".pages__add");
+        this.addingPage.init(addPage);
+    }
 
-    page.addEventListener("dragover", (event) => {
-        swapElement = event.target.closest(".pages__page");
-    })
+    addPage(fileName, url) {
+        let page = new Page(fileName, url);
+        this.registerPageEvents(page);
 
-    page.addEventListener("dragend", (event) => {
-        event.target.classList.remove("dragging");
-        swapElement.before(event.target.closest(".pages__page"));
-    })
+        let addPage = this.element.querySelector(".pages__add");
+        this.pages.push(page);
+
+        addPage.before(page.render());
+    }
+
+    onDeletePage(event){
+        let ind = this.pages.indexOf(event.detail.page);
+        this.pages.splice(ind, 1);
+        let customEvent = new CustomEvent("pageDeleted", {detail: event.detail});
+        this.dispatchEvent(customEvent);
+    }
+
+    async getFilesFromImages() {
+        let files = [];
+        for (let i = 0; i < this.pages.length; i++){
+            await fetch(this.pages[i].url)
+                .then(response => response.blob())
+                .then(blob => {
+                    let file = new File([blob], `${i+1}.jpeg`, {type:"image/jpeg"});
+                    files.push(file);
+                });
+        }
+        return files;
+    }
+
+    registerPageEvents(page){
+        page.addEventListener("deleted", this.onDeletePage.bind(this));
+        page.addEventListener("move", this.onMovePage.bind(this));
+    }
+
+    _getPageFromCords(x, y, currentPage){
+        for(let page of this.pages){
+            if (page === currentPage)
+                continue;
+            let pageCords = page.element.getBoundingClientRect();
+            if ((pageCords.left <= x && x <= pageCords.right) && (pageCords.top <= y && y <= pageCords.bottom))
+                return page;
+        }
+    }
+
+    _pageInsertBefore(source, destination){
+        if(source.element === destination.element.previousElementSibling)
+            return;
+
+        const sourceInd = this.pages.indexOf(source);
+        const destinationInd = this.pages.indexOf(destination);
+
+        let destinationCords;
+        if (sourceInd < destinationInd)
+            destinationCords = destination.element.previousElementSibling.getBoundingClientRect();
+        else
+            destinationCords = destination.element.getBoundingClientRect();
+
+
+        source.x = (source.x - source.cords.left) + destinationCords.left;
+        source.y = (source.y - source.cords.bottom) + destinationCords.bottom;
+        source.cords = destinationCords;
+
+        this._movePage(sourceInd, destinationInd, 1);
+        destination.element.before(source.element);
+        this.dispatchEvent(new CustomEvent("pagesSwitched",
+            {detail: {"source": sourceInd, "destination": destinationInd, "flag": true}}));
+    }
+
+    _pageInsertAfter(source, destination){
+        if (source.element === destination.element.nextElementSibling)
+            return;
+
+        const sourceInd = this.pages.indexOf(source);
+        const destinationInd = this.pages.indexOf(destination);
+
+        let destinationCords;
+        if (sourceInd < destinationInd)
+            destinationCords = destination.element.getBoundingClientRect();
+        else
+            destinationCords = destination.element.nextElementSibling.getBoundingClientRect();
+        
+        source.x = (source.x - source.cords.left) + destinationCords.left;
+        source.y = (source.y - source.cords.bottom) + destinationCords.bottom;
+        source.cords = destinationCords;
+
+        this._movePage(sourceInd, destinationInd);
+        destination.element.after(source.element);
+        this.dispatchEvent(new CustomEvent("pagesSwitched",
+            {detail: {"source": sourceInd, "destination": destinationInd, "flag": false}}));
+    }
+
+    _movePage(sourceInd, destinationInd, flag = 0){
+        if (sourceInd < destinationInd){
+            for(let i = sourceInd; i < destinationInd - flag; i++){
+                let t = this.pages[i];
+                this.pages[i] = this.pages[i+1];
+                this.pages[i+1] = t;
+            }
+        }
+        else{
+            for(let i = sourceInd; i > destinationInd + !flag; i--){
+                let t = this.pages[i];
+                this.pages[i] = this.pages[i-1];
+                this.pages[i-1] = t;
+            }
+        }
+    }
+
+    onMovePage(event){
+        const page = this._getPageFromCords(event.detail.x, event.detail.y, event.detail.page);
+
+        if (!page)
+            return;
+
+        const currentPage = event.detail.page;
+        const cords = page.element.getBoundingClientRect();
+
+        if (event.detail.x < (cords.left + cords.right)/2)
+            this._pageInsertBefore(currentPage, page);
+        else
+            this._pageInsertAfter(currentPage, page);
+
+        event.detail.page.moveAt(event.detail.x, event.detail.y);
+    }
 }
 
-function blankAddImage(blank, image, name){
-    let page = new DOMParser().parseFromString(`
-        <div class="pages__page">
-            <img src="/static/chapters/add_chapters/images/close.svg" class="page__delete">
-        </div>
-    `, "text/html").querySelector(".pages__page");
+class Page extends Component {
+    constructor(fileName, url) {
+        super();
+        this.fileName = fileName;
+        this.url = url;
+    }
 
-    registerPageEvents(page);
+    html(){
+        return `
+            <div class="pages__page">
+                <img class="page__image" src="${this.url}">
+                <img src="/static/chapters/add_chapters/images/close.svg" class="page__delete">
+                <span>${this.fileName}.jpeg</span>
+            </div>
+        `
+    }
 
-    page.append(image);
-    let pageNum = document.createElement("span");
-    pageNum.textContent = name;
-    page.append(pageNum);
-    let addPage = blank.querySelector(".pages__add");
-    addPage.before(page);
+    events(element) {
+        this.element.querySelector(".page__delete").addEventListener("click", this.onDelete.bind(this));
+        this.element.addEventListener("mousedown", this.onDragStart.bind(this));
+        this.element.addEventListener("mouseup", this.onDragEnd.bind(this));
+        this.element.ondragstart = () => {return false;};
+    }
+
+    onInit() {
+        this.url = this.element.querySelector(".page__image").src;
+        this.fileName = this.element.querySelector("span").textContent;
+    }
+
+    onDelete(){
+        this.element.remove();
+        this.dispatchEvent(new CustomEvent("deleted", {detail: {"page": this}}));
+    }
+
+    moveAt(x, y){
+        this.element.style.transform = `translate3D(${x - this.x}px, ${y - this.y}px ,0px)`;
+    }
+
+    onDragStart(event){
+        this.x = event.clientX;
+        this.y = event.clientY;
+        this.cords = this.element.getBoundingClientRect();
+        console.log(this.cords);
+        this.element.onmousemove = this.onDrag.bind(this);
+        this.element.style.zIndex = 1001;
+        this.dispatchEvent(new CustomEvent("mousedown", {detail: {"page": this}}));
+    }
+
+    onDragEnd(event){
+        this.element.style.transform = null;
+        this.element.onmousemove = null;
+        this.element.style.zIndex = null;
+        this.dispatchEvent(new CustomEvent("mouseup", {detail: {"page": this}}));
+    }
+
+    onDrag(event){
+        this.dispatchEvent(
+            new CustomEvent("move",
+                {detail: {"page": this, "x": event.clientX, "y": event.clientY}}
+            )
+        );
+        this.moveAt(event.clientX, event.clientY);
+    }
 }
 
-function createImage(blob){
-    let item = document.createElement("img");
-    item.src = URL.createObjectURL(blob);
-    item.classList.add("page__image");
-    return item;
+class PagesNoPagesSection extends Component {
+    html() {
+        return `
+            <div class="upload-zone">
+                <p class="pages__text">Выберите .ZIP архивы или обычные изображения</p>
+            </div>
+        `
+    }
+
+    events(element) {
+        this.element.addEventListener("click", this.onFormClick.bind(this));
+        this.element.addEventListener("dragover", this.onDragOver);
+        this.element.addEventListener("drop", this.onDrop.bind(this));
+    }
+
+    onDrop(event) {
+        let files = event.dataTransfer?.files;
+        let customEvent = new CustomEvent("filesDragged", {detail: {"files": files}});
+        event.preventDefault();
+        this.dispatchEvent(customEvent);
+    }
+
+    onDragOver(event) {
+        event.preventDefault();
+    }
+
+    onFormClick(event) {
+        let customEvent = new CustomEvent("fileOpened");
+        this.dispatchEvent(customEvent);
+    }
 }
 
-function showContainer(container){
-    let dropZone = document.querySelector(".upload-zone");
-    dropZone.replaceWith(container);
+class AddingPagesPage extends PagesNoPagesSection {
+    html(){
+        return `
+            <div class="pages__add"></div>
+        `
+    }
 }
+
+class PagesContainer extends Component{
+    pagesSection = new PagesWithPagesSection();
+    noPagesSection = new PagesNoPagesSection();
+    chosenSection = this.noPagesSection;
+    fileInput = new FileInput();
+
+    constructor() {
+        super();
+    }
+
+    html() {
+        return `
+            <div class="inputs-input pages__container">
+                {{ this.noPagesSection }}
+            </div>
+        `
+    }
+
+    events(element) {
+        this.noPagesSection.addEventListener("fileOpened", this.fileInput.open.bind(this.fileInput));
+        this.noPagesSection.addEventListener("filesDragged", (e) => { this.fileInput.add(...e.detail.files) });
+        this.pagesSection.addEventListener("fileOpened", this.fileInput.open.bind(this.fileInput));
+        this.pagesSection.addEventListener("filesDragged", (e) => { this.fileInput.add(...e.detail.files) });
+        this.pagesSection.addEventListener("pagesSwitched", this.onSwitchPage.bind(this));
+        this.fileInput.addEventListener("fileAdded", this.onAddFile.bind(this));
+        this.pagesSection.addEventListener("pageDeleted", this.onDeleteFile.bind(this));
+    }
+
+    chooseSection(section) {
+        if (this.chosenSection === section) {
+            return null;
+        }
+        else {
+            this.chosenSection.element.replaceWith(section.element);
+            this.chosenSection = section;
+        }
+    }
+
+
+    onInit(){
+        let pages = this.element.querySelector(".pages__pages");
+        let noPages = this.element.querySelector(".upload-zone");
+        let fileInput = this.element.querySelector("input[type='file']");
+
+        if (pages) {
+            this.noPagesSection.render();
+            this.chosenSection = this.pagesSection;
+            this.pagesSection.init(pages);
+            this.pagesSection.getFilesFromImages().then((files) => {this.fileInput.set(...files)});
+        }
+        else if (noPages) {
+            this.pagesSection.render();
+            this.chosenSection = this.noPagesSection;
+            this.noPagesSection.init(noPages);
+        }
+        if (fileInput){
+            this.fileInput.init(fileInput);
+        }
+    }
+
+    onAddFile(event) {
+        if (!this.pagesSection.pages.length)
+            this.chooseSection(this.pagesSection);
+
+        let file = event.detail.file;
+        let url = URL.createObjectURL(file);
+        let name = file.name;
+        this.pagesSection.addPage(name, url);
+    }
+
+    onDeleteFile(event) {
+        if (!this.pagesSection.pages.length)
+            this.chooseSection(this.noPagesSection);
+
+        let fileName = event.detail.page.fileName;
+        this.fileInput.remove(fileName);
+    }
+
+    onSwitchPage(event){
+        this.fileInput.moveFile(event.detail.source, event.detail.destination, event.detail.flag);
+    }
+
+}
+
+class FileInput extends Component {
+    files = [];
+
+    html() {
+        return `
+            <input type="file">
+        `
+    }
+
+    events() {
+        this.element.addEventListener("change", this.onFileChange.bind(this));
+    }
+
+    add(...files){
+        for(let file of files){
+            switch (file.type){
+                case "application/x-zip-compressed":
+                    this.extractZip(file);
+                    break;
+                default:
+                    this.files.push(file);
+                    let event = new CustomEvent("fileAdded", {detail: {"file": file}});
+                    this.dispatchEvent(event);
+            }
+        }
+    }
+
+    remove(fileName){
+        for(let i = 0; i < this.files.length; i++){
+            if (this.files[i].name === fileName)
+                this.files.splice(i, 1);
+        }
+    }
+
+    open() {
+        this.element.click();
+    }
+
+    extractZip(file){
+        JSZip().loadAsync(file).
+            then((zip) => {
+                for(let file in zip.files)
+                    zip.files[file].async("blob")
+                        .then((blob) => {
+                            this.add(new File([blob], file));
+                        })
+                })
+    }
+
+    onFileChange(event){
+        let files = this.element.files;
+        this.add(...files);
+        this.element.value = "";
+    }
+
+    prepare(){
+        let dt = new DataTransfer()
+
+        for(let i = 0; i < this.files.length; i++){
+            let newFile = new File([this.files[i]], `${i+1}.jpeg`, {type: "image/jpeg"});
+            dt.items.add(newFile);
+        }
+        console.log(this.files);
+        console.log(dt.files);
+        this.element.files = dt.files;
+    }
+
+    set(...files) {
+        this.files = files;
+    }
+
+    moveFile(sourceInd, destinationInd, flag = 0){
+        if (sourceInd < destinationInd){
+            for(let i = sourceInd; i < destinationInd - flag; i++){
+                let t = this.files[i];
+                this.files[i] = this.files[i+1];
+                this.files[i+1] = t;
+            }
+        }
+        else{
+            for(let i = sourceInd; i > destinationInd + !flag; i--){
+                let t = this.files[i];
+                this.files[i] = this.files[i-1];
+                this.files[i-1] = t;
+            }
+        }
+    }
+}
+
+let pagesContainer = new PagesContainer();
+pagesContainer.init(document.querySelector(".pages__container"));
+
+let submitButton = document.querySelector("input[type='submit']");
+submitButton.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    pagesContainer.fileInput.prepare();
+
+    document.querySelector("form").submit();
+})

@@ -1,23 +1,30 @@
 class Component {
-    constructor() {
-        this.events = {};
+    eventsDict = {};
+
+    init(element) {
+        this.element = element;
+        this.onInit();
+        this.events(this.element);
     }
 
-    renderDOM(){
+    render(){
         if (this.element)
             return this.element;
 
-        this.element = this.parseHTML(this.render());
-        this.replaceComponents(this.findTextNodes(this.element));
-        this.registerEvents(this.element);
+        let parsedElement = this.renderHTML(this.html());
+        this.replaceComponents(this.findTextNodes(parsedElement));
+        this.element = parsedElement;
+        this.events(this.element);
         return this.element;
     }
 
-    render(){} // Abstract function
+    html(){} // Abstract function
 
-    registerEvents(element){} // Abstract function
+    events(element){} // Abstract function
 
-    parseHTML(html){
+    onInit(){} // Abstract function
+
+    renderHTML(html){
         let wrapper = document.createElement("div");
         wrapper.innerHTML = html;
 
@@ -34,58 +41,92 @@ class Component {
         return textNodes;
     }
 
-    parseTextNode(textNode){
-        let r = /{{.*}}/g;
-        let matches = textNode.data.match(r);
+    splitTextNode(textNode){
+        let r = /{{.*?}}/g;
+        let vars = textNode.data.match(r);
+        let text = textNode.data.split(r);
+        let varsNode = []
 
-        if (!matches)
+        if (!vars)
             return [];
 
-        return matches.map((command) => {
-            return command.substring(2, command.length - 2).trim();
-        });
+        let orderedList = [];
+        for(let i=0; i < (vars.length + text.length); i++){
+            if (i % 2 === 0 && text[i/2] !== "") {
+                orderedList.push(document.createTextNode(text[i/2]));
+            }
+            if (i % 2 === 1) {
+                let tempNode = document.createTextNode(vars[(i-1)/2]);
+                orderedList.push(tempNode);
+                varsNode.push(tempNode);
+            }
+        }
+
+        textNode.replaceWith(...orderedList);
+
+        return varsNode;
+    }
+
+    parseTextNode(varNode){
+        return varNode.substring(2, varNode.length - 2).trim();
+    }
+
+    renderFromType(object){
+        if (Array.isArray(object))
+            return object.map((obj) => this.renderFromType(obj))
+
+        switch (typeof object){
+            case "function":
+                let obj = new object();
+                return this.renderFromType(obj);
+            case "object":
+                if (object.element)
+                    return object.element;
+                if (object.html)
+                    return object.render();
+                return document.createTextNode(object.toString());
+            default:
+                return document.createTextNode(object.toString());
+        }
     }
 
     renderElement(text){ // Returns a rendered node
         let evaluated = eval(text);
 
-        if (typeof evaluated === "function"){
-            let cls = new evaluated();
-            if (cls.render)
-                return cls.renderDOM();
-            else
-                return document.createTextNode(cls.toString());
-        }
-        else if (typeof evaluated === "object"){
-            if (evaluated.render)
-                return evaluated.renderDOM();
-            else
-                return document.createTextNode(evaluated.toString());
-        }
-        else {
-            return document.createTextNode(evaluated);
-        }
+        return this.renderFromType(evaluated);
     }
 
     replaceComponents(textNodes){
         for (let node of textNodes){
-            let nodes = this.parseTextNode(node);
+            let vars = this.splitTextNode(node)
 
-            if (!nodes || nodes.length === 0)
+            if (!vars || vars.length === 0)
                 continue;
 
-            node.replaceWith(...nodes.map((component) => this.renderElement(component)));
+            let parsed;
+            for(let tempVar of vars){
+                parsed = this.parseTextNode(tempVar.data);
+
+                let rendered = this.renderElement(parsed);
+                if (Array.isArray(rendered))
+                    tempVar.replaceWith(...rendered);
+                else
+                    tempVar.replaceWith(rendered);
+            }
         }
     }
 
     addEventListener(name, handler) {
-        if (!this.events[name])
-            this.events[name] = [];
-        this.events[name].push(handler);
+        if (!this.eventsDict[name])
+            this.eventsDict[name] = [];
+        this.eventsDict[name].push(handler);
     }
 
     dispatchEvent(event) {
-        for (let handler of this.events[event.type])
+        if (!this.eventsDict[event.type])
+            return null;
+
+        for (let handler of this.eventsDict[event.type])
             handler(event);
     }
 }

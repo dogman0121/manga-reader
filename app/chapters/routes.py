@@ -38,7 +38,9 @@ def get_chapter(chapter_id):
 def edit_chapter(chapter_id):
     chapter = Chapter.get_by_id(chapter_id)
     form = ChapterForm()
+    print(request.files.getlist("file"))
     if form.validate_on_submit():
+        print("Fgdfgf")
         chapter.tome = form.tome.data
         chapter.chapter = form.chapter.data
         chapter.name = form.name.data
