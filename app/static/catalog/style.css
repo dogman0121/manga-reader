@@ -44,7 +44,7 @@ input[type="text"] {
 }
 
 .catalog__grid_square {
-    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 }
 
 .catalog__grid_rectangle {
