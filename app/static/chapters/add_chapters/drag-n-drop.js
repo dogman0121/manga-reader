@@ -476,7 +476,10 @@ submitButton.addEventListener("click", function (event) {
 
     pagesContainer.fileInput.prepare();
 
-    document.querySelector("form").submit();
+    let tome = document.querySelector("input[name='tome']")
+    let chapter = document.querySelector("input[name='chapter']")
+    if (tome.value && chapter.value)
+        document.querySelector("form").submit();
 })
 
 cleanButton.addEventListener("click", function (){
