@@ -205,7 +205,6 @@ class Page extends Component {
         this.x = event.clientX;
         this.y = event.clientY;
         this.cords = this.element.getBoundingClientRect();
-        console.log(this.cords);
         this.element.onmousemove = this.onDrag.bind(this);
         this.element.style.zIndex = 1001;
         this.dispatchEvent(new CustomEvent("mousedown", {detail: {"page": this}}));
@@ -371,10 +370,14 @@ class FileInput extends Component {
                 case "application/x-zip-compressed":
                     this.extractZip(file);
                     break;
-                default:
+                case "image/png":
                     this.files.push(file);
-                    let event = new CustomEvent("fileAdded", {detail: {"file": file}});
-                    this.dispatchEvent(event);
+                    this.dispatchEvent(new CustomEvent("fileAdded", {detail: {"file": file}}));
+                    break;
+                case "image/jpeg":
+                    this.files.push(file);
+                    this.dispatchEvent(new CustomEvent("fileAdded", {detail: {"file": file}}));
+                    break;
             }
         }
     }
@@ -390,15 +393,28 @@ class FileInput extends Component {
         this.element.click();
     }
 
-    extractZip(file){
-        JSZip().loadAsync(file).
-            then((zip) => {
+    async extractZip(file){
+        let files = [];
+        await JSZip().loadAsync(file)
+            .then(async (zip) => {
                 for(let file in zip.files)
-                    zip.files[file].async("blob")
+                    await zip.files[file].async("blob")
                         .then((blob) => {
-                            this.add(new File([blob], file));
+                            files.push(new File([blob], file.substring(0, file.lastIndexOf(".")), {type: "image/jpeg"}));
                         })
-                })
+                files = this.sortFiles(...files);
+                this.add(...files);
+            })
+    }
+
+    sortFiles(...files){
+        files.sort(function (fileA, fileB){
+            if (fileA === fileB)
+                return 0;
+
+            return fileA.name < fileB.name ? -1 : 1;
+        })
+        return files;
     }
 
     onFileChange(event){
@@ -414,8 +430,6 @@ class FileInput extends Component {
             let newFile = new File([this.files[i]], `${i+1}.jpeg`, {type: "image/jpeg"});
             dt.items.add(newFile);
         }
-        console.log(this.files);
-        console.log(dt.files);
         this.element.files = dt.files;
     }
 
