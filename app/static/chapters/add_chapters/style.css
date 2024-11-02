@@ -21,6 +21,12 @@
 .pages {
     margin-top: 30px;
     font-size: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.clean_button {
+    align-self: end;
 }
 
 .pages__pages {

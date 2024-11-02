@@ -1,4 +1,4 @@
-class PagesWithPagesSection extends Component {
+class PagesSection extends Component {
     pages = [];
     addingPage = new AddingPagesPage();
 
@@ -161,6 +161,11 @@ class PagesWithPagesSection extends Component {
 
         event.detail.page.moveAt(event.detail.x, event.detail.y);
     }
+
+    clean() {
+        this.pages = [];
+        this.element.querySelectorAll(".pages__page").forEach((page) => page.remove());
+    }
 }
 
 class Page extends Component {
@@ -227,7 +232,7 @@ class Page extends Component {
     }
 }
 
-class PagesNoPagesSection extends Component {
+class NoPagesSection extends Component {
     html() {
         return `
             <div class="upload-zone">
@@ -259,7 +264,7 @@ class PagesNoPagesSection extends Component {
     }
 }
 
-class AddingPagesPage extends PagesNoPagesSection {
+class AddingPagesPage extends NoPagesSection {
     html(){
         return `
             <div class="pages__add"></div>
@@ -268,8 +273,8 @@ class AddingPagesPage extends PagesNoPagesSection {
 }
 
 class PagesContainer extends Component{
-    pagesSection = new PagesWithPagesSection();
-    noPagesSection = new PagesNoPagesSection();
+    pagesSection = new PagesSection();
+    noPagesSection = new NoPagesSection();
     chosenSection = this.noPagesSection;
     fileInput = new FileInput();
 
@@ -349,6 +354,11 @@ class PagesContainer extends Component{
         this.fileInput.moveFile(event.detail.source, event.detail.destination, event.detail.flag);
     }
 
+    clean() {
+        this.chooseSection(this.noPagesSection);
+        this.fileInput.set([]);
+        this.pagesSection.clean();
+    }
 }
 
 class FileInput extends Component {
@@ -459,10 +469,16 @@ let pagesContainer = new PagesContainer();
 pagesContainer.init(document.querySelector(".pages__container"));
 
 let submitButton = document.querySelector("input[type='submit']");
+let cleanButton = document.querySelector(".clean_button");
+
 submitButton.addEventListener("click", function (event) {
     event.preventDefault();
 
     pagesContainer.fileInput.prepare();
 
     document.querySelector("form").submit();
+})
+
+cleanButton.addEventListener("click", function (){
+    pagesContainer.clean();
 })
