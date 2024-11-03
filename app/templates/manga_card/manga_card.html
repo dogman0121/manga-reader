@@ -62,8 +62,7 @@
     <div id="manga-info">
         <div id="manga-info__header">
             <div id="manga-names">
-                <h1 class="manga-names__russian">{{ title.name_russian }}</h1>
-                <h2 class="manga-names__languages">
+                <span class="manga-names__languages">
                     {% if title.name_english and title.name_languages %}
                         {{ " / ".join([title.name_english, title.name_languages]) }}
                     {% elif title.name_english %}
@@ -71,7 +70,8 @@
                     {% elif title.name_languages %}
                         {{ title.name_languages }}
                     {% endif %}
-                </h2>
+                </span>
+                <h1 class="manga-names__russian">{{ title.name_russian }}</h1>
             </div>
             <div id="read-button">Читать</div>
         </div>
