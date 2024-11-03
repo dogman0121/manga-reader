@@ -19,7 +19,7 @@ def manga_page(title_id):
     title_json = json.dumps(title.to_dict(), ensure_ascii=False)
     user_rating = title.get_user_rating(current_user) if current_user.is_authenticated else None
     is_saved = title in current_user.saves if current_user.is_authenticated else False
-    return render_template('manga_card/manga_card.html',
+    return render_template('manga_card.html',
                            user=current_user,
                            title=title,
                            title_json=title_json,
@@ -43,7 +43,7 @@ def add_manga():
 
         return redirect(url_for("manga.manga_page", title_id=title.id))
 
-    return render_template("manga_card/add_manga.html",
+    return render_template("add_manga.html",
                            user=current_user,
                            form=adding_manga_form,
                            mode="add")
@@ -62,7 +62,7 @@ def edit_manga(title_id):
         return redirect(url_for("manga.manga_page", title_id=title_id))
 
     title = Title.get_by_id(title_id)
-    return render_template("manga_card/add_manga.html",
+    return render_template("add_manga.html",
                            user=current_user,
                            form=adding_manga_form,
                            title=title,

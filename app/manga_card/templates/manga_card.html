@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/styles/sections.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/styles/comments.css') }}">
+<link rel="stylesheet" href="{{ url_for('manga.static', filename='description.css') }}">
 <script>
     let auth = {{ 'true' if user.is_authenticated else 'false' }};
     let title_id = {{ title.id }};
@@ -23,18 +24,7 @@
             Редактировать
         </a>
     {% endif %}
-    <section id="description">
-        <span class="description__item">Тип: {{ title.type.name }}</span>
-        <span class="description__item">Год: {{ title.year }}</span>
-        <span class="description__item">Статус: {{ title.status.name }}</span>
-        <span class="description__item">
-            Автор:
-            <a href="{{ url_for("profile.get_profile", profile_id=title.author_id) }}" class="description-user">
-                <img class="description-user__avatar" src="{{ title.author.get_avatar() }}">
-                {{ title.author.login }}
-            </a>
-        </span>
-    </section>
+    {% include "description.html" %}
     <ul id="similar">
         <h3>Похожее</h3>
         <li class="similar-title">

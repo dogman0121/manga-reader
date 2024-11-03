@@ -1,0 +1,12 @@
+<section id="description">
+    <span class="description__item">Тип: {{ title.type.name }}</span>
+    <span class="description__item">Год: {{ title.year }}</span>
+    <span class="description__item">Статус: {{ title.status.name }}</span>
+    <span class="description__item">
+        Автор:
+        <a href="{{ url_for("profile.get_profile", profile_id=title.author_id) }}" class="description-user">
+            <img class="description-user__avatar" src="{{ title.author.get_avatar() }}">
+            {{ title.author.login }}
+        </a>
+    </span>
+</section>
