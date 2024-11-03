@@ -419,6 +419,9 @@ class FileInput extends Component {
 
     sortFiles(...files){
         files.sort(function (fileA, fileB){
+            if (parseInt(fileA.name) && parseInt(fileB.name))
+                return parseInt(fileA.name) - parseInt(fileB.name);
+
             if (fileA === fileB)
                 return 0;
 
