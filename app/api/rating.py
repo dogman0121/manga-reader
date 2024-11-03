@@ -35,5 +35,5 @@ def update_rating():
 def delete_rating():
     title_id = request.json["title_id"]
     title = Title.get_by_id(title_id)
-    title.remove_rating()
+    title.remove_rating(current_user)
     return {"status": "ok"}

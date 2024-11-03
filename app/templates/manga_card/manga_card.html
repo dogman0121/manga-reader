@@ -24,11 +24,16 @@
         </a>
     {% endif %}
     <section id="description">
-        Тип: {{ title.type.name }}<br>
-        Год: {{ title.year }}<br>
-        Статус: {{ title.status.name }}<br>
-        Автор: {{ title.author.login }}<br>
-        Переводик: {{ title.translator }}<br>
+        <span class="description__item">Тип: {{ title.type.name }}</span>
+        <span class="description__item">Год: {{ title.year }}</span>
+        <span class="description__item">Статус: {{ title.status.name }}</span>
+        <span class="description__item">
+            Автор:
+            <a href="{{ url_for("profile.get_profile", profile_id=title.author_id) }}" class="description-user">
+                <img class="description-user__avatar" src="{{ title.author.get_avatar() }}">
+                {{ title.author.login }}
+            </a>
+        </span>
     </section>
     <ul id="similar">
         <h3>Похожее</h3>
