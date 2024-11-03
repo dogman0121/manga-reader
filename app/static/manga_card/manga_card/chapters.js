@@ -63,3 +63,11 @@ class Chapters {
 }
 
 let chapters = new Chapters();
+
+document.querySelector("#filter-button").addEventListener("click", function (){
+    const chapters = document.querySelectorAll(".chapter");
+    const chaptersBlock = document.querySelector(".chapters__list");
+    chaptersBlock.innerHTML = "";
+    for(let chapter of chapters)
+        chaptersBlock.prepend(chapter);
+})
