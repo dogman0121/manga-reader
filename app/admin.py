@@ -14,6 +14,7 @@ class UserAdmin(ModelView):
 class TitleAdmin(ModelView):
     column_list = ('id', 'type_id', 'name_russian', 'name_english', 'name_languages', 'description', 'year', 'views',
                    'author_id')
+    form_columns = ['type_id', 'name_russian', 'name_english', 'name_languages', 'description', 'year', 'author_id']
 
 
 class CommentAdmin(ModelView):
