@@ -90,6 +90,12 @@ body {
     background-color: #FFD600;
 }
 
+.search__results {
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+
 .item {
     display: flex;
     flex-direction: row;

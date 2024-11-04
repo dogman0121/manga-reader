@@ -10,7 +10,6 @@ def search():
     params = request.args.get("p")
     if params == "title":
         res = [i.to_dict() for i in Title.search(query)]
-        print(res)
         return jsonify(res)
     elif params == "team":
         res = [i.to_dict() for i in Team.search(query)]

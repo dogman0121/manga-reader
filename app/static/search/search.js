@@ -18,22 +18,31 @@ searchInput.addEventListener("input", (event) => {
     debounceSearch(event.target.value, chosenSection);
 })
 
+function chooseSection(section){
+    switch (section){
+        case "title":
+            searchFilters.querySelector(".team").classList.remove("search__filter_selected");
+            searchFilters.querySelector(".title").classList.add("search__filter_selected");
+            break;
+        case "team":
+            searchFilters.querySelector(".title").classList.remove("search__filter_selected");
+            searchFilters.querySelector(".team").classList.add("search__filter_selected");
+            break;
+    }
+    debounceSearch(searchInput.value, section);
+    chosenSection = section;
+}
+
 searchFilters.addEventListener("click", function (event){
     if (!event.target.classList.contains("search__filter"))
         return;
     if (event.target.classList.contains("search__filter_selected"))
         return;
 
-    if (event.target.classList.contains("title")){
-        chosenSection = 'title';
-        searchFilters.querySelector(".team").classList.remove("search__filter_selected");
-        searchFilters.querySelector(".title").classList.add("search__filter_selected");
-    }
-    else {
-        chosenSection = 'team';
-        searchFilters.querySelector(".title").classList.remove("search__filter_selected");
-        searchFilters.querySelector(".team").classList.add("search__filter_selected");
-    }
+    if (event.target.classList.contains("title"))
+        chooseSection("title");
+    else
+        chooseSection("team");
 })
 
 function open() {
@@ -47,7 +56,7 @@ function close() {
 }
 
 function search(query, section=null) {
-    fetch(`/search?q=${query}&p=${section}`)
+    fetch("/search/?" + new URLSearchParams({q: query, p: section}).toString())
         .then(response => response.json())
         .then(items => {
             searchResults.innerHTML = '';
