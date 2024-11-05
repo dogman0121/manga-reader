@@ -127,6 +127,7 @@ textarea:focus {
     background-color: #FFD600;
     font-size: 20px;
     border-radius: 12px;
+    margin: 0 0 20px 40px;
 
     display: flex;
     justify-content: center;
