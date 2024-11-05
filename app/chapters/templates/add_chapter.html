@@ -2,7 +2,7 @@
 {% block header %}
     <link rel="stylesheet" href="{{ url_for("static", filename="modules/inputs/inputs.css") }}">
     <link rel="stylesheet" href="{{ url_for("static", filename="inputs.css") }}">
-    <link rel="stylesheet" href="{{ url_for("chapters.static", filename="add_chapters/style.css") }}">
+    <link rel="stylesheet" href="{{ url_for("chapters.static", filename="chapters_form/style.css") }}">
     {% if mode == "edit" %}
         <title>Редактирование главы</title>
     {% else %}
@@ -61,7 +61,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.js" integrity="sha512-3FKAKNDHbfUwAgW45wNAvfgJDDdNoTi5PZWU7ak3Xm0X8u0LbDBWZEyPklRebTZ8r+p0M2KIJWDYZQjDPyYQEA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="{{ url_for("static", filename="manga_card/manga_card/Component.js") }}"></script>
     <script src="{{ url_for("static", filename="modules/inputs/inputs.js") }}"></script>
-    <script src="{{ url_for("chapters.static", filename="add_chapters/form.js") }}"></script>
-    <script src="{{ url_for("chapters.static", filename="add_chapters/drag-n-drop.js") }}"></script>
+    <script src="{{ url_for("chapters.static", filename="chapters_form/form.js") }}"></script>
+    <script src="{{ url_for("chapters.static", filename="chapters_form/drag-n-drop.js") }}"></script>
 {% endblock %}
 
