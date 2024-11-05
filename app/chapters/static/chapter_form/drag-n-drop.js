@@ -179,7 +179,7 @@ class Page extends Component {
         return `
             <div class="pages__page">
                 <img class="page__image" src="${this.url}">
-                <img src="/static/chapters/add_chapters/images/close.svg" class="page__delete">
+                <img src="/chapters/static/chapters_form/images/close.svg" class="page__delete">
                 <span>${this.fileName}.jpeg</span>
             </div>
         `

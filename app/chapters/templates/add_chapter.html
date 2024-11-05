@@ -40,7 +40,7 @@
                         {% for i in range(chapter.pages_count) %}
                             <div class="pages__page">
                                 <img class="page__image" src="{{ url_for('static', filename="media/chapters/{}/{}.jpeg".format(chapter.id, i+1)) }}">
-                                <img src="{{ url_for('chapters.static', filename="add_chapters/images/close.svg") }}" class="page__delete">
+                                <img src="{{ url_for('chapters.static', filename="chapters_form/images/close.svg") }}" class="page__delete">
                                 <span>{{ i+1 }}.jpeg</span>
                             </div>
                         {% endfor %}
