@@ -56,6 +56,6 @@ class AddMangaForm(FlaskForm):
         self.title.status = Status.get_by_id(self.status.data)
         self.title.year = self.year.data
         self.title.genres = [Genre.get_by_id(int(i)) for i in self.genres.data]
-        self.title.author_id = current_user.id
-        self.title.author = User.get_by_id(current_user.id)
+        self.title.author_id = self.title.author_id or current_user.id
+        self.title.author = User.get_by_id(self.title.author_id or current_user.id)
         return self.title
