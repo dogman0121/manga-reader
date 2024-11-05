@@ -16,8 +16,13 @@ window.addEventListener("scroll", function (){
                 fetch("/api/chapters/pages?chapter_id=" + currentChapter.id.toString())
                     .then(response => response.json())
                     .then(pages => {
+                        console.log(pages);
+                        let pagesContainer = document.querySelector(".main__inner");
+                        pagesContainer.innerHTML += `
+                            <div class="page-info">Том ${currentChapter.tome} Глава ${currentChapter.chapter}</div>
+                        `;
                         for (page of pages){
-                            document.querySelector(".main__inner").innerHTML += `
+                            pagesContainer.innerHTML += `
                                 <div class="page">
                                     <img class="page__image" src="${page}">
                                 </div>
