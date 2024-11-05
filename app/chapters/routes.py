@@ -64,7 +64,7 @@ def edit_chapter(chapter_id):
     form.name.data = chapter.name
 
     chapter.pages_count = len(os.listdir(f"app/static/media/chapters/{chapter.id}"))
-    return render_template("chapters/templates/add_chapter.html", user=current_user, form=form, chapter=chapter,
+    return render_template("add_chapter.html", user=current_user, form=form, chapter=chapter,
                            mode="edit")
 
 
@@ -94,4 +94,4 @@ def add_chapter():
             page.save(f"app/static/media/chapters/{chapter.id}/{page.filename}")
 
         return redirect(url_for("manga.manga_page", title_id=title))
-    return render_template("chapters/templates/add_chapter.html", user=current_user, form=form, mode="add")
+    return render_template("add_chapter.html", user=current_user, form=form, mode="add")
