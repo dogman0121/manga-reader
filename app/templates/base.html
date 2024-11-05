@@ -53,11 +53,12 @@
         {% block json_data %}
         {% endblock %}
     </script>
-    {% block footer %}
-    {% endblock %}
     <script src="{{ url_for('static', filename='header/adaptive.js') }}"></script>
     <script src="{{ url_for('static', filename='base/dropdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='base/data.js') }}"></script>
     <script src="{{ url_for('static', filename='search/search.js') }}"></script>
     <script src="{{ url_for('static', filename='header/show-search.js') }}"></script>
+    {% block footer %}
+    {% endblock %}
 </body>
 </html>

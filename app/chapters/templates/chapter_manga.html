@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block header %}
+<link rel="stylesheet" href="{{ url_for('static', filename='header/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
+<link rel="stylesheet" href="{{ url_for('chapters.static', filename='chapter_manga/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('chapters.static', filename='chapter.css') }}">
+<title>Читать бесплатно {{ chapter.title.name_russian }} том {{ chapter.tome }} глава {{ chapter.chapter }}</title>
+{% endblock %}
+{% block content %}
+<div class="page">
+    <img class="page__image" src={{ pages[0] }}>
+</div>
+<span class="page-num">
+    Страница <span class="page-num__number">1</span> / {{ pages | length }}
+</span>
+{% endblock %}
+{% block footer %}
+<script src="{{ url_for("chapters.static", filename="chapter_manga/click_page.js") }}"></script>
+{% endblock %}
+{% block json_data %}
+    {"title": {{ title_json | safe }}, "chapter": {{ chapter_json | safe }}, "pages": {{ pages_json | safe }}}
+{% endblock %}

@@ -4,15 +4,6 @@
     padding: 10px 0;
 }
 
-main {
-    margin-top: 0;
-}
-
-.main__inner {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
 .page-info {
     font-size: 32px;
     margin: 80px 0 60px;
@@ -25,12 +16,4 @@ main {
     max-width: 100%;
 }
 
-.page__image {
-    width: 100%;
-}
 
-@media (max-width: 700px) {
-    main > .content__inner {
-        padding: 0;
-    }
-}
