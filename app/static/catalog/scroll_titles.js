@@ -10,7 +10,7 @@ window.addEventListener("scroll", function (){
     if((titlesGridBottom - document.documentElement.clientHeight) < 10) {
         if (ended){
             ended = false;
-            getTitles(formData, ++page)
+            getTitles(formData, ++catalogPage)
                 .then((titles) => {
                     let grid = document.querySelector(".catalog__grid");
                     catalogTitles = catalogTitles.concat(titles);
