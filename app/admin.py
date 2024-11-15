@@ -25,6 +25,7 @@ class ChaptersAdmin(ModelView):
     column_list = ("id", "name", "title_id", "tome", "chapter", "name", "date", "team_id")
     form_columns = ["id", "name", "title_id", "tome", "chapter", "name", "date", "team_id"]
 
+
 admin.add_view(UserAdmin(User, db.session, endpoint="users"))
 admin.add_view(TitleAdmin(Title, db.session, endpoint="titles"))
 admin.add_view(CommentAdmin(Comment, db.session, endpoint="comments"))
