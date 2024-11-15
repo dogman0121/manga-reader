@@ -26,6 +26,8 @@ class ChaptersBlock extends Component{
 
     events() {
         this.chaptersTranslators.addEventListener("translatorSwitched", this.onTranslatorSwitched.bind(this));
+        this.element.querySelector("#filter-button").addEventListener("click",
+            this.chaptersList.value.reOrder.bind(this.chaptersList));
     }
 
     onTranslatorSwitched(event) {
@@ -148,6 +150,12 @@ class ChaptersList extends Component {
                 {{ this.chapters }}
             </div>
         `
+    }
+
+    reOrder() {
+        let chapters = this.element.querySelectorAll(".chapter");
+        this.element.innerHTML = "";
+        chapters.forEach(chapter => this.element.prepend(chapter));
     }
 
 }
