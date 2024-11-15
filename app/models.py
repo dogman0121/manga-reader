@@ -431,7 +431,8 @@ class Title(db.Model):
         translators_lst = []
         for i in translators:
             translator_dct = i.to_dict()
-            translator_dct["chapters"] = [i.to_dict() for i in i.get_title_chapters(self)]
+            translator_dct["chapters"] = [i.to_dict() for i in sorted(i.get_title_chapters(self),
+                                                                      key=lambda c: c.tome * 1000 + c.chapter)]
             translators_lst.append(translator_dct)
 
         dct["translators"] = translators_lst
