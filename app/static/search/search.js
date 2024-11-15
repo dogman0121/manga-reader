@@ -18,7 +18,7 @@ searchInput.addEventListener("input", (event) => {
     debounceSearch(event.target.value, chosenSection);
 })
 
-function chooseSection(section){
+function chooseSearchSection(section){
     switch (section){
         case "title":
             searchFilters.querySelector(".team").classList.remove("search__filter_selected");
@@ -40,9 +40,9 @@ searchFilters.addEventListener("click", function (event){
         return;
 
     if (event.target.classList.contains("title"))
-        chooseSection("title");
+        chooseSearchSection("title");
     else
-        chooseSection("team");
+        chooseSearchSection("team");
 })
 
 function open() {
