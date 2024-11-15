@@ -237,7 +237,7 @@ class Chapter(db.Model):
     tome: Mapped[int] = mapped_column(nullable=False)
     chapter: Mapped[int] = mapped_column(nullable=False)
     date: Mapped[datetime] = mapped_column(default=lambda: datetime.utcnow().strftime("%Y-%m-%d"))
-    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=False)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=True)
     team: Mapped["Team"] = relationship(back_populates="chapters")
 
     @staticmethod
