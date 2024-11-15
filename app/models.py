@@ -237,6 +237,8 @@ class Chapter(db.Model):
     tome: Mapped[int] = mapped_column(nullable=False)
     chapter: Mapped[int] = mapped_column(nullable=False)
     date: Mapped[datetime] = mapped_column(default=lambda: datetime.utcnow().strftime("%Y-%m-%d"))
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=False)
+    team: Mapped["Team"] = relationship(back_populates="chapters")
 
     @staticmethod
     def get_by_id(chapter_id):
@@ -290,6 +292,7 @@ class Title(db.Model):
     author: Mapped[User] = relationship("User")
     chapters: Mapped[list["Chapter"]] = relationship(uselist=True, back_populates="title")
     comments: Mapped[list["Comment"]] = relationship(uselist=True, back_populates="title")
+    translators: Mapped[list["Team"]] = relationship(uselist=True, secondary="titles_translators", back_populates="titles")
 
     @staticmethod
     def get_by_id(title_id):
@@ -353,6 +356,16 @@ class Title(db.Model):
         self.views += 1
         self.update()
 
+    def add_translator(self, team):
+        db.session.execute(insert(titles_translators).values(title_id=self.id, team_id=team.id))
+        db.session.commit()
+
+    def check_translator(self, team):
+        return db.session.execute(
+            Select(exists(titles_translators).where(and_(titles_translators.c.title_id==self.id,
+                                                  titles_translators.c.team_id==team.id)))
+        ).scalar()
+
     # ----- Rating -----
     def get_rating(self):
         rating = db.session.execute(Select(ratings.c.rating).where(ratings.c.title_id == self.id)).scalars().all()
@@ -399,7 +412,7 @@ class Title(db.Model):
             return url_for("static", filename=f"media/posters/{self.id}.jpg", _external=True)
 
     def to_dict(self):
-        return {
+        dct = {
             "id": self.id,
             "type": self.type.to_dict(),
             "status": self.status.to_dict(),
@@ -412,8 +425,17 @@ class Title(db.Model):
             "genres": [i.to_dict() for i in self.genres],
             "views": self.views,
             "saves": self.get_saves_count(),
-            "chapters": [chapter.to_dict() for chapter in self.chapters]
         }
+
+        translators = self.translators
+        translators_lst = []
+        for i in translators:
+            translator_dct = i.to_dict()
+            translator_dct["chapters"] = [i.to_dict() for i in i.get_title_chapters(self)]
+            translators_lst.append(translator_dct)
+
+        dct["translators"] = translators_lst
+        return dct
 
 
 votes = Table(
@@ -523,6 +545,8 @@ class Team(db.Model):
     members: Mapped[list["User"]] = relationship(uselist=True, back_populates="team",
                                                  primaryjoin="Team.id == User.team_id")
     translations: Mapped[list["Title"]] = relationship(uselist=True, secondary="titles_translators")
+    chapters: Mapped[list["Chapter"]]= relationship(uselist=True, back_populates="team")
+    titles: Mapped[list["Title"]] = relationship(secondary="titles_translators", uselist=True, back_populates="translators")
 
     @staticmethod
     def get_by_id(team_id):
@@ -541,12 +565,23 @@ class Team(db.Model):
         db.session.commit()
 
     def delete(self):
+        db.session.execute(delete(titles_translators).where(titles_translators.c.title_id==self.id))
+        for member in self.members:
+            member.remove_team()
+        for chapter in self.chapters:
+            chapter.delete()
+
         db.session.delete(self)
         db.session.commit()
 
     def get_poster(self):
         if os.path.exists(f"app/static/media/teams/{self.id}.jpg"):
             return url_for("static", filename=f"media/teams/{self.id}.jpg", _external=True)
+
+    def get_title_chapters(self, title):
+        return db.session.execute(
+            Select(Chapter).where(and_(Chapter.team_id == self.id, Chapter.title_id == title.id))
+        ).scalars()
 
     def to_dict(self):
         return {

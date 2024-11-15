@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block header %}
 <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/styles/sections.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/styles/comments.css') }}">
-<link rel="stylesheet" href="{{ url_for('manga.static', filename='description.css') }}">
+<link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/sections.css') }}">
+<link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/comments.css') }}">
+<link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/description.css') }}">
+<link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/chapters.css') }}">
 <script>
     let auth = {{ 'true' if user.is_authenticated else 'false' }};
     let title_id = {{ title.id }};
@@ -127,68 +128,23 @@
         </div>
         <section class="sections__content">
             <div id="chapters" class="section section_selected">
-                {% if title.chapters|length > 0 %}
-                    <div class="chapters__header chapters-header">
-                        Список глав
-                        <div class="chapters-header__buttons">
-                            {% if user.team_id %}
-                                <a href="{{ url_for("chapters.add_chapter", title_id=title.id) }}">
-                                    <img class="add-chapter" src="{{ url_for('static', filename="manga_card/manga_card/images/plus.png") }}">
-                                </a>
-                            {% endif %}
-                            <img id="filter-button" src="{{ url_for('static', filename='manga_card/manga_card/images/filter.svg') }}">
-                        </div>
-                    </div>
-                    <div class="chapters__list">
-                        {% for chapter in title.chapters %}
-                        <div class="chapters__item chapter" data-id="{{ chapter.id }}">
-                            <a class="chapter__link" href="{{ url_for('chapters.get_chapter', chapter_id=chapter.id) }}">
-                                <div class="chapter__content">
-                                    Том {{ chapter.tome }} Глава {{ chapter.chapter }}
-                                    <div class="chapter__icons">
-                                        {% if user.team_id %}
-                                            <a class="chapter-icon__link chapter__link" href="{{ url_for("chapters.edit_chapter", chapter_id=chapter.id) }}">
-                                                <img class="chapter__icon" src="{{ url_for('static', filename="manga_card/manga_card/images/pencil.svg") }}">
-                                            </a>
-                                            <a class="chapter-icon__link chapter__link" href="{{ url_for("chapters.delete_chapter", chapter_id=chapter.id) }}">
-                                                <img class="chapter__icon" src="{{ url_for('static', filename="manga_card/manga_card/images/garbage.svg") }}">
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                <div class="no-chapters">
-                    <h1 class="no-chapters__header">
-                    Глав нет
-                    </h1>
-                    <p class="no-chapters__text">Автор еще не добавил ни одной главы</p>
-                    {% if current_user.team_id %}
-                        <a class="no-chapters__add-link" href="{{ url_for("chapters.add_chapter", title_id=title.id) }}">
-                            <div class="no-chapters__add-button">Добавить</div>
-                        </a>
-                    {% endif %}
-                    </div>
-                {% endif %}
             </div>
         </section>
     </div>
 </div>
 {% endblock %}
 {% block json_data %}
-    {"title": {{ title_json | safe }}}
+    {
+    "title": {{ title_json | safe }},
+    "user": {{ user_json | safe }}
+    }
 {% endblock %}
 {% block footer %}
-    <script src="{{ url_for('static', filename='manga_card/manga_card/data.js') }}"></script>
-    <script src="{{ url_for('static', filename='manga_card/manga_card/Component.js') }}"></script>
-        <script src="{{ url_for('static', filename='manga_card/manga_card/comment.js') }}"></script>
+    <script src="{{ url_for('static', filename='Component.js') }}"></script>
+    <script src="{{ url_for('manga.static', filename='manga_page/chapters.js') }}"></script>
+    <script src="{{ url_for('static', filename='manga_card/manga_card/comment.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/sections.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/adaptive.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/rating.js') }}"></script>
     <script src="{{ url_for('static', filename='manga_card/manga_card/saves.js') }}"></script>
-    <script src="{{ url_for('static', filename='manga_card/manga_card/chapter.js') }}"></script>
-    <script src="{{ url_for('static', filename='manga_card/manga_card/chapters.js') }}"></script>
 {% endblock %}

@@ -1,3 +1,30 @@
+class Render {
+    static renderObject(object){
+        if (Array.isArray(object))
+            return object.map((obj) => this.renderObject(obj))
+
+        if (object instanceof State){
+            const x = this.renderObject(object.value);
+            object.bindElement(x);
+            return x;
+        }
+
+        switch (typeof object){
+            case "function":
+                let obj = new object();
+                return this.renderObject(obj);
+            case "object":
+                if (object.element)
+                    return object.element;
+                if (object.html)
+                    return object.render();
+                return document.createTextNode(object.toString());
+            default:
+                return document.createTextNode(object.toString());
+        }
+    }
+}
+
 class Component {
     eventsDict = {};
 
@@ -12,7 +39,13 @@ class Component {
             return this.element;
 
         let parsedElement = this.renderHTML(this.html());
-        this.replaceComponents(this.findTextNodes(parsedElement));
+        if (!parsedElement){
+            parsedElement = document.createTextNode(this.html());
+            this.replaceComponents([parsedElement]);
+        }
+        else {
+            this.replaceComponents(this.findTextNodes(parsedElement));
+        }
         this.element = parsedElement;
         this.events(this.element);
         return this.element;
@@ -71,29 +104,10 @@ class Component {
         return varNode.substring(2, varNode.length - 2).trim();
     }
 
-    renderFromType(object){
-        if (Array.isArray(object))
-            return object.map((obj) => this.renderFromType(obj))
-
-        switch (typeof object){
-            case "function":
-                let obj = new object();
-                return this.renderFromType(obj);
-            case "object":
-                if (object.element)
-                    return object.element;
-                if (object.html)
-                    return object.render();
-                return document.createTextNode(object.toString());
-            default:
-                return document.createTextNode(object.toString());
-        }
-    }
-
     renderElement(text){ // Returns a rendered node
         let evaluated = eval(text);
 
-        return this.renderFromType(evaluated);
+        return Render.renderObject(evaluated);
     }
 
     replaceComponents(textNodes){
@@ -128,5 +142,26 @@ class Component {
 
         for (let handler of this.eventsDict[event.type])
             handler(event);
+    }
+}
+
+class State {
+    constructor(defaultValue){
+        this.value = defaultValue;
+    }
+
+    set(value){
+        this.value = value;
+        const newElem = Render.renderObject(value);
+        this.element.replaceWith(newElem);
+        this.element = newElem;
+    }
+
+    get(){
+        return this.value;
+    }
+
+    bindElement(elem){
+        this.element = elem;
     }
 }

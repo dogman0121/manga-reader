@@ -1,6 +1,6 @@
 from flask import request, render_template, url_for, redirect
 from flask_login import current_user
-from app.models import Chapter
+from app.models import Chapter, Title, Team
 from os import listdir
 from app.chapters import bp
 from app.chapters.forms import ChapterForm
@@ -78,20 +78,26 @@ def delete_chapter(chapter_id):
 
 @bp.route("/add", methods=["GET", "POST"])
 def add_chapter():
-    title = request.args.get("title_id")
+    title_id = request.args.get("title_id")
+    title = Title.get_by_id(title_id)
+    team = Team.get_by_id(current_user.team_id)
     form = ChapterForm()
     if form.validate_on_submit():
         chapter = Chapter()
         chapter.tome = form.tome.data
         chapter.chapter = form.chapter.data
         chapter.name = form.name.data
-        chapter.title_id = title
+        chapter.title_id = title_id
+        chapter.team_id = current_user.team_id
         chapter.add()
+
+        if not title.check_translator(team):
+            title.add_translator(team)
 
         if not(os.path.exists(f"app/static/media/chapters/{chapter.id}")):
             os.makedirs(f"app/static/media/chapters/{chapter.id}")
         for page in request.files.getlist("file"):
             page.save(f"app/static/media/chapters/{chapter.id}/{page.filename}")
 
-        return redirect(url_for("manga.manga_page", title_id=title))
+        return redirect(url_for("manga.manga_page", title_id=title_id))
     return render_template("add_chapter.html", user=current_user, form=form, mode="add")

@@ -205,49 +205,6 @@ textarea:focus {
     margin-left: 5px;
 }
 
-.chapters__header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.chapters-header__buttons {
-    display: flex;
-}
-
-.chapter__icon {
-    width: 15px;
-    height: 15px;
-}
-
-.chapter-icon__link + .chapter-icon__link {
-    margin-left: 10px;
-}
-
-.chapter__content {
-    display: flex;
-    justify-content: space-between;
-}
-
-.add-chapter {
-    width: 25px;
-    height: 25px;
-}
-
-.chapters__item {
-    padding: 20px 14px;
-    background-color: #D9D9D9;
-    border-radius: 12px;
-}
-
-.chapters__list {
-    margin-top: 8px;
-}
-
-.chapters__item + .chapters__item {
-    margin-top: 5px;
-}
-
 .modal {
     position: fixed;
     top: 0;

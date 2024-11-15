@@ -17,7 +17,13 @@ def manga_page(title_id):
         rating = 0
     title.add_view()
     title_json = json.dumps(title.to_dict(), ensure_ascii=False)
-    user_rating = title.get_user_rating(current_user) if current_user.is_authenticated else None
+    if current_user.is_authenticated:
+        user_json = json.dumps(current_user.to_dict(), ensure_ascii=False)
+        user_rating = title.get_user_rating(current_user)
+    else:
+        user_json = json.dumps({}, ensure_ascii=False)
+        user_rating = None
+
     is_saved = title in current_user.saves if current_user.is_authenticated else False
     return render_template('manga_card.html',
                            user=current_user,
@@ -27,7 +33,8 @@ def manga_page(title_id):
                            rating_count=rating_c,
                            rating=rating,
                            user_rating=user_rating,
-                           saved=is_saved)
+                           saved=is_saved,
+                           user_json=user_json)
 
 
 @bp.route("/add", methods=["GET", "POST"])
