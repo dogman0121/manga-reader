@@ -165,7 +165,7 @@ class Chapter extends Component {
                     <div class="chapter__content">
                         Том {{ this.tome }} Глава {{ this.chapter }}
                         <div class="chapter__icons">
-                            {{ DATA.user.team_id ? new EditChapterSection(this) : "" }}
+                            {{ DATA.user.team_id == this.id ? new EditChapterSection(this) : "" }}
                         </div>
                     </div>
                 </a>
