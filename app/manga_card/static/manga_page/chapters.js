@@ -3,7 +3,7 @@ class ChaptersBlock extends Component{
         super();
 
         this.chaptersTranslators = new ChapterTranslatorsList(data);
-        this.chaptersList = new State(new ChaptersList(this.chaptersTranslators.translators[0].chapters));
+        this.chaptersList = new State(new ChaptersList(this.chaptersTranslators.translators[0]));
     }
 
     html() {
@@ -94,6 +94,7 @@ class ChapterTranslator extends Component {
     constructor(data) {
         super();
 
+        this.id = data.id;
         this.name = data.name;
         this.poster = data.poster;
         this.selected = data.selected;
@@ -131,13 +132,14 @@ class ChapterTranslator extends Component {
 class ChaptersList extends Component {
     chapters = [];
 
-    constructor(data) {
+    constructor(team) {
         super();
 
-        if (!data)
+        if (!team)
             return;
 
-        this.chapters = data.map(chapter => new Chapter(chapter));
+        console.log(team);
+        this.chapters = team.chapters.map(chapter => new Chapter(chapter, team.id));
     }
 
     html() {
@@ -151,11 +153,12 @@ class ChaptersList extends Component {
 }
 
 class Chapter extends Component {
-    constructor(data) {
+    constructor(chapter, team_id) {
         super();
-        this.id = data.id;
-        this.chapter = data.chapter;
-        this.tome = data.tome;
+        this.id = chapter.id;
+        this.chapter = chapter.chapter;
+        this.tome = chapter.tome;
+        this.team_id = team_id;
     }
 
     html() {
@@ -165,7 +168,7 @@ class Chapter extends Component {
                     <div class="chapter__content">
                         Том {{ this.tome }} Глава {{ this.chapter }}
                         <div class="chapter__icons">
-                            {{ DATA.user.team_id == this.id ? new EditChapterSection(this) : "" }}
+                            {{ DATA.user.team_id === this.team_id ? new EditChapterSection(this) : "" }}
                         </div>
                     </div>
                 </a>
