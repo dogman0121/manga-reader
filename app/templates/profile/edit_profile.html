@@ -23,9 +23,9 @@
         {{ general_settings.csrf_token(id=False) }}
         <img class="avatar" src="{{ user.get_avatar() }}">
         <label>
-        <div class="button">
+        <button class="button">
             Изменить
-        </div>
+        </button>
         <div class="setting-option">
             {{ general_settings.avatar(hidden=True) }}
         </div></label>

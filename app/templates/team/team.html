@@ -13,11 +13,13 @@
             {% endif %}
         </div>
         {% if team.leader_id == user.id %}
-            <a class="edit" href="{{ url_for("team.edit_team", team_id=team.id) }}">Редактировать</a>
+            <a href="{{ url_for("team.edit_team", team_id=team.id) }}">
+                <button class="edit">Редактировать</button>
+            </a>
         {% endif %}
         {% if user.team_id == team.id %}
-            <a class="edit" href="{{ url_for("team.leave_team", team_id=team.id) }}">
-                Выйти
+            <a href="{{ url_for("team.leave_team", team_id=team.id) }}">
+                <button class="edit">Выйти</button>
             </a>
         {% endif %}
         <div class="members">

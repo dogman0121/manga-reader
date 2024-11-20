@@ -1,0 +1,44 @@
+:root {
+    --header-background: #FFD600;
+    --body-background: #FFFFFF;
+    --footer-background: #FFD600;
+    --text-color: #000000;
+    --selected: #D9D9D9;
+    --icon: #000000;
+    --icon-selected: #000000;
+    --dropdown-background: #FFFFFF;
+    --search-filter-background: #D9D9D9;
+    --search-filter-text-color: #000000;
+    --search-filter-selected-background: #FFD600;
+    --search-filter-selected-text-color: #000000;
+    --inputs-option-background: #FFFFFF;
+    --inputs-option-text-color: #000000;
+    --inputs-option-selected-background: #D9D9D9;
+    --inputs-option-selected-text-color: #000000;
+    --button1-background: #FFD600;
+    --button2-background: #D9D9D9;
+    --button3-background: #D9D9D9;
+    --section-background: #D9D9D9;
+}
+
+:root[data-color-scheme="dark"] {
+    --header-background: #06090E;
+    --body-background: #171717;
+    --footer-background: #06090E;
+    --text-color: #FFFFFF;
+    --icon: #FFFFFF;
+    --icon-selected: #000000;
+    --dropdown-background: #222222;
+    --search-filter-background: #222222;
+    --search-filter-text-color: #FFFFFF;
+    --search-filter-selected-background: #FFD600;
+    --search-filter-selected-text-color: #000000;
+    --inputs-option-background: #171717;
+    --inputs-option-text-color: #FFFFFF;
+    --inputs-option-selected-background: #D9D9D9;
+    --inputs-option-selected-text-color: #000000;
+    --button1-background: #FFD600;
+    --button2-background: #FFD600;
+    --button3-background: #222222;
+    --section-background: #222222;
+}

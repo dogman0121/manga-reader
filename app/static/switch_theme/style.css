@@ -1,0 +1,277 @@
+#hide-checkbox {
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.toggle {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  background: #211042;
+  border-radius: 50px;
+  transition: 500ms;
+  overflow: hidden;
+}
+
+.toggle-button {
+  position: absolute;
+  display: inline-block;
+  top: 7%;
+  left: 3%;
+  width: 43%;
+  height: 86%;
+  border-radius: 50%;
+  background: #FAEAF1;
+  overflow: hidden;
+  box-shadow: 0 0 35px 4px rgba(255, 255, 255);
+  transition: all 500ms ease-out;
+}
+
+.crater {
+  position: absolute;
+  display: inline-block;
+  background: #FAEAF1;
+  border-radius: 50%;
+  transition: 500ms;
+}
+
+.crater-1 {
+  background: #FFFFF9;
+  width: 100%;
+  height: 100%;
+  left: 11.63%;
+  bottom: 11.63%;
+}
+
+.crater-2 {
+  width: 23.26%;
+  height: 23.26%;
+  top: -8.14%;
+  left: 51.16%;
+}
+
+.crater-3 {
+  width: 18.6%;
+  height: 18.6%;
+  top: 23.26%;
+  right: -4.65%;
+}
+
+.crater-4 {
+  width: 11.63%;
+  height: 11.63%;
+  top: 27.91%;
+  left: 34.88%;
+}
+
+.crater-5 {
+  width: 17.44%;
+  height: 17.44%;
+  top: 46.51%;
+  left: 55.81%;
+}
+
+.crater-6 {
+  width: 11.63%;
+  height: 11.63%;
+  top: 55.81%;
+  left: 23.26%;
+}
+
+.crater-7 {
+  width: 13.95%;
+  height: 13.95%;
+  bottom: 5.81%;
+  left: 40.7%;
+}
+
+.star {
+  position: absolute;
+  display: inline-block;
+  border-radius: 50%;
+  background: #FFF;
+  box-shadow: 1px 0 2px 2px rgba(255, 255, 255);
+}
+
+.star-1 {
+  width: 3%;
+  height: 6%;
+  right: 45%;
+  bottom: 40%;
+}
+
+.star-2 {
+  width: 4%;
+  height: 8%;
+  right: 35%;
+  top: 10%;
+}
+
+.star-3 {
+  width: 2.5%;
+  height: 5%;
+  right: 30%;
+  bottom: 15%;
+}
+
+.star-4 {
+  width: 1.5%;
+  height: 3%;
+  right: 20%;
+  bottom: 50%;
+}
+
+.star-5 {
+  width: 2%;
+  height: 4%;
+  right: 5%;
+  bottom: 35%;
+}
+
+.star-6, .star-7, .star-8 {
+  width: 5%;
+  height: 2%;
+  border-radius: 2px;
+  transform: rotate(-45deg);
+  box-shadow: 5px 0px 4px 1px #FFF;
+  animation-name: travel;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+}
+
+.star-6 {
+  right: 15%;
+  bottom: 30%;
+  animation-delay: -2s;
+}
+
+.star-7 {
+  right: 25%;
+  bottom: 60%;
+}
+
+.star-8 {
+  right: 45%;
+  top: 10%;
+  animation-delay: -4s;
+}
+
+@keyframes travel {
+  0% {
+    transform: rotate(-45deg) translateX(70px);
+  }
+
+  50% {
+    transform: rotate(-45deg) translateX(-20px);
+    box-shadow: 5px 0px 6px 1px #FFF;
+  }
+
+  100% {
+    transform: rotate(-45deg) translateX(-30px);
+    width: 2px;
+    height: 2px;
+    opacity: 0;
+    box-shadow: none;
+  }
+}
+
+#hide-checkbox:checked + .toggle {
+  background: #24D7F7;
+}
+
+#hide-checkbox:checked + .toggle .toggle-button {
+  background: #F7FFFF;
+  transform: translateX(31px);
+  box-shadow: 0 0 35px 5px rgba(255, 255, 255);
+}
+
+#hide-checkbox:checked + .toggle .toggle-button .crater {
+  transform: rotate(-45deg) translateX(70px);
+}
+
+#hide-checkbox:checked + .toggle .star {
+  animation: move 2s infinite;
+  transform: none;
+  box-shadow: none;
+}
+
+#hide-checkbox:checked + .toggle .star-1 {
+  width: 20%;
+  height: 10%;
+  border-radius: 10px;
+  background: #FFF;
+  left: 10%;
+  top: 25%;
+  box-shadow: none;
+}
+
+#hide-checkbox:checked + .toggle .star-2 {
+  width: 6%;
+  height: 12%;
+  background: #FFF;
+  left: 13%;
+  top: 23%;
+  box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
+}
+
+#hide-checkbox:checked + .toggle .star-3 {
+  width: 8%;
+  height: 16%;
+  background: #FFF;
+  left: 17.5%;
+  top: 19%;
+  box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
+}
+
+#hide-checkbox:checked + .toggle .star-4 {
+  width: 7%;
+  height: 14%;
+  background: #FFF;
+  left: 23%;
+  top: 21%;
+  box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
+}
+
+#hide-checkbox:checked + .toggle .star-5 {
+  width: 30%;
+  height: 15%;
+  border-radius: 15px;
+  background: #FFF;
+  left: 15%;
+  bottom: 20%;
+  box-shadow: none;
+}
+
+#hide-checkbox:checked + .toggle .star-6 {
+  width: 9%;
+  height: 18%;
+  background: #FFF;
+  border-radius: 50%;
+  left: 19%;
+  bottom: 20%;
+  box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
+}
+
+#hide-checkbox:checked + .toggle .star-7 {
+  width: 12%;
+  height: 24%;
+  background: #FFF;
+  border-radius: 50%;
+  left: 26%;
+  bottom: 20%;
+  box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
+}
+
+#hide-checkbox:checked + .toggle .star-8 {
+  width: 10.5%;
+  height: 21%;
+  background: #FFF;
+  border-radius: 50%;
+  left: 35%;
+  top: 59%;
+  box-shadow: -1px 0 2px 0 rgba(0, 0 , 0, 0.1);
+}

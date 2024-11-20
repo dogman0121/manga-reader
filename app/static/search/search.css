@@ -28,7 +28,7 @@ body {
     width: 600px;
 
     border-radius: 15px 15px 12px 12px;
-    background-color: white;
+    background-color: var(--dropdown-background);
 
     transform: translateX(-50%);
 }
@@ -56,6 +56,7 @@ body {
     border:none;
     border-bottom: 1px solid #D9D9D9;
     outline: none;
+    background-color: var(--dropdown-background);
 
     margin-left: 8px;
     padding: 5px 0;
@@ -82,12 +83,14 @@ body {
 .search__filter {
     padding: 1px 10px;
     font-size: 16px;
-    background-color: #D9D9D9;
+    background-color: var(--search-filter-background);
+    color: var(--search-filter-text-color);
     border-radius: 4px;
 }
 
 .search__filter_selected {
-    background-color: #FFD600;
+    background-color: var(--search-filter-selected-background);
+    color: var(--search-filter-selected-text-color);
 }
 
 .search__results {

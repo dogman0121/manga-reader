@@ -98,6 +98,10 @@ li {
     margin-left: 3px;
 }
 
+.profile__options > a {
+    background-color: var(--button3-background);
+}
+
 .add_team {
     padding: 5px 7px;
     background-color: #f0f0f0;

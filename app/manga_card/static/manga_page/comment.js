@@ -87,7 +87,9 @@ class CommentPanel extends Component{
             answersButton += `
                 <span class="comment__show-answers show-answers">
                     ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.comment.answersCount}</span>)
-                    <img class="show-answers__image" src="../static/manga_card/manga_card/images/rating-down.svg">
+                    <svg class="rating-down__image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor"/>
+                    </svg>
                 </span>
             `
 
@@ -95,15 +97,19 @@ class CommentPanel extends Component{
             <div class="comment__panel">
                 <div class="comment__rating">
                     <div class="rating__button rating-up ${(this.comment.userVote === 1) ? " rating__button_active" : ""}">
-                        <img class="rating-up__image" src="../static/manga_card/manga_card/images/rating-up.svg">
+                        <svg class="rating-image rating-up__image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C12.2652 7 12.5196 7.10536 12.7071 7.29289L19.7071 14.2929C20.0976 14.6834 20.0976 15.3166 19.7071 15.7071C19.3166 16.0976 18.6834 16.0976 18.2929 15.7071L12 9.41421L5.70711 15.7071C5.31658 16.0976 4.68342 16.0976 4.29289 15.7071C3.90237 15.3166 3.90237 14.6834 4.29289 14.2929L11.2929 7.29289C11.4804 7.10536 11.7348 7 12 7Z" fill="currentColor"/>
+                        </svg>
                     </div>
                     <span class="rating__text">${this.comment.upVotes - this.comment.downVotes}</span>
                     <div class="rating__button rating-down${(this.comment.userVote === 0) ? " rating__button_active" : ""}">
-                        <img class="rating-down__image" src="../static/manga_card/manga_card/images/rating-down.svg">
+                        <svg class="rating-image rating-down__image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor"/>
+                        </svg>
                     </div>
                 </div>
                 <span class="comment__answer-button">ответить</span>
-                ${answersButton};
+                ${answersButton}
             </div>
         `
 
@@ -248,7 +254,7 @@ class CommentForm extends Component{
             html = `
                 <div class="comment__form">
                     <textarea class="comments__input" placeholder="Введите текст"></textarea>
-                    <div class="comments__send">Отправить</div>
+                    <button class="comments__send">Отправить</button>
                 </div>
             `
         else

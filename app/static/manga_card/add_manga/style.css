@@ -10,14 +10,6 @@ body {
     overflow: hidden;
 }
 
-.select-wrapper__option_selected {
-    background-color: #D9D9D9;
-}
-
-.select-wrapper__option {
-    padding: 10px 20px;
-}
-
 .select-wrapper__option:hover {
     background-color: #D9D9D9;
 }
@@ -81,7 +73,7 @@ textarea {
 
 
 .form__submit {
-    background-color: #FFD600;
+    background-color: var(--header-background);
     padding: 20px 40px;
     border-radius: 20px;
     border: none;
@@ -115,6 +107,7 @@ textarea {
     align-items: center;
     justify-content: center;
     border-radius: 6px;
+    color: #000000;
 }
 
 .selected-option__image {

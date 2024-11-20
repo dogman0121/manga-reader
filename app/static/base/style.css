@@ -8,10 +8,8 @@ body {
     overflow-x: hidden;
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
-}
-
-header {
-    background-color: #FFD600;
+    background-color: var(--body-background);
+    color: var(--text-color);
 }
 
 main {
@@ -20,10 +18,25 @@ main {
 
 a {
     text-decoration: none;
-    color: #000000;
+    color: var(--text-color);
 }
 
-footer {
-    margin-top: 20px;
+a:hover {
+    color: var(--text-color);
+}
+
+a:visited {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+input, textarea {
+    background-color: var(--body-background);
+    color: var(--text-color);
+}
+
+button, input[type="submit"] {
+    border: none;
     background-color: #FFD600;
+    color: #000000;
 }

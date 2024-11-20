@@ -1,3 +1,7 @@
+header {
+    background-color: var(--header-background);
+}
+
 .header__inner {
     display: flex;
     flex-direction: row;
@@ -15,6 +19,10 @@
     width: 40px;
     height: 40px;
     margin: auto 0 auto;
+}
+
+#logo {
+    fill: var(--icon);
 }
 
 .empty-icon {
@@ -42,6 +50,7 @@ nav {
     display: flex;
     flex-direction: row;
     align-items: center;
+    column-gap: 10px;
 
     margin: auto 0;
 }
@@ -49,7 +58,6 @@ nav {
 .nav__item {
     display: block;
     font-size: 20px;
-    color: #000000;
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -68,21 +76,10 @@ nav {
     border-radius: 50%;
 }
 
-.dropdown-panel{
-    position: relative;
-}
-
-.dropdown-menu {
-    position: absolute;
-    right: 0;
-    z-index: 1001;
-}
-
 .profile-menu {
     padding: 5px 10px;
-    background: #FFFFFF;
     font-size: 16px;
-    border-radius: 12px;
+    border-radius: 8px;
     min-width: 200px;
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2)
 }

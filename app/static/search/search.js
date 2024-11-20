@@ -3,7 +3,7 @@ const searchInput = searchEl.querySelector(".search__input");
 const searchResults = searchEl.querySelector(".search__results");
 const searchResultsEmpty = searchEl.querySelector(".results__empty");
 const searchFilters = searchEl.querySelector(".search__filters");
-const searchCloseButton = searchEl.querySelector(".search__close_image");
+const searchCloseButton = searchEl.querySelector(".search__close-image");
 let chosenSection = 'title';
 
 searchEl.addEventListener("click", function (event){

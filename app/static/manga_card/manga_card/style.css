@@ -9,21 +9,6 @@ body {
     font-size: 14px;
 }
 
-a {
-    text-decoration: none;
-    color: #000000;
-}
-
-a:hover {
-    color: #000000;
-}
-
-a:visited {
-    color: #000000;
-    text-decoration: none;
-}
-
-
 h1, .manga-names__russian {
     font-size: 28px;
     font-weight: normal;
@@ -125,6 +110,7 @@ textarea:focus {
     height: 60px;
     width: 228px;
     background-color: #FFD600;
+    color: #000000;
     font-size: 20px;
     border-radius: 12px;
     margin: 0 0 20px 40px;
@@ -138,7 +124,7 @@ textarea:focus {
     margin-top: 5px;
     height: 40px;
     width: 100%;
-    background-color: #D9D9D9;
+    background-color: var(--button2-background);
     font-size: 16px;
     border-radius: 12px;
 

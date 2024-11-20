@@ -1,0 +1,10 @@
+.dropdown-panel{
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    z-index: 1001;
+    background-color: var(--dropdown-background);
+}

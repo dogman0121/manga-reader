@@ -8,9 +8,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base/color-scheme.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='base/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='header/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header/dropdown.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename="switch_theme/style.css") }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='footer/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='search/search.css')  }}">
     <link type="image/png" sizes="96x96" rel="icon" href="{{ url_for('static', filename="base/images/icon-96.png") }}">
@@ -54,6 +57,7 @@
         {% endblock %}
     </script>
     <script src="{{ url_for('static', filename='header/adaptive.js') }}"></script>
+    <script src="{{ url_for('static', filename='switch_theme/switch_theme.js') }}"></script>
     <script src="{{ url_for('static', filename='base/dropdown.js') }}"></script>
     <script src="{{ url_for('static', filename='base/data.js') }}"></script>
     <script src="{{ url_for('static', filename='search/search.js') }}"></script>

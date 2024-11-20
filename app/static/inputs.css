@@ -8,4 +8,24 @@
 
 .inputs-input__input {
     width: 100%;
+    background-color: var(--body-background);
+}
+
+.form_textarea {
+    background-color: var(--body-background);
+}
+
+input {
+    color: var(--text-color);
+}
+
+.select-wrapper__option {
+    padding: 10px 20px;
+    background-color: var(--inputs-option-background);
+    color: var(--inputs-option-text-color);
+}
+
+.select-wrapper__option_selected, .select-wrapper__option:hover {
+    background-color: var(--inputs-option-selected-background);
+    color: var(--inputs-option-selected-text-color);
 }

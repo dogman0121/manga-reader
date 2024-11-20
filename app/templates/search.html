@@ -2,9 +2,13 @@
     <div class="search__container">
         <div class="search__header">
             <div class="search__form">
-                <img src="{{ url_for('static', filename="search/images/search.svg") }}" class="search__search-image">
+                <svg class="search__search-image search__icon" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <input class="search__input" placeholder="введите запрос">
-                <img src="{{ url_for('static', filename="search/images/cross.svg") }}" class="search__close_image">
+                <svg class="search__close-image search__icon" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 5L4.99998 19M5.00001 5L19 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </div>
         </div>
         <div class="search__main">

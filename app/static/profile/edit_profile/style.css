@@ -34,7 +34,8 @@ body {
 }
 
 .section-button_selected {
-    background-color: #D9D9D9;
+    background-color: var(--button2-background);
+    color: #000000;
 }
 
 .section_selected {

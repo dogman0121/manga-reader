@@ -42,13 +42,13 @@ h3 {
     margin-top: 5px;
     height: 40px;
     width: 100%;
-    background-color: #D9D9D9;
+    background-color: var(--button2-background);
     font-size: 16px;
     border-radius: 12px;
 }
 
 .members {
-    background-color: #D9D9D9;
+    background-color: var(--section-background);
     border-radius: 12px;
     padding: 10px 15px;
     margin-top: 20px;
