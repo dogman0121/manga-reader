@@ -114,6 +114,11 @@
     flex-direction: row;
 }
 
+.comment__show-answers-button {
+    display: flex;
+    align-items: center;
+}
+
 .rating__button {
     width: 23px;
     height: 23px;
