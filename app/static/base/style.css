@@ -22,11 +22,9 @@ a {
 }
 
 a:hover {
-    color: var(--text-color);
 }
 
 a:visited {
-    color: var(--text-color);
     text-decoration: none;
 }
 

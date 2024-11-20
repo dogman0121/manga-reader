@@ -183,8 +183,12 @@ textarea:focus {
 
 .genres-list__item {
     padding: 1px 8px 2px;
-    background-color: #D9D9D9;
+    background-color: var(--inputs-option-selected-background);
     border-radius: 8px;
+}
+
+.genres-list__link {
+    color: var(--inputs-option-selected-text-color);
 }
 
 .genres-list__item + .genres-list__item {

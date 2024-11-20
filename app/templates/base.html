@@ -6,20 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <script>
-        function setColorScheme(schemeName) {
-            switch (schemeName){
-                case "dark":
-                    document.documentElement.setAttribute("data-color-scheme", "dark");
-                    localStorage.setItem("color-scheme", "dark");
+        function setColorScheme(e){
+            switch(e){
+                case"dark":
+                    document.documentElement.setAttribute("data-color-scheme","dark");
+                    localStorage.setItem("color-scheme","dark");
                     break;
-                case "light":
-                    document.documentElement.setAttribute("data-color-scheme", "light");
-                    localStorage.setItem("color-scheme", "light");
-                    break;
+                case"light":
+                    document.documentElement.setAttribute("data-color-scheme","light");
+                    localStorage.setItem("color-scheme","light")
             }
         }
+        setColorScheme(localStorage.getItem("color-scheme")||"light");
 
-        setColorScheme(localStorage.getItem("color-scheme") || "light");
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,10 +32,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='footer/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='search/search.css')  }}">
     <link type="image/png" sizes="96x96" rel="icon" href="{{ url_for('static', filename="base/images/icon-96.png") }}">
-    <!-- Yandex.Metrika counter -->
-    <!-- /Yandex.Metrika counter -->
     {% block header %}
     {% endblock %}
+    <!-- Yandex.Metrika counter -->
+    <!-- /Yandex.Metrika counter -->
     <script type="text/javascript" >
        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
        m[i].l=1*new Date();
