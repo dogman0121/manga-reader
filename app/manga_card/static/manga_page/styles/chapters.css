@@ -5,8 +5,15 @@
     margin-top: 10px;
 }
 
+.chapters-header__icon {
+    width: 20px;
+    height: 20px;
+}
+
 .chapters-header__buttons {
     display: flex;
+    align-items: center;
+    column-gap: 5px;
 }
 
 .chapter__icon {
@@ -30,7 +37,7 @@
 
 .chapters__item {
     padding: 16px 14px;
-    background-color: #D9D9D9;
+    background-color: var(--section-background);;
     border-radius: 12px;
 }
 
@@ -60,7 +67,8 @@
 }
 
 .translator_selected {
-    background-color: #D9D9D9;
+    background-color: var(--inputs-option-selected-background);
+    color: var(--inputs-option-selected-text-color);
 }
 
 .translator__image {
