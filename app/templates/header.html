@@ -32,7 +32,7 @@
                         <div class="nav__item dropdown-button">
                             <img class="user-avatar" src="{{ user.get_avatar() }}">
                         </div>
-                        <div class="dropdown-menu profile-menu" hidden>
+                        <div class="dropdown-menu profile-menu" style="display: none">
                             <a href="{{ url_for('profile.get_profile', profile_id=user.id) }}" class="profile-menu__option">
                                 <img src="{{ url_for('static', filename='base/images/profile.svg') }}" class="profile-menu__icon">
                                 Профиль
