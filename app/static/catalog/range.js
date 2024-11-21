@@ -1,6 +1,6 @@
 let rangeInputs = document.querySelectorAll(".range__input");
 for (let input of rangeInputs) {
-    input.addEventListener("input", inputEvent);
+    input.addEventListener("change", inputEvent);
 }
 
 function inputEvent(event) {
