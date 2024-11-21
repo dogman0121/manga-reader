@@ -299,23 +299,24 @@ class Title(db.Model):
         return db.session.get(Title, title_id)
 
     @hybrid_method
-    def validate_types(self, types: list[Type]):
-        if not types:
+    def validate_types(self, type_ids: list[int]):
+        if not type_ids:
             return True
 
-        return self.type in types
+        return self.type_id.in_(type_ids)
 
     @hybrid_method
-    def validate_statuses(self, statuses: list[Status]):
-        if not statuses:
+    def validate_statuses(self, status_ids: list[int]):
+        if not status_ids:
             return True
 
-        return self.status in statuses
+        return self.status_id.in_(status_ids)
 
     @hybrid_method
     def validate_genres(self, genres: list[Genre]):
         if not genres:
             return True
+
         return all(genre in self.genres for genre in genres)
 
     @hybrid_method
@@ -323,16 +324,14 @@ class Title(db.Model):
         return and_(year_from <= self.year, self.year <= year_to)
 
     @staticmethod
-    def get_with_filters(types: list[Type] = (), statuses: list[Status] = (), genres: list[Genre] = (),
+    def get_with_filters(types: list[int] = (), statuses: list[int] = (), genres: list[Genre] = (),
                          year_from: int = 0, year_to: int = 10000, rating_from: int = 0, rating_to: int = 10,
                          page: int = 1):
         return db.session.execute(Select(Title).filter(
-            and_(
                 Title.validate_types(types),
                 Title.validate_statuses(statuses),
                 Title.validate_year(year_from, year_to)
-            )
-        ).limit(20).offset(20 * (page - 1))).scalars().all()
+            ).limit(20).offset(20 * (page - 1))).scalars().all()
 
     @staticmethod
     def search(query):

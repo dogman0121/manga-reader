@@ -11,5 +11,5 @@ function inputEvent(event) {
         input.value = text.slice(0, -1);
         return null;
     }
-    editCatalog(input.name, input.value, 3);
+    editCatalog(input.name, input.value, 2);
 }

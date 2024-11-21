@@ -5,6 +5,7 @@ let formData = new FormData();
 // mode: 3 - удалить элемент из формы
 
 function editCatalog(name, value, mode){
+    //console.log(name, value, mode);
     queue++;
     switch (mode){
         case 1:
@@ -23,6 +24,7 @@ function editCatalog(name, value, mode){
         case 4:
             formData.delete(name);
     }
+    //console.log((new URLSearchParams(formData)).toString());
     let newSearch = "?" + (new URLSearchParams(formData)).toString();
     window.history.pushState(null, null, newSearch);
     setTimeout(function (){

@@ -63,7 +63,7 @@ class Select {
         if (event.target.classList.contains("select-list__option")){
             if (event.target.classList.contains("select-list__option_selected")) {
                 this.object.removeChoice(event.target.dataset.value);
-                editCatalog(this.object.name, event.target.dataset.value, 2);
+                editCatalog(this.object.name, event.target.dataset.value, 3);
             }
             else {
                 this.object.addChoice(event.target.dataset.value);
