@@ -9,6 +9,10 @@ body {
     font-size: 14px;
 }
 
+main {
+    margin-top: 30px;
+}
+
 
 input[type="text"] {
     font-size: 16px;
@@ -59,6 +63,7 @@ input[type="text"] {
 }
 
 .catalog__header {
+    margin: 0;
     font-weight: 200;
     font-size: 50px;
     line-height: 50px;
