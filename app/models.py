@@ -1,6 +1,6 @@
 from flask import url_for
 from flask_login import UserMixin
-from sqlalchemy.ext.hybrid import hybrid_method
+from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
 from sqlalchemy import exists, ForeignKey, Table, Column, Integer, Select, and_, func, insert, delete, update
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
@@ -298,6 +298,11 @@ class Title(db.Model):
     def get_by_id(title_id):
         return db.session.get(Title, title_id)
 
+    # @hybrid_property
+    # def genres(self):
+    #     return list(db.session.execute(Select(Genre).where(and_(
+    #         titles_genres.c.title_id == self.id, titles_genres.c.genre_id == Genre.id))).scalars())
+
     @hybrid_method
     def validate_types(self, type_ids: list[int]):
         if not type_ids:
@@ -310,22 +315,17 @@ class Title(db.Model):
         if not status_ids:
             return True
 
-        return self.status_id.in_(status_ids)
+        return self.genres
 
     @hybrid_method
     def validate_genres(self, genres: list[int]):
         if not genres:
             return True
 
-        title_genres = db.session.execute(Select(titles_genres.c.genre_id).where(
-            titles_genres.c.title_id == self.id)).scalars()
-
-        title_genres_list = list(title_genres)
-
-        if not title_genres_list:
+        if not self.genres:
             return False
 
-        return all(genre in title_genres_list for genre in genres)
+        return Title.genres.any(Genre.id.in_(genres))
 
     @hybrid_method
     def validate_year(self, year_from: int, year_to: int):
@@ -335,7 +335,7 @@ class Title(db.Model):
     def validate_rating(self, rating_from: int, rating_to: int):
         rating_sum, rating_len = self.get_rating()
         if rating_len == 0:
-            return False
+            return True if rating_from == 0 else False
         rating = rating_sum / rating_len
         return and_(rating_from <= rating, rating <= rating_to)
 
