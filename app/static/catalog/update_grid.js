@@ -18,7 +18,7 @@ function editCatalog(name, value, mode){
             let valuesWithName = formData.getAll(name);
             formData.delete(name);
             for (let attrValue of valuesWithName)
-                if (attrValue !== value)
+                if (attrValue !== value && value.length !== 0)
                     formData.append(name, attrValue);
             break;
         case 4:

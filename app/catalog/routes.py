@@ -9,9 +9,9 @@ from app.catalog import bp
 
 @bp.route("/")
 def catalog_page():
-    types = [i for i in request.args.getlist("types")]
-    statuses = [Status.get_by_id(i) for i in request.args.getlist("statuses")]
-    genres = [Genre.get_by_id(i) for i in request.args.getlist("genres")]
+    types = [int(i) for i in request.args.getlist("types")]
+    statuses = [int(i) for i in request.args.getlist("statuses")]
+    genres = [int(i) for i in request.args.getlist("genres")]
     adult = [int(i) for i in request.args.getlist("adult")]
     year_from = int(request.args.get("year_by") or 0)
     year_to = int(request.args.get("year_to") or 10000)

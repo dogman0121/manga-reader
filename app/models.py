@@ -313,24 +313,42 @@ class Title(db.Model):
         return self.status_id.in_(status_ids)
 
     @hybrid_method
-    def validate_genres(self, genres: list[Genre]):
+    def validate_genres(self, genres: list[int]):
         if not genres:
             return True
 
-        return all(genre in self.genres for genre in genres)
+        title_genres = db.session.execute(Select(titles_genres.c.genre_id).where(
+            titles_genres.c.title_id == self.id)).scalars()
+
+        title_genres_list = list(title_genres)
+
+        if not title_genres_list:
+            return False
+
+        return all(genre in title_genres_list for genre in genres)
 
     @hybrid_method
     def validate_year(self, year_from: int, year_to: int):
         return and_(year_from <= self.year, self.year <= year_to)
 
+    @hybrid_method
+    def validate_rating(self, rating_from: int, rating_to: int):
+        rating_sum, rating_len = self.get_rating()
+        if rating_len == 0:
+            return False
+        rating = rating_sum / rating_len
+        return and_(rating_from <= rating, rating <= rating_to)
+
     @staticmethod
-    def get_with_filters(types: list[int] = (), statuses: list[int] = (), genres: list[Genre] = (),
+    def get_with_filters(types: list[int] = (), statuses: list[int] = (), genres: list[int] = (),
                          year_from: int = 0, year_to: int = 10000, rating_from: int = 0, rating_to: int = 10,
                          page: int = 1):
         return db.session.execute(Select(Title).filter(
                 Title.validate_types(types),
                 Title.validate_statuses(statuses),
-                Title.validate_year(year_from, year_to)
+                Title.validate_year(year_from, year_to),
+                Title.validate_genres(genres),
+                Title.validate_rating(rating_from, rating_to)
             ).limit(20).offset(20 * (page - 1))).scalars().all()
 
     @staticmethod
@@ -361,29 +379,34 @@ class Title(db.Model):
 
     def check_translator(self, team):
         return db.session.execute(
-            Select(exists(titles_translators).where(and_(titles_translators.c.title_id==self.id,
-                                                  titles_translators.c.team_id==team.id)))
+            Select(exists(titles_translators).where(and_(titles_translators.c.title_id == self.id,
+                                                  titles_translators.c.team_id == team.id)))
         ).scalar()
 
     # ----- Rating -----
+    @hybrid_method
     def get_rating(self):
         rating = db.session.execute(Select(ratings.c.rating).where(ratings.c.title_id == self.id)).scalars().all()
         return sum(rating), len(rating)
 
+    @hybrid_method
     def add_rating(self, user, rating):
         db.session.execute(insert(ratings).values(user_id=user.id, title_id=self.id, rating=rating))
         db.session.commit()
 
+    @hybrid_method
     def remove_rating(self, user):
         db.session.execute(delete(ratings).where(and_(ratings.c.user_id == user.id, ratings.c.title_id == self.id)))
         db.session.commit()
 
+    @hybrid_method
     def update_rating(self, user, new_rating):
         db.session.execute(
             update(ratings).where(and_(ratings.c.user_id == user.id, ratings.c.title_id == self.id)).values(
                 rating=new_rating))
         db.session.commit()
 
+    @hybrid_method
     def get_user_rating(self, user):
         user_rating = db.session.execute(Select(ratings.c.rating).where(and_(
             ratings.c.user_id == user.id, self.id == ratings.c.title_id))).scalar()
