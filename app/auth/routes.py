@@ -42,7 +42,7 @@ def login():
         return render_template("login.html", form=form)
     elif request.method == "POST":
         if form.validate_on_submit():
-            user = User.get_by_email(form.email.data)
+            user = User.get_by_login(form.login.data)
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for("index.index"))
