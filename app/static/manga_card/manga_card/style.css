@@ -50,7 +50,7 @@ li {
 
 #poster__image {
     width: 100%;
-    aspect-ratio: 2/3;
+    aspect-ratio: 0.7;
     border-radius: 14px;
 }
 

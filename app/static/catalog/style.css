@@ -55,7 +55,7 @@ input[type="text"] {
 .title-square__poster {
     border-radius: 7px;
     width: 100%;
-    aspect-ratio: 2/3;
+    aspect-ratio: 0.7;
 
 }
 .title-square__name {
@@ -288,7 +288,7 @@ input[type="text"] {
 
 .title-rectangle__poster {
     max-width: 35%;
-    aspect-ratio: 2/3;
+    aspect-ratio: 0.7;
     border-radius: 12px;
 }
 
