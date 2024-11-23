@@ -44,9 +44,9 @@ window.onload = function() {
     window.YaAuthSuggest.init({
         client_id: '60a4f1a51d3341c8973244bde329fe8d',
         response_type: 'token',
-        redirect_uri: 'https://kanwoo-manga.ru/auth/oauth/yandex'
+        redirect_uri: 'http://127.0.0.1:8000/auth/oauth/yandex'
     },
-    'https://kanwoo-manga.ru', {
+    'http://127.0.0.1:8000', {
         view: 'button',
         parentId: 'yandex_id',
         buttonView: 'icon',
@@ -69,9 +69,9 @@ window.onload = function() {
             .then(response => response.json())
             .then(data => {
                 if (data.status === "ok")
-                    window.location.href = "https://kanwoo-manga.ru";
+                    window.location.href = "http://127.0.0.1:8000";
                 else
-                    window.location.href = "https://kanwoo-manga.ru/auth";
+                    window.location.href = "http://127.0.0.1:8000/auth";
             })
     })
     .catch(function(error) {

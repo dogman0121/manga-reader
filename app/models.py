@@ -89,7 +89,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def is_email_taken(email):
-        return db.session.execute(Select(exists(User).where(User.login == email))).scalar()
+        return db.session.execute(Select(exists(User).where(User.email == email))).scalar()
 
     def add_team(self, team_id):
         self.team_id = team_id
