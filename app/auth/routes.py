@@ -1,10 +1,11 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from werkzeug.security import check_password_hash
 from app.models import User
 from flask_login import login_user, logout_user
 from app.auth import bp
 from app.email import send_password_recovery_mail, check_password_recovery_token
 from app.auth.forms import SendEmailForm, RecoveryPasswordForm, RegisterForm, LoginForm
+import requests
 
 
 @bp.route("/", methods=["GET", "POST"])
@@ -89,3 +90,25 @@ def recovery_password(token):
             user.update()
             return redirect(url_for(".login", section="login"))
     return render_template("recovery_password.html", password_form=recovery_password_form)
+
+
+@bp.route("/oauth/yandex", methods=["GET"])
+def oauth_yandex():
+    return render_template("oauth_yandex.html")
+
+
+@bp.route("/oauth/yandex", methods=["POST"])
+def handle_yandex():
+    user_token = request.json["access_token"]
+    user_data = requests.get("https://login.yandex.ru/info?format=json",
+                             headers={"Authorization": f"OAuth {user_token}"}).json()
+
+    user = User.get_by_oauth("ya", user_data["id"])
+    if user:
+        login_user(user)
+    else:
+        new_user = User(login=user_data["login"], email=user_data["default_email"])
+        new_user.add()
+        new_user.add_oauth("ya", user_data["id"])
+        login_user(new_user)
+    return jsonify({"status": "ok"})

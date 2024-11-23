@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('auth.static', filename='style.css') }}">
+    {% block header_scripts %}
+    {% endblock %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -18,5 +20,7 @@
             </form>
         </div>
     </main>
+    {% block footer_scripts %}
+    {% endblock %}
 </body>
 </html>

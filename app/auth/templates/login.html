@@ -1,4 +1,7 @@
 {% extends "base_login.html" %}
+{% block header_scripts %}
+<script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"></script>
+{% endblock %}
 {% block title %}
 Авторизация
 {% endblock %}
@@ -13,6 +16,11 @@
 {% for error in form.login.errors %}
     <div class="flash_error">{{error}}</div>
 {% endfor %}
+<div class="oauth">
+    <div id="yandex_id">
+
+    </div>
+</div>
 <div class="input-box">
     {{ form.login(placeholder="Логин") }}
     <img class="input-box__images" src="{{ url_for('auth.static', filename='images/user.svg') }}">
@@ -29,4 +37,47 @@
 <div class="register">
     <p>Нет учетной записи? <a href="{{url_for('.auth', section='register')}}" class="register__link">Зарегистрироваться</a></p>
 </div>
+{% endblock %}
+{% block footer_scripts %}
+<script>
+window.onload = function() {
+    window.YaAuthSuggest.init({
+        client_id: '60a4f1a51d3341c8973244bde329fe8d',
+        response_type: 'token',
+        redirect_uri: 'https://kanwoo-manga.ru/auth/oauth/yandex'
+    },
+    'https://kanwoo-manga.ru', {
+        view: 'button',
+        parentId: 'yandex_id',
+        buttonView: 'icon',
+        buttonTheme: 'light',
+        buttonSize: 'm',
+        buttonBorderRadius: 8
+    }
+    )
+    .then(function(result) {
+        return result.handler()
+    })
+    .then(function(data) {
+        console.log(data)
+        fetch("/auth/oauth/yandex", {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            method: "POST",
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "ok")
+                    window.location.href = "https://kanwoo-manga.ru";
+                else
+                    window.location.href = "https://kanwoo-manga.ru/auth";
+            })
+    })
+    .catch(function(error) {
+        console.log('Что-то пошло не так: ', error);
+    });
+};
+</script>
 {% endblock %}

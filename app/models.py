@@ -1,7 +1,7 @@
 from flask import url_for
 from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
-from sqlalchemy import exists, ForeignKey, Table, Column, Integer, Select, and_, func, insert, delete, update, desc
+from sqlalchemy import exists, ForeignKey, Table, Column, Integer, String, Select, and_, func, insert, delete, update, desc
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
 from app import db, login_manager
@@ -16,6 +16,14 @@ saves = Table(
     Column("title_id", Integer(), ForeignKey("titles.id"), nullable=False)
 )
 
+oauth = Table(
+    "oauth",
+    db.metadata,
+    Column("user_id", Integer(), ForeignKey("users.id"), nullable=False),
+    Column("oauth_type", String(), nullable=False),
+    Column("oauth_id", Integer(), nullable=False)
+)
+
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
@@ -23,7 +31,7 @@ class User(db.Model, UserMixin):
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False, autoincrement=True, unique=True)
     login: Mapped[str] = mapped_column(unique=True, nullable=False)
     email: Mapped[str] = mapped_column(nullable=False, unique=True)
-    password: Mapped[str] = mapped_column(nullable=False)
+    password: Mapped[str] = mapped_column(nullable=True)
     role: Mapped[int] = mapped_column(default=1, nullable=False)
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("teams.id"), nullable=True)
     team: Mapped[Optional["Team"]] = relationship(uselist=False, back_populates="members",
@@ -34,6 +42,14 @@ class User(db.Model, UserMixin):
     @staticmethod
     def get_by_id(user_id: int):
         return db.session.get(User, user_id)
+
+    @staticmethod
+    def get_by_oauth(oauth_type, oauth_id):
+        user_id = db.session.execute(Select(oauth.c.user_id).where(and_(
+            oauth.c.oauth_type==oauth_type, oauth.c.oauth_id==oauth_id))).scalar()
+        if not user_id:
+            return None
+        return User.get_by_id(user_id)
 
     @staticmethod
     def get_by_login(login: str):
@@ -64,6 +80,10 @@ class User(db.Model, UserMixin):
     def set_login(self, login):
         self.login = login
 
+    @staticmethod
+    def is_login_taken(login):
+        return db.session.execute(Select(exists(User).where(User.login==login))).scalar()
+
     def set_email(self, email):
         self.email = email
 
@@ -93,6 +113,13 @@ class User(db.Model, UserMixin):
     def remove_save(self, title):
         db.session.execute(delete(saves).where(and_(saves.c.user_id == self.id, saves.c.title_id == title.id)))
         db.session.commit()
+
+    def add_oauth(self, oauth_type, oauth_id):
+        db.session.execute(insert(oauth).values(user_id=self.id, oauth_type=oauth_type, oauth_id=oauth_id))
+        db.session.commit()
+
+    def check_oauth(self):
+        return db.session.execute(Select(exists(oauth).where(oauth.c.user_id==self.id))).scalar()
 
     def to_dict(self):
         return {
@@ -233,12 +260,12 @@ class Chapter(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False, unique=True)
     name: Mapped[str] = mapped_column(nullable=True)
     title_id: Mapped[int] = mapped_column(ForeignKey("titles.id"), nullable=False)
-    title: Mapped["Title"] = relationship(back_populates="chapters")
+    title: Mapped["Title"] = relationship("Title", back_populates="chapters")
     tome: Mapped[int] = mapped_column(nullable=False)
     chapter: Mapped[int] = mapped_column(nullable=False)
     date: Mapped[datetime] = mapped_column(default=lambda: datetime.utcnow().strftime("%Y-%m-%d"))
     team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=True)
-    team: Mapped["Team"] = relationship(back_populates="chapters")
+    team: Mapped["Team"] = relationship("Team", back_populates="chapters")
 
     @staticmethod
     def get_by_id(chapter_id):
@@ -581,9 +608,10 @@ class Team(db.Model):
     telegram_link: Mapped[str] = mapped_column(nullable=True)
     members: Mapped[list["User"]] = relationship(uselist=True, back_populates="team",
                                                  primaryjoin="Team.id == User.team_id")
-    translations: Mapped[list["Title"]] = relationship(uselist=True, secondary="titles_translators")
-    chapters: Mapped[list["Chapter"]]= relationship(uselist=True, back_populates="team")
-    titles: Mapped[list["Title"]] = relationship(secondary="titles_translators", uselist=True, back_populates="translators")
+    translations: Mapped[list["Title"]] = relationship(uselist=True, secondary="titles_translators", viewonly=True)
+    chapters: Mapped[list["Chapter"]] = relationship("Chapter", uselist=True, back_populates="team")
+    titles: Mapped[list["Title"]] = relationship(secondary="titles_translators", uselist=True,
+                                                 back_populates="translators", viewonly=True)
 
     @staticmethod
     def get_by_id(team_id):
