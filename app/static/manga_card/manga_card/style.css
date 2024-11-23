@@ -210,7 +210,7 @@ textarea:focus {
 }
 
 .modal__content {
-    background-color: #FFFFFF;
+    background-color: var(--dropdown-background);
     border-radius: 12px;
 }
 
