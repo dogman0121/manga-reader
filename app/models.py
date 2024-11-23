@@ -1,7 +1,7 @@
 from flask import url_for
 from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
-from sqlalchemy import exists, ForeignKey, Table, Column, Integer, Select, and_, func, insert, delete, update
+from sqlalchemy import exists, ForeignKey, Table, Column, Integer, Select, and_, func, insert, delete, update, desc
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
 from app import db, login_manager
@@ -342,14 +342,28 @@ class Title(db.Model):
     @staticmethod
     def get_with_filters(types: list[int] = (), statuses: list[int] = (), genres: list[int] = (),
                          year_from: int = 0, year_to: int = 10000, rating_from: int = 0, rating_to: int = 10,
-                         page: int = 1):
-        return db.session.execute(Select(Title).filter(
-                Title.validate_types(types),
-                Title.validate_statuses(statuses),
-                Title.validate_year(year_from, year_to),
-                Title.validate_genres(genres),
-                Title.validate_rating(rating_from, rating_to)
-            ).limit(20).offset(20 * (page - 1))).scalars().all()
+                         adult: bool = False, sortings: int = 1, page: int = 1):
+        query = (Select(Title,
+                        func.count(saves.c.title_id).label("saves_count"),
+                        func.count(ratings.c.title_id).label("ratings_count")).filter(
+            Title.validate_types(types),
+            Title.validate_statuses(statuses),
+            Title.validate_year(year_from, year_to),
+            Title.validate_genres(genres),
+            Title.validate_rating(rating_from, rating_to)
+        )
+            .join(saves, saves.c.title_id == Title.id, isouter=True)
+            .join(ratings, ratings.c.title_id == Title.id, isouter=True)
+            .group_by(Title.id))
+
+        if sortings == 1:
+            return db.session.execute(query.order_by(desc(Title.views)).limit(20).offset(20 * (page-1))).scalars().all()
+        elif sortings == 2:
+            return db.session.execute(query.order_by(desc(func.count(saves.c.title_id))).limit(20).offset(20 * (page-1))).scalars().all()
+        elif sortings == 3:
+            return db.session.execute(query.order_by(desc(func.count(ratings.c.title_id))).limit(20).offset(20 * (page-1))).scalars().all()
+        elif sortings == 4:
+            return db.session.execute(query.order_by(desc(Title.year)).limit(20).offset(20 * (page-1))).scalars().all()
 
     @staticmethod
     def search(query):

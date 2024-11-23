@@ -19,7 +19,7 @@ sortingOptions.addEventListener("click", function(event) {
     event.target.classList.add("sortings-list__option_selected");
     selectLabel.textContent = event.target.textContent;
 
-    editCatalog("sort_by", event.target.dataset.value, 3);
+    editCatalog("sort_by", event.target.dataset.value, 2);
 
 })
 
