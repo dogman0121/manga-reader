@@ -59,7 +59,6 @@ window.onload = function() {
         return result.handler()
     })
     .then(function(data) {
-        console.log(data)
         fetch("/auth/oauth/yandex", {
             headers: {
                 "Content-Type": "application/json"

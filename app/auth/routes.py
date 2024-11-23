@@ -42,7 +42,7 @@ def login():
         return render_template("login.html", form=form)
     elif request.method == "POST":
         if form.validate_on_submit():
-            user = User.get_by_login(form.login.data)
+            user = User.get_by_email(form.email.data)
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
                 return redirect(url_for("index.index"))
@@ -107,8 +107,11 @@ def handle_yandex():
     if user:
         login_user(user)
     else:
-        new_user = User(login=user_data["login"], email=user_data["default_email"])
-        new_user.add()
-        new_user.add_oauth("ya", user_data["id"])
-        login_user(new_user)
+        if User.is_email_taken(user_data["email"]):
+            user = User.get_by_email(user_data["email"])
+        else:
+            user = User(login=user_data["login"], email=user_data["default_email"])
+            user.add()
+        user.add_oauth("ya", user_data["id"])
+        login_user(user)
     return jsonify({"status": "ok"})

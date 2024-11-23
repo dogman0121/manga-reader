@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False, autoincrement=True, unique=True)
-    login: Mapped[str] = mapped_column(unique=True, nullable=False)
+    login: Mapped[str] = mapped_column(unique=False, nullable=False)
     email: Mapped[str] = mapped_column(nullable=False, unique=True)
     password: Mapped[str] = mapped_column(nullable=True)
     role: Mapped[int] = mapped_column(default=1, nullable=False)
@@ -86,6 +86,10 @@ class User(db.Model, UserMixin):
 
     def set_email(self, email):
         self.email = email
+
+    @staticmethod
+    def is_email_taken(email):
+        return db.session.execute(Select(exists(User).where(User.login == email))).scalar()
 
     def add_team(self, team_id):
         self.team_id = team_id
