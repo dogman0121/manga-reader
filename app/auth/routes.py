@@ -107,8 +107,8 @@ def handle_yandex():
     if user:
         login_user(user)
     else:
-        if User.is_email_taken(user_data["email"]):
-            user = User.get_by_email(user_data["email"])
+        if User.is_email_taken(user_data["default_email"]):
+            user = User.get_by_email(user_data["default_email"])
         else:
             user = User(login=user_data["login"], email=user_data["default_email"])
             user.add()
