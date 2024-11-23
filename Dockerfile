@@ -7,8 +7,6 @@ COPY . /flask-app/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN flask --app manage db stamp head
-RUN flask --app manage db migrate
 RUN flask --app manage db upgrade
 
 EXPOSE 8000
