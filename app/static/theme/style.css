@@ -8,8 +8,9 @@
   position: relative;
   cursor: pointer;
   display: inline-block;
-  width: 60px;
-  height: 30px;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 2/1;
   background: #211042;
   border-radius: 50px;
   transition: 500ms;
@@ -185,7 +186,7 @@
 
 #hide-checkbox:checked + .toggle .toggle-button {
   background: #F7FFFF;
-  transform: translateX(31px);
+  transform: translateX(115%);
   box-shadow: 0 0 35px 5px rgba(255, 255, 255);
 }
 

@@ -26,7 +26,6 @@
         </div>
         <div class="nav-right">
             <nav class="nav-right__nav">
-                {% include 'switch_theme.html' %}
                 {% if user.is_authenticated %}
                     <div class="dropdown-panel">
                         <div class="nav__item dropdown-button">
@@ -34,17 +33,28 @@
                         </div>
                         <div class="dropdown-menu profile-menu" style="display: none">
                             <a href="{{ url_for('profile.get_profile', profile_id=user.id) }}" class="profile-menu__option">
-                                <img src="{{ url_for('static', filename='base/images/profile.svg') }}" class="profile-menu__icon">
+                                <img style="width:18px" src="{{ url_for('static', filename='base/images/profile.svg') }}" class="profile-menu__icon">
                                 Профиль
                             </a>
                             <a href="{{ url_for('profile.edit_profile') }}" class="profile-menu__option">
-                                <img src="{{ url_for('static', filename='base/images/settings.svg') }}" class="profile-menu__icon">
+                                <img style="width:19px" src="{{ url_for('static', filename='base/images/settings.svg') }}" class="profile-menu__icon">
                                 Настройки
                             </a>
                             <a href="{{ url_for('manga.add_manga') }}" class="profile-menu__option">
                                 <img src="{{ url_for('static', filename='header/images/plus.svg') }}" class="profile-menu__icon">
                                 Добавить тайтл
                             </a>
+                            <div class="profile-menu__theme">
+                                <div class="profile-menu__option">
+                                    <svg class="profile-menu__icon" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="Environment / Sun">
+                                            <path id="Vector" d="M12 4V2M12 20V22M6.41421 6.41421L5 5M17.728 17.728L19.1422 19.1422M4 12H2M20 12H22M17.7285 6.41421L19.1427 5M6.4147 17.728L5.00049 19.1422M12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17Z" stroke="#A9A9A9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </g>
+                                    </svg>
+                                    Тема
+                                </div>
+                                {% include "switch_theme.html" %}
+                            </div>
                             <a href="{{ url_for('auth.logout') }}" class="profile-menu__option">
                                 <img src="{{ url_for('static', filename='base/images/exit.svg') }}" class="profile-menu__icon">
                                 Выйти
@@ -52,6 +62,7 @@
                         </div>
                     </div>
                 {% else %}
+                    {% include 'switch_theme.html' %}
                     <a class="nav__item" id="profile" href="{{ url_for('auth.auth')}}">
                         <img class="empty-icon" src="{{ url_for("static", filename="media/avatars/default.png") }}">
                     </a>

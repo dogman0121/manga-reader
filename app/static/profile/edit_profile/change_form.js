@@ -22,3 +22,8 @@ password.addEventListener("click", function (){
     url.searchParams.set("section", "password");
     window.history.pushState(null, null, url.toString());
 });
+
+document.querySelector(".change-photo-button").onclick = (event) => {
+    document.querySelector("input[type='file']#avatar").click();
+    event.preventDefault();
+}

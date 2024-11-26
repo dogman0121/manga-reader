@@ -40,6 +40,13 @@ header {
     margin-left: 24px;
 }
 
+.theme-switcher {
+    width: 60px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
 .nav-right {
     display: flex;
     justify-content: center;
@@ -84,6 +91,17 @@ nav {
     border-radius: 8px;
     min-width: 200px;
     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2)
+}
+
+.profile-menu__theme {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-menu__theme > .theme-switcher {
+    width: 40px;
+    height: 20px;
 }
 
 .profile-menu__option {
