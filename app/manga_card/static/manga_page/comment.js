@@ -250,7 +250,7 @@ class CommentForm extends Component{
 
     html() {
         let html;
-        if (auth)
+        if (DATA.user)
             html = `
                 <div class="comments__form">
                     <textarea class="comments__input" placeholder="Введите текст"></textarea>
