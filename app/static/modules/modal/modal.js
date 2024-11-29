@@ -9,18 +9,20 @@ function Modal(element) {
 
     this.open = function () {
         document.body.append(this.modal);
+        document.body.style.overflowY = "hidden";
     }
 
     this.close = function () {
         this.modal.remove();
+        document.body.style.overflowY = null;
     }
 
     this._callbackClose = function (event){
-        let modal = event.target.closest(".modal");
-        let modalInner = event.target.closest(".modal__inner")
-        if (!modalInner)
-            modal.remove();
+        if (event.target.closest(".modal__inner"))
+            return null;
+
+        this.close();
     }
 
-    this.modal.addEventListener("click", this._callbackClose);
+    this.modal.addEventListener("click", this._callbackClose.bind(this));
 }

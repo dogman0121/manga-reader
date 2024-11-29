@@ -1,0 +1,46 @@
+.rating__option {
+    display: flex;
+    flex-direction: row;
+}
+
+.rating__option + .rating__option {
+    margin-top: 10px;
+}
+
+.rating__option-image {
+    vertical-align: middle;
+}
+
+.rating__option-number {
+    margin-left: 5px;
+}
+
+.rating__option-description {
+    margin-left: 10px;
+}
+
+.user-rating {
+    margin: auto 0;
+
+    color: white;
+    border-radius: 10px;
+    padding: 0.2px 6px 0.3px 6px;
+    font-size: 16px;
+    margin-left: 2px;
+}
+
+.user-rating_bad{
+    background: #FF0000;
+}
+
+.user-rating_normal{
+    background: #FFCC00;
+}
+
+.user-rating_good{
+    background: #33CC66;
+}
+
+.user-rating_excellent{
+    background: #339900;
+}

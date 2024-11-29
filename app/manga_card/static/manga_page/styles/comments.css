@@ -4,7 +4,8 @@
 
 /* Comment form */
 
-.comment__form {
+.comments__form {
+    margin-top: 5px;
     display: none;
     border-radius: 12px;
     border: 1px solid #CFCECE;
@@ -13,8 +14,8 @@
     width: 100%;
 }
 
-.title__comments > .comment__form,
-.comment__form_visible {
+.comments__title-comments > .comments__form,
+.comments__form_visible {
     display: block;
 }
 
@@ -44,20 +45,20 @@
     outline: none;
 }
 
-.comments-not-auth__text {
+.comments__not-auth-text {
     text-align: center;
     margin-top: 20px;
     font-size: 16px;
 }
 
-.comments-not-auth__login {
+.comments__not-auth-login {
     padding: 5px 10px;
     border: 0;
     border-radius: 6px;
     background-color: #FFD600;
 }
 
-.comments-not-auth__button {
+.comments__not-auth-button {
     margin-top: 10px;
     display: flex;
     justify-content: center;
@@ -70,138 +71,138 @@
     margin-top: 14px;
 }
 
-.comment__user {
+.comments__user {
     display: flex;
     flex-direction: row;
 }
 
-.user__avatar {
+.comments__user-avatar {
     width: 40px;
     height: 40px;
     border-radius: 3px;
 }
 
-.user__info {
+.comments__user-info {
     display: flex;
     flex-direction: column;
 
     margin-left: 5px;
 }
 
-.user__name {
+.comments__user-name {
     text-align: start;
 }
 
-.comment__text {
+.comments__text {
     margin-top: 9px;
 }
 
 
 /* Comment Panel */
 
-.comment__panel {
+.comments__panel {
     display: flex;
     flex-direction: row;
 }
 
-.comment__reactions {
+.comments__reactions {
     display: flex;
     flex-direction: row;
 }
 
-.comment__rating {
+.comments__rating {
     display: flex;
     flex-direction: row;
 }
 
-.comment__show-answers-button {
+.comments__show-answers-button {
     display: flex;
     align-items: center;
 }
 
-.rating__button {
+.comments__rating-button {
     width: 23px;
     height: 23px;
     display: flex;
 }
 
-.rating__button_active {
+.comments__rating-button_active {
     color: var(--icon-selected);
     background-color: #D9D9D9;
     border-radius: 50%;
 }
 
-.rating-image {
+.comments__rating-image {
     margin: auto;
 }
 
-.rating-up__image {
+.comments__rating-up-image {
     width: 20px;
     height: 20px;
 }
 
-.rating-down__image {
+.comments__rating-down-image {
     width: 20px;
     height: 20px;
 }
 
-.rating__text {
+.comments__rating-text {
     margin: auto 0 auto 7px;
 }
-.rating-down {
+.comments__rating-down {
     margin-left: 6px;
 }
 
-.comment__answer-button {
+.comments__answer-button {
     margin: auto 0 auto 30px;
 }
 
-.comment + .comment {
+.comments__comment + .comments__comment {
     margin-top: 12px;
 }
 
 /* Comment answers */
 
-.comment__answers {
+.comments__answers {
     display: none;
     margin-top: 10px;
     margin-left: 20px;
 }
 
-.title__comments > .comment__answers,
-.comment__answers_visible {
+.comments__title-comments > .comments__answers,
+.comments__answers_visible {
     display: flex;
     flex-direction: row;
 }
 
-.title__comments > .comment__answers {
+.comments__title-comments > .comments__answers {
     margin-left: 0;
 }
 
-.answers__list {
+.comments__answers-list {
     padding-top: 10px;
     padding-bottom: 17px;
     width: 100%;
 }
 
-.show-answers {
+.comments__show-answers {
     margin: auto 0 auto 30px;
 }
 
-.show-answers__image {
+.comments__show-answers-image {
     margin-left: 2px;
 }
 
-.no-comments, .no-chapters {
+.comments__no-comments, .no-chapters {
     text-align: center;
     margin-top: 60px;
 }
 
-.no-comments__header, .no-chapters__header {
+.comments__no-comments-header, .no-chapters__header {
     font-size: 24px;
 }
 
-.no-comments__text, .no-chapters__text {
+.comments__no-comments-text, .no-chapters__text {
     font-size: 16px;
 }
 

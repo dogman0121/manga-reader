@@ -108,19 +108,18 @@ textarea:focus {
 
 #read-button {
     height: 60px;
-    width: 228px;
+    width: 180px;
     background-color: #FFD600;
     color: #000000;
     font-size: 20px;
     border-radius: 12px;
-    margin: 0 0 20px 40px;
 
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.edit-button {
+.edit-button, .save-button {
     margin-top: 5px;
     height: 40px;
     width: 100%;
@@ -133,10 +132,25 @@ textarea:focus {
     align-items: center;
 }
 
+.manga-subbuttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.rating {
+    align-self: end;
+    margin-top: 4px;
+    display: flex;
+}
+
+.rating__text {
+    text-decoration: underline;
+}
+
 #stats {
-    margin-top: 10px;
     display: flex;
     flex-direction: row;
+    column-gap: 50px;
 }
 
 .stats-option {
@@ -156,10 +170,6 @@ textarea:focus {
     margin: auto;
 }
 
-.stats-option + .stats-option {
-    margin-left: 30px;
-}
-
 .stats-option__icon {
     max-width: 24px;
     max-height: 24px;
@@ -174,6 +184,7 @@ textarea:focus {
     margin-top: 20px;
     line-height: 1.4;
     width: 100%;
+    overflow-wrap: break-word;
 }
 
 #genres-list {
@@ -217,48 +228,6 @@ textarea:focus {
 .modal__inner {
     font-size: 16px;
     padding: 20px 30px;
-}
-
-.rating-option + .rating-option {
-    margin-top: 10px;
-}
-
-.rating-option__image {
-    vertical-align: middle;
-}
-
-.rating-option__number {
-    margin-left: 5px;
-}
-
-.rating-option__description {
-    margin-left: 10px;
-}
-
-.user-rating {
-    margin: auto 0;
-
-    color: white;
-    border-radius: 10px;
-    padding: 0.5px 6px 1px 6px;
-    font-size: 16px;
-    margin-left: 2px;
-}
-
-.user-rating_bad{
-    background: #FF0000;
-}
-
-.user-rating_normal{
-    background: #FFCC00;
-}
-
-.user-rating_good{
-    background: #33CC66;
-}
-
-.user-rating_excellent{
-    background: #339900;
 }
 
 @media (max-width: 700px){

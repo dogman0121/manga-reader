@@ -8,13 +8,11 @@
 }
 
 .modal__inner {
-    min-width: 500px;
-    min-height: 400px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: var(--dropdown-background);
-    padding: 18px 7px 5px 12px;
+    padding: 18px 20px 12px 20px;
     border-radius: 12px;
 }

@@ -10,15 +10,15 @@ class CommentBody extends Component{
         let howOld = this.formatTimedelta(dateUTC - commentDate);
 
         return `
-            <div class="comment__body">
-                <div class="comment__user user">
-                    <img class="user__avatar" src="${this.comment.user.avatar}">
-                    <div class="user__info">
-                        <span class="user__name">${this.comment.user.login}</span>
-                        <span class="comment__date">${howOld}</span>
+            <div class="comments__body">
+                <div class="comments__user user">
+                    <img class="comments__user-avatar" src="${this.comment.user.avatar}">
+                    <div class="comments__user-info">
+                        <span class="comments__user-name">${this.comment.user.login}</span>
+                        <span class="comments__date">${howOld}</span>
                     </div>
                 </div>
-                <div class="comment__text">${this.comment.text}</div>
+                <div class="comments__text">${this.comment.text}</div>
             </div>
         `;
     }
@@ -86,29 +86,29 @@ class CommentPanel extends Component{
         if (this.comment.answersCount)
             answersButton += `
                 <span class="comment__show-answers show-answers">
-                    ПОКАЗАТЬ ОТВЕТЫ(<span class="show-answers__answers-count">${this.comment.answersCount}</span>)
-                    <svg class="rating-down__image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    ПОКАЗАТЬ ОТВЕТЫ(<span class="comments__show-answers-answers-count">${this.comment.answersCount}</span>)
+                    <svg class="comments__rating-down-image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor"/>
                     </svg>
                 </span>
             `
 
         const html = `
-            <div class="comment__panel">
-                <div class="comment__rating">
-                    <div class="rating__button rating-up ${(this.comment.userVote === 1) ? " rating__button_active" : ""}">
-                        <svg class="rating-image rating-up__image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="comments__panel">
+                <div class="comments__rating">
+                    <div class="comments__rating-button comments__rating-up ${(this.comment.userVote === 1) ? " comments__rating-button_active" : ""}">
+                        <svg class="comments__rating-image comments__rating-up-image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C12.2652 7 12.5196 7.10536 12.7071 7.29289L19.7071 14.2929C20.0976 14.6834 20.0976 15.3166 19.7071 15.7071C19.3166 16.0976 18.6834 16.0976 18.2929 15.7071L12 9.41421L5.70711 15.7071C5.31658 16.0976 4.68342 16.0976 4.29289 15.7071C3.90237 15.3166 3.90237 14.6834 4.29289 14.2929L11.2929 7.29289C11.4804 7.10536 11.7348 7 12 7Z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="rating__text">${this.comment.upVotes - this.comment.downVotes}</span>
-                    <div class="rating__button rating-down${(this.comment.userVote === 0) ? " rating__button_active" : ""}">
-                        <svg class="rating-image rating-down__image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span class="comments__rating-text">${this.comment.upVotes - this.comment.downVotes}</span>
+                    <div class="comments__rating-button comments__rating-down${(this.comment.userVote === 0) ? " comments__rating-button_active" : ""}">
+                        <svg class="comments__rating-image comments__rating-down-image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor"/>
                         </svg>
                     </div>
                 </div>
-                <span class="comment__answer-button">ответить</span>
+                <span class="comments__answer-button">ответить</span>
                 ${answersButton}
             </div>
         `
@@ -117,10 +117,10 @@ class CommentPanel extends Component{
     }
 
     events(element) {
-        this.element.querySelector(".rating-up").addEventListener("click", this.voteUp.bind(this));
-        this.element.querySelector(".rating-down").addEventListener("click", this.voteDown.bind(this));
-        this.element.querySelector(".comment__answer-button").addEventListener("click", this.commentFormListener.bind(this));
-        this.element.querySelector(".show-answers")?.addEventListener("click", this.answersListener.bind(this));
+        this.element.querySelector(".comments__rating-up").addEventListener("click", this.voteUp.bind(this));
+        this.element.querySelector(".comments__rating-down").addEventListener("click", this.voteDown.bind(this));
+        this.element.querySelector(".comments__answer-button").addEventListener("click", this.commentFormListener.bind(this));
+        this.element.querySelector(".comments__show-answers")?.addEventListener("click", this.answersListener.bind(this));
     }
 
     voteDown() {
@@ -130,24 +130,24 @@ class CommentPanel extends Component{
         this.voteWork = true;
         this.sendVote(0)
             .then(() => {
-                const voteUpButton = this.element.querySelector(".rating-up");
-                const voteDownButton = this.element.querySelector(".rating-down");
-                const votesCounter = this.element.querySelector(".rating__text");
+                const voteUpButton = this.element.querySelector(".comments__rating-up");
+                const voteDownButton = this.element.querySelector(".comments__rating-down");
+                const votesCounter = this.element.querySelector(".comments__rating-text");
                 if (this.comment.userVote === 0){
-                    voteDownButton.classList.remove("rating__button_active");
+                    voteDownButton.classList.remove("comments__rating-button_active");
                     votesCounter.textContent = parseInt(votesCounter.textContent) + 1;
                     this.comment.downVotes--;
                     this.comment.userVote = undefined;
                 }
                 else if (this.comment.userVote === 1) {
-                    voteUpButton.classList.remove("rating__button_active");
-                    voteDownButton.classList.add("rating__button_active");
+                    voteUpButton.classList.remove("comments__rating-button_active");
+                    voteDownButton.classList.add("comments__rating-button_active");
                     votesCounter.textContent = parseInt(votesCounter.textContent) - 2;
                     this.comment.upVotes--;
                     this.comment.downVotes++;
                     this.comment.userVote = 0;
                 } else {
-                    voteDownButton.classList.add("rating__button_active");
+                    voteDownButton.classList.add("comments__rating-button_active");
                     votesCounter.textContent = parseInt(votesCounter.textContent) - 1;
                     this.comment.downVotes++;
                     this.comment.userVote = 0;
@@ -163,24 +163,24 @@ class CommentPanel extends Component{
         this.voteWork = true;
         this.sendVote(1)
             .then(() => {
-                const voteUpButton = this.element.querySelector(".rating-up");
-                const voteDownButton = this.element.querySelector(".rating-down");
-                const votesCounter = this.element.querySelector(".rating__text");
+                const voteUpButton = this.element.querySelector(".comments__rating-up");
+                const voteDownButton = this.element.querySelector(".comments__rating-down");
+                const votesCounter = this.element.querySelector(".comments__rating-text");
                 if (this.comment.userVote === 1){
-                    voteUpButton.classList.remove("rating__button_active");
+                    voteUpButton.classList.remove("comments__rating-button_active");
                     votesCounter.textContent = parseInt(votesCounter.textContent) - 1;
                     this.comment.upVotes--;
                     this.comment.userVote = undefined;
                 }
                 else if (this.comment.userVote === 0) {
-                    voteDownButton.classList.remove("rating__button_active");
-                    voteUpButton.classList.add("rating__button_active");
+                    voteDownButton.classList.remove("comments__rating-button_active");
+                    voteUpButton.classList.add("comments__rating-button_active");
                     votesCounter.textContent = parseInt(votesCounter.textContent) + 2;
                     this.comment.upVotes++;
                     this.comment.downVotes--;
                     this.comment.userVote = 1;
                 } else {
-                    voteUpButton.classList.add("rating__button_active");
+                    voteUpButton.classList.add("comments__rating-button_active");
                     votesCounter.textContent = parseInt(votesCounter.textContent) + 1;
                     this.comment.upVotes++;
                     this.comment.userVote = 1;
@@ -252,17 +252,17 @@ class CommentForm extends Component{
         let html;
         if (auth)
             html = `
-                <div class="comment__form">
+                <div class="comments__form">
                     <textarea class="comments__input" placeholder="Введите текст"></textarea>
                     <button class="comments__send">Отправить</button>
                 </div>
             `
         else
             html = `
-                <div class="comment__form">
-                    <p class="comments-not-auth__text">Чтобы написать комментарий необходимо авторизоваться</p>
-                    <div class="comments-not-auth__button">
-                        <a href="/auth" class="comments-not-auth__login">Войти</a>
+                <div class="comments__form">
+                    <p class="comments__not-auth-text">Чтобы написать комментарий необходимо авторизоваться</p>
+                    <div class="comments__not-auth-button">
+                        <a href="/auth" class="comments__not-auth-login">Войти</a>
                     </div>
                 </div>
             `
@@ -302,11 +302,11 @@ class CommentForm extends Component{
     }
 
     show() {
-        this.element.classList.add("comment__form_visible");
+        this.element.classList.add("comments__form_visible");
     }
 
     hide() {
-        this.element.classList.remove("comment__form_visible");
+        this.element.classList.remove("comments__form_visible");
     }
 }
 
@@ -320,8 +320,8 @@ class CommentAnswers extends Component{
 
     html() {
         let html = `
-            <div class="comment__answers">
-                <div class="answers__list">
+            <div class="comments__answers">
+                <div class="comments__answers-list">
                 </div>
             </div>
         `
@@ -330,13 +330,13 @@ class CommentAnswers extends Component{
 
     addBack(comment) {
         this.answers.push(comment);
-        this.element.querySelector(".answers__list").append(comment.render());
+        this.element.querySelector(".comments__answers-list").append(comment.render());
         this.comment.answersCount ++;
     }
 
     addFront(comment){
         this.answers.push(comment);
-        this.element.querySelector(".answers__list").prepend(comment.render());
+        this.element.querySelector(".comments__answers-list").prepend(comment.render());
         this.comment.answersCount ++;
     }
 
@@ -356,11 +356,11 @@ class CommentAnswers extends Component{
     show() {
         if (this.answers.length === 0)
             this.load();
-        this.element.classList.add("comment__answers_visible");
+        this.element.classList.add("comments__answers_visible");
     }
 
     hide() {
-        this.element.classList.remove("comment__answers_visible");
+        this.element.classList.remove("comments__answers_visible");
     }
 }
 
@@ -407,7 +407,7 @@ class Comment extends Component{
 
     html() {
         return `
-            <div data-id="${this.id}" class="comment">
+            <div data-id="${this.id}" class="comments__comment">
                 {{ this.commentBody }}
                 {{ this.commentPanel }}
                 {{ this.commentForm }}
@@ -436,7 +436,7 @@ class TitleComment extends Comment {
 
     html() {
         return `
-            <div class="title__comments">
+            <div class="comments__title-comments">
                 {{ this.commentForm }}
                 {{ this.commentAnswers }}
             </div>

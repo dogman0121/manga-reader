@@ -329,11 +329,6 @@ class Title(db.Model):
     def get_by_id(title_id):
         return db.session.get(Title, title_id)
 
-    # @hybrid_property
-    # def genres(self):
-    #     return list(db.session.execute(Select(Genre).where(and_(
-    #         titles_genres.c.title_id == self.id, titles_genres.c.genre_id == Genre.id))).scalars())
-
     @hybrid_method
     def validate_types(self, type_ids: list[int]):
         if not type_ids:
@@ -488,6 +483,8 @@ class Title(db.Model):
             "name_languages": self.name_languages,
             "description": self.description,
             "poster": self.get_poster(),
+            "ratings_sum": self.get_rating()[0],
+            "ratings_count": self.get_rating()[1],
             "year": self.year,
             "genres": [i.to_dict() for i in self.genres],
             "views": self.views,

@@ -1,4 +1,4 @@
-let save = document.querySelector(".saved");
+const save = document.querySelector(".save-button");
 save.addEventListener("click", debounce(saveTitle, 200));
 
 
@@ -17,7 +17,7 @@ function debounce(func, timeout){
 
 
 function saveTitle() {
-    if (save.querySelector(".stats-option__caption"))
+    if (save.textContent === "Сохранено")
         removeSave();
     else
         addSave();
@@ -32,25 +32,15 @@ function addSave(){
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            title_id: title_id,
+            title_id: DATA.title.id,
         }),
     })
         .then(response => response.json())
-        .then(json => {
-            if (json.status !== "ok")
+        .then(response => {
+            if (response.status !== "ok")
                 return null;
 
-            let savedMessageRendered = new DOMParser().parseFromString(`
-                <div class="stats-option__caption">
-                    (сохранено)
-                </div>
-            `, "text/html").querySelector(".stats-option__caption");
-
-
-            let savesCount = parseInt(save.querySelector(".stats-option__text").textContent);
-            save.querySelector(".stats-option__text").textContent = (savesCount + 1).toString();
-
-            save.append(savedMessageRendered);
+            save.textContent = "Сохранено";
         })
 }
 
@@ -62,17 +52,15 @@ function removeSave(){
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            title_id: title_id,
+            title_id: DATA.title.id,
         }),
     })
         .then(response => response.json())
-        .then(json => {
-            if (json.status !== "ok")
+        .then(response => {
+            if (response.status !== "ok")
                 return null;
 
-            let count = parseInt(save.querySelector(".stats-option__text").textContent);
-            save.querySelector(".stats-option__text").textContent = (count - 1).toString();
-            save.querySelector(".stats-option__caption").remove();
+            save.textContent = "Сохранить";
         })
 }
 

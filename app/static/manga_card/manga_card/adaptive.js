@@ -7,17 +7,29 @@ window.addEventListener("resize", () => {
 if (window.innerWidth <= 700){
     adapt_manga_page();
 }
+
+function adapt_buttons() {
+    const readButton = document.querySelector("#read-button");
+    const saveButton = document.querySelector(".save-button");
+    const editButton = document.querySelector(".edit-button");
+
+    const buttonsPanel = document.createElement("div");
+    buttonsPanel.className = "buttons-panel";
+
+    buttonsPanel.append(editButton);
+    buttonsPanel.append(readButton);
+    buttonsPanel.append(saveButton);
+
+    document.querySelector("#left-side").append(buttonsPanel);
+}
+
 function adapt_manga_page(){
-    const poster = document.querySelector("#poster");
     const leftSide = document.querySelector("#left-side");
     const mangaNames = document.querySelector("#manga-names");
     const stats = document.querySelector("#stats");
     const sectionButtons = document.querySelector(".sections__buttons");
     const sections = document.querySelector(".sections");
     const sectionContent = document.querySelector(".sections__content");
-
-    if (document.querySelector("#read-button"))
-        document.querySelector("#read-button").remove();
 
     if (!sectionButtons.querySelector("#info-button")) {
         sectionButtons.innerHTML = `
