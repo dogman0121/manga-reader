@@ -103,6 +103,8 @@
 .comments__panel {
     display: flex;
     flex-direction: row;
+    column-gap: 20px;
+    align-items: center;
 }
 
 .comments__reactions {
@@ -115,7 +117,7 @@
     flex-direction: row;
 }
 
-.comments__show-answers-button {
+.comments__show-answers {
     display: flex;
     align-items: center;
 }
@@ -151,10 +153,6 @@
 }
 .comments__rating-down {
     margin-left: 6px;
-}
-
-.comments__answer-button {
-    margin: auto 0 auto 30px;
 }
 
 .comments__comment + .comments__comment {
