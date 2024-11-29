@@ -471,7 +471,6 @@ class TitleComment extends Comment {
                 }
                 else {
                     for (let comment of comments){
-                        console.log(this.commentAnswers);
                         this.commentAnswers.addBack(Comment.createFromObj(comment));
                     }
                     this.page += 1

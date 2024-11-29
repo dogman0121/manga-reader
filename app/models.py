@@ -585,7 +585,8 @@ class Comment(db.Model):
             "parent_id": self.parent_id,
             "up_votes": self.get_up_votes(),
             "down_votes": self.get_down_votes(),
-            "answers_count": len(self.get_answers())
+            "answers_count": len(self.get_answers()),
+            "user_vote": self.get_user_vote(self.user)
         }
 
 
