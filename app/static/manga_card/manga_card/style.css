@@ -193,7 +193,7 @@ textarea:focus {
 }
 
 .genres-list__item {
-    padding: 1px 8px 2px;
+    padding: 0 8px 2px;
     background-color: var(--inputs-option-selected-background);
     border-radius: 8px;
 }
