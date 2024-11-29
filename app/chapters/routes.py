@@ -23,6 +23,7 @@ def get_chapter(chapter_id):
     chapter = Chapter.get_by_id(chapter_id)
     title_json = json.dumps(chapter.title.to_dict(), ensure_ascii=False)
     chapter_json = json.dumps(chapter.to_dict(), ensure_ascii=False)
+    chapters_list_json = json.dumps([i.to_dict() for i in chapter.title.chapters])
     referer = request.headers.get("Referer")
     pages = chapter.get_pages()
     pages_json = json.dumps(pages)
@@ -37,6 +38,7 @@ def get_chapter(chapter_id):
                            user=current_user,
                            title_json=title_json,
                            chapter_json=chapter_json,
+                           chapters_list_json=chapters_list_json,
                            pages_json=pages_json
                            )
 

@@ -17,5 +17,8 @@
     <script src="{{ url_for("chapters.static", filename="chapter_manhwa/scroll_loading.js") }}"></script>
 {% endblock %}
 {% block json_data %}
-    {"title": {{ title_json | safe }}, "chapter": {{ chapter_json | safe }}, "pages": {{ pages_json | safe }}}
+    {"title": {{ title_json | safe }},
+    "chapter": {{ chapter_json | safe }},
+    "pages": {{ pages_json | safe }},
+    "chapters_list": {{ chapters_list_json | safe }}}
 {% endblock %}
