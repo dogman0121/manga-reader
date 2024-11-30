@@ -68,7 +68,10 @@ class PagesSection extends Component {
 
     registerPageEvents(page){
         page.addEventListener("deleted", this.onDeletePage.bind(this));
+        page.addEventListener("moveStart", this.onMovePageStart.bind(this));
+        page.addEventListener("moveEnd", this.onMovePageEnd.bind(this));
         page.addEventListener("move", this.onMovePage.bind(this));
+        window.addEventListener("scroll", this.onPageScroll.bind(this));
     }
 
     _getPageFromCords(x, y, currentPage){
@@ -145,6 +148,19 @@ class PagesSection extends Component {
         }
     }
 
+    onPageScroll(event){
+        if (!this.movingPage)
+            return null;
+    }
+
+    onMovePageStart(event) {
+        this.movingPage = event.detail.page;
+    }
+
+    onMovePageEnd(event) {
+        this.movingPage = undefined;
+    }
+
     onMovePage(event){
         const page = this._getPageFromCords(event.detail.x, event.detail.y, event.detail.page);
 
@@ -212,14 +228,14 @@ class Page extends Component {
         this.cords = this.element.getBoundingClientRect();
         this.element.onmousemove = this.onDrag.bind(this);
         this.element.style.zIndex = 1001;
-        this.dispatchEvent(new CustomEvent("mousedown", {detail: {"page": this}}));
+        this.dispatchEvent(new CustomEvent("moveStart", {detail: {"page": this}}));
     }
 
     onDragEnd(event){
         this.element.style.transform = null;
         this.element.onmousemove = null;
         this.element.style.zIndex = null;
-        this.dispatchEvent(new CustomEvent("mouseup", {detail: {"page": this}}));
+        this.dispatchEvent(new CustomEvent("moveEnd", {detail: {"page": this}}));
     }
 
     onDrag(event){

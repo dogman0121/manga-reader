@@ -266,7 +266,7 @@ class Chapter(db.Model):
     title_id: Mapped[int] = mapped_column(ForeignKey("titles.id"), nullable=False)
     title: Mapped["Title"] = relationship("Title", back_populates="chapters")
     tome: Mapped[int] = mapped_column(nullable=False)
-    chapter: Mapped[int] = mapped_column(nullable=False)
+    chapter: Mapped[float] = mapped_column(nullable=False)
     date: Mapped[datetime] = mapped_column(default=lambda: datetime.utcnow().strftime("%Y-%m-%d"))
     team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=True)
     team: Mapped["Team"] = relationship("Team", back_populates="chapters")
