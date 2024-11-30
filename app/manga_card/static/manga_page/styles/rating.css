@@ -1,3 +1,26 @@
+.rating__button {
+    align-self: end;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    background-color: var(--dropdown-background);
+    border-radius: 6px;
+    height: 30px;
+}
+
+.rating__text {
+    display: flex;
+    align-items: center;
+    column-gap: 5px;
+}
+
+.rating__button-icon {
+    width: 20px;
+    height: 20px;
+}
+
 .rating__option {
     display: flex;
     flex-direction: row;

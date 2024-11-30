@@ -92,16 +92,21 @@ class PagesSection extends Component {
         const destinationInd = this.pages.indexOf(destination);
 
         let destinationCords;
-        if (sourceInd < destinationInd)
+        if (sourceInd < destinationInd) {
+            if (destinationInd - 1 === sourceInd)
+                return null;
             destinationCords = destination.element.previousElementSibling.getBoundingClientRect();
-        else
+        }
+        else {
             destinationCords = destination.element.getBoundingClientRect();
+        }
 
 
         source.x = (source.x - source.cords.left) + destinationCords.left;
         source.y = (source.y - source.cords.bottom) + destinationCords.bottom;
         source.cords = destinationCords;
 
+        this.scrollCords = window.scrollY;
         this._movePage(sourceInd, destinationInd, 1);
         destination.element.before(source.element);
         this.dispatchEvent(new CustomEvent("pagesSwitched",
@@ -116,15 +121,20 @@ class PagesSection extends Component {
         const destinationInd = this.pages.indexOf(destination);
 
         let destinationCords;
-        if (sourceInd < destinationInd)
+        if (sourceInd < destinationInd) {
             destinationCords = destination.element.getBoundingClientRect();
-        else
+        }
+        else {
+            if (destinationInd + 1 === sourceInd)
+                return null;
             destinationCords = destination.element.nextElementSibling.getBoundingClientRect();
+        }
         
         source.x = (source.x - source.cords.left) + destinationCords.left;
         source.y = (source.y - source.cords.bottom) + destinationCords.bottom;
         source.cords = destinationCords;
 
+        this.scrollCords = window.scrollY;
         this._movePage(sourceInd, destinationInd);
         destination.element.after(source.element);
         this.dispatchEvent(new CustomEvent("pagesSwitched",
@@ -151,10 +161,13 @@ class PagesSection extends Component {
     onPageScroll(event){
         if (!this.movingPage)
             return null;
+
+        this.movingPage.moveAt(this.cursorX, this.cursorY - this.scrollCords + window.scrollY);
     }
 
     onMovePageStart(event) {
         this.movingPage = event.detail.page;
+        this.scrollCords = window.scrollY;
     }
 
     onMovePageEnd(event) {
@@ -162,6 +175,8 @@ class PagesSection extends Component {
     }
 
     onMovePage(event){
+        this.cursorX = event.detail.x;
+        this.cursorY = event.detail.y;
         const page = this._getPageFromCords(event.detail.x, event.detail.y, event.detail.page);
 
         if (!page)

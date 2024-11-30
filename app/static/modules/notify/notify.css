@@ -1,0 +1,35 @@
+.notify__manager {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1003;
+}
+
+.notify {
+    background-color: var(--dropdown-background);
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.notify__header {
+    font-size: 18px;
+    padding: 3px 0 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.notify__close-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.notify__description {
+    padding: 10px 0;
+}
+
+
+

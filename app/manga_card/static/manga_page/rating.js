@@ -112,8 +112,11 @@ class Rating extends Component {
         })
             .then(response => response.json())
             .then(function (response) {
-                if (response.status !== "ok")
+                if (response.status !== "ok"){
+                    if (response.detail === "unauthorized")
+                        notify.push(new Notify("Ошибка", "Вы не авторизованы!"));
                     return null;
+                }
 
                 this.rating = undefined;
                 this.dispatchEvent(new CustomEvent("deleteRating", {detail: {rating: this}}));
@@ -134,8 +137,11 @@ class Rating extends Component {
         })
             .then(response => response.json())
             .then(function(response) {
-                if (response.status !== "ok")
+                if (response.status !== "ok"){
+                    if (response.detail === "unauthorized")
+                        notify.push(new Notify("Ошибка", "Вы не авторизованы!"));
                     return null;
+                }
 
                 this.ratingLabel.textContent = rating;
                 this.rating = rating;
@@ -158,8 +164,11 @@ class Rating extends Component {
         })
             .then(response => response.json())
             .then(function (response){
-                if (response.status !== "ok")
+                if (response.status !== "ok"){
+                    if (response.detail === "unauthorized")
+                        notify.push(new Notify("Ошибка", "Вы не авторизованы!"));
                     return null;
+                }
 
                 this.ratingLabel.textContent = rating;
                 this.rating = rating;
@@ -183,10 +192,10 @@ class Rating extends Component {
     }
 }
 
-
+const notify = new NotifyManager();
 const rating = new Rating(document.querySelector(".user-rating"));
 const modal = new Modal(rating.render());
-const ratingButton = document.querySelector(".rating");
+const ratingButton = document.querySelector(".rating__button");
 const ratingText = document.querySelector(".rating__text");
 
 ratingButton.addEventListener("click", function(event){
@@ -199,7 +208,12 @@ rating.addEventListener("addRating", function(event) {
 })
 
 rating.addEventListener("deleteRating", function(event) {
-    ratingText.textContent = `Оценить(${DATA.title.ratings_count})`;
+    ratingText.innerHTML = `
+        Оценить
+        <svg width="18px" height="18px" viewBox="0 -0.5 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16.0005 0L21.4392 9.27275L32.0005 11.5439L24.8005 19.5459L25.889 30.2222L16.0005 25.895L6.11194 30.2222L7.20049 19.5459L0.000488281 11.5439L10.5618 9.27275L16.0005 0Z" fill="#FFCB45"/>
+        </svg>
+    `;
     event.detail.rating.ratingLabel.remove();
 })
 
