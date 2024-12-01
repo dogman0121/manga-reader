@@ -15,12 +15,14 @@
     <div id="poster">
         <img id="poster__image" src="{{ title.get_poster() }}">
     </div>
-    {% if user.is_authenticated and (user.role > 1 or title.author_id == user.id) %}
-        <a href="{{ url_for("manga.edit_manga", title_id=title.id) }}">
-            <button class="edit-button">
-                Редактировать
-            </button>
-        </a>
+    {% if user.is_authenticated %}
+        {% if user.role > 1 or title.author_id == user.id %}
+            <a href="{{ url_for("manga.edit_manga", title_id=title.id) }}">
+                <button class="edit-button">
+                    Редактировать
+                </button>
+            </a>
+        {% endif %}
         {% if saved %}
             <button class="save-button">Сохранено</button>
         {% else %}
