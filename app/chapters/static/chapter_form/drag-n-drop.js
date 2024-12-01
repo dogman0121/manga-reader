@@ -79,6 +79,7 @@ class PagesSection extends Component {
             if (page === currentPage)
                 continue;
             let pageCords = page.element.getBoundingClientRect();
+
             if ((pageCords.left <= x && x <= pageCords.right) && (pageCords.top <= y && y <= pageCords.bottom))
                 return page;
         }
@@ -101,12 +102,11 @@ class PagesSection extends Component {
             destinationCords = destination.element.getBoundingClientRect();
         }
 
+        source.x = source.x + (destinationCords.left - source.left);
+        source.y = source.y + (window.scrollY + destinationCords.bottom - source.bottom);
+        source.left = destinationCords.left;
+        source.bottom = window.scrollY + destinationCords.bottom;
 
-        source.x = (source.x - source.cords.left) + destinationCords.left;
-        source.y = (source.y - source.cords.bottom) + destinationCords.bottom;
-        source.cords = destinationCords;
-
-        this.scrollCords = window.scrollY;
         this._movePage(sourceInd, destinationInd, 1);
         destination.element.before(source.element);
         this.dispatchEvent(new CustomEvent("pagesSwitched",
@@ -129,12 +129,12 @@ class PagesSection extends Component {
                 return null;
             destinationCords = destination.element.nextElementSibling.getBoundingClientRect();
         }
-        
-        source.x = (source.x - source.cords.left) + destinationCords.left;
-        source.y = (source.y - source.cords.bottom) + destinationCords.bottom;
-        source.cords = destinationCords;
 
-        this.scrollCords = window.scrollY;
+        source.x = source.x + (destinationCords.left - source.left);
+        source.y = source.y + (window.scrollY + destinationCords.bottom - source.bottom);
+        source.left = destinationCords.left;
+        source.bottom = window.scrollY + destinationCords.bottom;
+
         this._movePage(sourceInd, destinationInd);
         destination.element.after(source.element);
         this.dispatchEvent(new CustomEvent("pagesSwitched",
@@ -162,12 +162,11 @@ class PagesSection extends Component {
         if (!this.movingPage)
             return null;
 
-        this.movingPage.moveAt(this.cursorX, this.cursorY - this.scrollCords + window.scrollY);
+        this.movingPage.move();
     }
 
     onMovePageStart(event) {
         this.movingPage = event.detail.page;
-        this.scrollCords = window.scrollY;
     }
 
     onMovePageEnd(event) {
@@ -175,8 +174,6 @@ class PagesSection extends Component {
     }
 
     onMovePage(event){
-        this.cursorX = event.detail.x;
-        this.cursorY = event.detail.y;
         const page = this._getPageFromCords(event.detail.x, event.detail.y, event.detail.page);
 
         if (!page)
@@ -190,7 +187,7 @@ class PagesSection extends Component {
         else
             this._pageInsertAfter(currentPage, page);
 
-        event.detail.page.moveAt(event.detail.x, event.detail.y);
+        event.detail.page.move();
     }
 
     clean() {
@@ -233,14 +230,16 @@ class Page extends Component {
         this.dispatchEvent(new CustomEvent("deleted", {detail: {"page": this}}));
     }
 
-    moveAt(x, y){
-        this.element.style.transform = `translate3D(${x - this.x}px, ${y - this.y}px ,0px)`;
+    move(){
+        this.element.style.transform =
+            `translate3D(${this.cursorX - this.x}px, ${this.cursorY + window.scrollY - this.y}px ,0px)`;
     }
 
     onDragStart(event){
         this.x = event.clientX;
-        this.y = event.clientY;
-        this.cords = this.element.getBoundingClientRect();
+        this.y = window.scrollY + event.clientY;
+        this.left = this.element.getBoundingClientRect().left;
+        this.bottom = window.scrollY + this.element.getBoundingClientRect().bottom;
         this.element.onmousemove = this.onDrag.bind(this);
         this.element.style.zIndex = 1001;
         this.dispatchEvent(new CustomEvent("moveStart", {detail: {"page": this}}));
@@ -259,7 +258,10 @@ class Page extends Component {
                 {detail: {"page": this, "x": event.clientX, "y": event.clientY}}
             )
         );
-        this.moveAt(event.clientX, event.clientY);
+
+        this.cursorX = event.clientX;
+        this.cursorY = event.clientY;
+        this.move();
     }
 }
 

@@ -285,9 +285,9 @@ class CommentForm extends Component{
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "title": title_id,
+                "title": DATA.title.id,
                 "text": text,
-                "user": user_id,
+                "user": DATA.user.id,
                 "root": this.comment.root ? this.comment.root : this.comment.id,
                 "parent": this.comment.id
             })

@@ -33,7 +33,7 @@ class ChaptersBlock extends Component{
     }
 
     onTranslatorSwitched(event) {
-        this.chaptersList.set(new ChaptersList(event.detail.translator.chapters));
+        this.chaptersList.set(new ChaptersList(event.detail.translator));
     }
 }
 
@@ -89,7 +89,7 @@ class ChapterTranslatorsList extends Component {
         this.selectedTranslator.unSelect();
         this.selectedTranslator = event.detail.translator;
         this.selectedTranslator.select();
-        this.dispatchEvent(new CustomEvent("translatorSwitched", {detail: {translator: event.detail.translator}}));
+        this.dispatchEvent(new CustomEvent("translatorSwitched", {detail: event.detail}));
     }
 
 }
@@ -142,6 +142,7 @@ class ChaptersList extends Component {
         if (!team)
             return;
 
+        console.log(team);
         this.chapters = team.chapters.map(chapter => new Chapter(chapter, team.id));
     }
 

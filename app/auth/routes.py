@@ -113,5 +113,5 @@ def handle_yandex():
             user = User(login=user_data["login"], email=user_data["default_email"])
             user.add()
         user.add_oauth("ya", user_data["id"])
-        login_user(user)
+        login_user(user, remember=True)
     return jsonify({"status": "ok"})
