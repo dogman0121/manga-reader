@@ -4,7 +4,11 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
 <link rel="stylesheet" href="{{ url_for('chapters.static', filename='chapter_manhwa/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('chapters.static', filename='chapter.css') }}">
-<title>Читать бесплатно {{ chapter.title.name_russian }} том {{ chapter.tome }} глава {{ chapter.chapter }}</title>
+<title>
+    Читать бесплатно {{ chapter.title.name_russian }}
+    том {{ chapter.tome }}
+    глава {{ '{0:g}'.format(chapter.chapter) }}
+</title>
 {% endblock %}
 {% block content %}
 {% for page in pages %}

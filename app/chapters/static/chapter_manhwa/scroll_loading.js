@@ -8,7 +8,7 @@ let currentChapter = json.chapter;
 
 window.addEventListener("scroll", function (){
     let lastPageCords = lastPage.getBoundingClientRect();
-    if ((lastPageCords.bottom - document.documentElement.clientHeight) < 50) {
+    if ((lastPageCords.bottom - document.documentElement.clientHeight) < 100) {
         for (let chapter of chapters){
             if (chapter.tome > currentChapter.tome ||
                 (chapter.tome === currentChapter.tome && chapter.chapter > currentChapter.chapter)){
@@ -28,6 +28,7 @@ window.addEventListener("scroll", function (){
                             `
                         }
                     })
+                break;
             }
         }
     }
