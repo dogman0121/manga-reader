@@ -14,12 +14,16 @@
     width: 100%;
 }
 
+.comments__form_error {
+    border: 1px solid #FF0000;
+}
+
 .comments__title-comments > .comments__form,
 .comments__form_visible {
     display: block;
 }
 
-.comments__input {
+.comments__form-input {
     border:none;
     resize:none;
     overflow: hidden;
@@ -27,14 +31,25 @@
     width: 100%;
 }
 
-.comments__send {
+.comments__form-panel {
+    position:absolute;
+    right: 0;
+    bottom: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.comments__form-length_error {
+    color: #FF0000;
+}
+
+.comments__form-send {
     padding: 6px 12px;
     border-radius: 6px;
 
     font-size: 14px;
-    position:absolute;
-    right: 14px;
-    bottom: 8px;
 }
 
 .comments__send:hover {
@@ -96,6 +111,7 @@
 
 .comments__text {
     margin-top: 9px;
+    word-break: break-word;
 }
 
 

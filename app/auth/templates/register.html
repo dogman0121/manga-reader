@@ -10,26 +10,53 @@
         <div class="flash_error">{{message}}</div>
     {% endif %}
 {% endfor %}
-{% for error in form.login.errors %}
-    <div class="flash_error">{{error}}</div>
-{% endfor %}
-{% for error in form.email.errors %}
-    <div class="flash_error">{{error}}</div>
-{% endfor %}
-{% for error in form.password.errors %}
-    <div class="flash_error">{{error}}</div>
-{% endfor %}
-<div class="input-box">
-    {{ form.login(placeholder="Логин") }}
-    <img class="input-box__images" src="{{ url_for('auth.static', filename='images/user.svg') }}">
+<div class="input">
+    {% if form.login.errors %}
+        <div class="input-box input-box_error">
+            {{ form.login(placeholder="Логин") }}
+            <img class="input-box__images" src="{{ url_for('auth.static', filename='images/user.svg') }}">
+        </div>
+    {% else %}
+        <div class="input-box">
+            {{ form.login(placeholder="Логин") }}
+            <img class="input-box__images" src="{{ url_for('auth.static', filename='images/user.svg') }}">
+        </div>
+    {% endif %}
+    {% for error in form.login.errors %}
+        <div class="flash_error">{{error}}</div>
+    {% endfor %}
 </div>
-<div class="input-box">
-    {{ form.email(placeholder="Почта") }}
-    <img class="input-box__images" src="{{ url_for('auth.static', filename='images/email.svg') }}">
+<div class="input">
+    {% if form.email.errors %}
+        <div class="input-box input-box_error">
+            {{ form.email(placeholder="Почта") }}
+            <img class="input-box__images" src="{{ url_for('auth.static', filename='images/email.svg') }}">
+        </div>
+    {% else %}
+        <div class="input-box">
+            {{ form.email(placeholder="Почта") }}
+            <img class="input-box__images" src="{{ url_for('auth.static', filename='images/email.svg') }}">
+        </div>
+    {% endif %}
+    {% for error in form.email.errors %}
+        <div class="flash_error">{{error}}</div>
+    {% endfor %}
 </div>
-<div class="input-box">
-    {{ form.password(placeholder="Пароль") }}
-    <img class="input-box__images" src="{{ url_for('auth.static', filename='images/lock.svg') }}">
+<div class="input">
+    {% if form.password.errors %}
+        <div class="input-box input-box_error">
+            {{ form.password(placeholder="Пароль") }}
+            <img class="input-box__images" src="{{ url_for('auth.static', filename='images/lock.svg') }}">
+        </div>
+    {% else %}
+        <div class="input-box">
+            {{ form.password(placeholder="Пароль") }}
+            <img class="input-box__images" src="{{ url_for('auth.static', filename='images/lock.svg') }}">
+        </div>
+    {% endif %}
+    {% for error in form.password.errors %}
+        <div class="flash_error">{{error}}</div>
+    {% endfor %}
 </div>
 <button type="submit" class="btn">Зарегистрироваться</button>
 <div class="register">

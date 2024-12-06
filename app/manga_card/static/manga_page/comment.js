@@ -253,8 +253,15 @@ class CommentForm extends Component{
         if (Object.keys(DATA.user).length !== 0)
             html = `
                 <div class="comments__form">
-                    <textarea class="comments__input" placeholder="Введите текст"></textarea>
-                    <button class="comments__send">Отправить</button>
+                    <textarea class="comments__form-input" placeholder="Введите текст"></textarea>
+                    <div class="comments__form-panel">
+                        <div class="comments__form-length">
+                            <span class="comments__form-current-length">0</span>
+                            /
+                            <span class="comments__form-max-length">300</span>
+                        </div>
+                        <button class="comments__form-send">Отправить</button>
+                    <div>
                 </div>
             `
         else
@@ -270,11 +277,15 @@ class CommentForm extends Component{
     }
 
     events(element) {
-        element.querySelector(".comments__send")?.addEventListener("click", this.sendAnswer.bind(this));
+        element.querySelector(".comments__form-send")?.addEventListener("click", this.sendAnswer.bind(this));
+        registerResize(element.querySelector("textarea"));
+        element.querySelector("textarea").addEventListener("input", this.onInput.bind(this));
     }
 
     sendAnswer(){
-        let textarea = this.element.querySelector(".comments__input");
+        if (!this.validateInput())
+            return null;
+        let textarea = this.element.querySelector(".comments__form-input");
         let text = textarea.value;
         textarea.value = "";
 
@@ -303,6 +314,25 @@ class CommentForm extends Component{
 
     show() {
         this.element.classList.add("comments__form_visible");
+    }
+
+    onInput(event){
+        this.element.querySelector(".comments__form-current-length").textContent = event.target.value.length;
+
+        if (!this.validateInput()){
+            this.element.classList.add("comments__form_error");
+            this.element.querySelector(".comments__form-length").classList.add("comments__form-length_error");
+        }
+        else {
+            this.element.classList.remove("comments__form_error");
+            this.element.querySelector(".comments__form-length").classList.remove("comments__form-length_error");
+        }
+    }
+
+    validateInput() {
+        const currLength = parseInt(this.element.querySelector(".comments__form-current-length").textContent);
+        const maxLength = parseInt(this.element.querySelector(".comments__form-max-length").textContent);
+        return currLength <= maxLength;
     }
 
     hide() {

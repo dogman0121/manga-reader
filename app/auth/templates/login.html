@@ -8,26 +8,33 @@
 {% block form %}
 {{ form.hidden_tag() }}
 <h1>Авторизация</h1>
+<p> через соцсети </p>
+<div class="oauth">
+    <div id="yandex_id"></div>
+</div>
+<p> или </p>
 {% for category, message in get_flashed_messages(with_categories=true) %}
     {% if category == "error" %}
-        <div class="flash_error">{{message}}</div>
+        <div class="flash_error flash_error_header">{{message}}</div>
     {% endif %}
 {% endfor %}
-{% for error in form.login.errors %}
-    <div class="flash_error">{{error}}</div>
-{% endfor %}
-<div class="oauth">
-    <div id="yandex_id">
-
+<div class="input">
+    <div class="input-box">
+        {{ form.login(placeholder="Логин") }}
+        <img class="input-box__images" src="{{ url_for('auth.static', filename='images/user.svg') }}">
     </div>
+    {% for error in form.login.errors %}
+        <div class="flash_error">{{error}}</div>
+    {% endfor %}
 </div>
-<div class="input-box">
-    {{ form.login(placeholder="Логин") }}
-    <img class="input-box__images" src="{{ url_for('auth.static', filename='images/user.svg') }}">
-</div>
-<div class="input-box">
-    {{ form.password(placeholder="Пароль") }}
-    <img class="input-box__images" src="{{ url_for('auth.static', filename='images/lock.svg') }}">
+<div class="input">
+    <div class="input-box">
+        {{ form.password(placeholder="Пароль") }}
+        <img class="input-box__images" src="{{ url_for('auth.static', filename='images/lock.svg') }}">
+    </div>
+    {% for error in form.password.errors %}
+        <div class="flash_error">{{error}}</div>
+    {% endfor %}
 </div>
 <div class="remember-forgot">
     <label><input type="checkbox" name="remember">Запомнить меня</label>

@@ -1,9 +1,10 @@
 const textAreas = document.getElementsByTagName("textarea");
 
 for (let textarea of textAreas){
-    textarea.style.height = ``;
-    textarea.style.height = `${textarea.scrollHeight + 2}px`;
+    registerResize(textarea);
+}
 
+function registerResize(textarea) {
     textarea.addEventListener("input", function(event){
           if (event.target.value[event.target.value.length - 1] === "\n")
             event.target.value = event.target.value.slice(0, -1);

@@ -14,5 +14,6 @@ document.querySelector(".main__inner").addEventListener("click", function (event
             currentPage.src = DATA.pages[--currentPageNum];
     }
 
+    window.scrollY = 0;
     currentPageNumElem.textContent = currentPageNum + 1;
 })
