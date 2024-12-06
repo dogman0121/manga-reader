@@ -90,6 +90,7 @@ class ChapterTranslatorsList extends Component {
         this.selectedTranslator = event.detail.translator;
         this.selectedTranslator.select();
         this.dispatchEvent(new CustomEvent("translatorSwitched", {detail: event.detail}));
+        this.dispatchEvent(new CustomEvent("translatorSwitched", {detail: event.detail}));
     }
 
 }
@@ -142,7 +143,6 @@ class ChaptersList extends Component {
         if (!team)
             return;
 
-        console.log(team);
         this.chapters = team.chapters.map(chapter => new Chapter(chapter, team.id));
     }
 

@@ -279,7 +279,7 @@ class CommentForm extends Component{
     events(element) {
         element.querySelector(".comments__form-send")?.addEventListener("click", this.sendAnswer.bind(this));
         registerResize(element.querySelector("textarea"));
-        element.querySelector("textarea").addEventListener("input", this.onInput.bind(this));
+        element.querySelector("textarea")?.addEventListener("input", this.onInput.bind(this));
     }
 
     sendAnswer(){

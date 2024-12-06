@@ -5,6 +5,9 @@ for (let textarea of textAreas){
 }
 
 function registerResize(textarea) {
+    if (!textarea)
+        return null;
+
     textarea.addEventListener("input", function(event){
           if (event.target.value[event.target.value.length - 1] === "\n")
             event.target.value = event.target.value.slice(0, -1);
