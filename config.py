@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 
 class Config:
@@ -7,12 +10,12 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = 'postgresql://admin:123456@217.144.189.150:5432/manga-reader'
 
-    MAIL_SERVER = 'smtp.googlemail.com'
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = 'giachetti101@gmail.com'
-    MAIL_DEFAULT_SENDER = 'giachetti101@gmail.com'
-    MAIL_PASSWORD = 'dcnm jflp femx yuev'
+    MAIL_SERVER = os.environ.get("MAIL_SERVER")
+    MAIL_PORT = os.environ.get("MAIL_PORT")
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS")
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
 
 
 class TestConfig:
@@ -25,4 +28,9 @@ class TestConfig:
     APPLICATION_ROOT = "/"
     PREFERRED_URL_SCHEME = "http"
 
-    WTF_CSRF_ENABLED = False
+    MAIL_SERVER = os.environ.get("MAIL_SERVER")
+    MAIL_PORT = os.environ.get("MAIL_PORT")
+    MAIL_USE_TLS = os.environ.get("MAIL_USE_TLS")
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
