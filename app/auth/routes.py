@@ -105,7 +105,7 @@ def handle_yandex():
 
     user = User.get_by_oauth("ya", user_data["id"])
     if user:
-        login_user(user)
+        login_user(user, remember=True)
     else:
         if User.is_email_taken(user_data["default_email"]):
             user = User.get_by_email(user_data["default_email"])
