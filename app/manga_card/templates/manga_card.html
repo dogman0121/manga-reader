@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block header %}
+<meta property="og:title" content="Читать {{ title.type.name }} {{ title.name_russian }} бесплатно">
+<meta property="og:description" content="{{ title.description }}">
+<meta property="og:image" content="{{ title.get_poster() }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='manga_card/manga_card/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/sections.css') }}">
 <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/comments.css') }}">
@@ -8,7 +11,7 @@
 <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/rating.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='modules/modal/modal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='modules/notify/notify.css') }}">
-<title>{{ title.name_russian }}</title>
+<title>Читать {{ title.type.name }} {{ title.name_russian }} бесплатно</title>
 {% endblock %}
 {% block content %}
 <div id="left-side">

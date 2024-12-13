@@ -10,9 +10,11 @@
             <div class="flash_error">{{message}}</div>
         {% endif %}
     {% endfor %}
-    <div class="input-box">
-        {{ email_form.email(placeholder="Почта") }}
-        <img class="input-box__images" src="{{ url_for('auth.static', filename='images/email.svg') }}">
+    <div class="input">
+        <div class="input-box">
+            {{ email_form.email(placeholder="Почта") }}
+            <img class="input-box__images" src="{{ url_for('auth.static', filename='images/email.svg') }}">
+        </div>
     </div>
     {% for category, message in get_flashed_messages(with_categories=true) %}
         {% if category == "info" %}
