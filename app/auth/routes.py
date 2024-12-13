@@ -31,6 +31,7 @@ def register():
             user.set_password(form.password.data)
             user.add()
 
+            login_user(user)
             return redirect(url_for("index.index"))
 
     return render_template("register.html", form=form)

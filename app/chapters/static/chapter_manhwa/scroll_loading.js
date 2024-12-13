@@ -6,12 +6,17 @@ let chapters = DATA.chapters_list;
 let currentChapter = json.chapter;
 
 
+let can = true;
+
 window.addEventListener("scroll", function (){
     let lastPageCords = lastPage.getBoundingClientRect();
     if ((lastPageCords.bottom - document.documentElement.clientHeight) < 100) {
         for (let chapter of chapters){
             if (chapter.tome > currentChapter.tome ||
                 (chapter.tome === currentChapter.tome && chapter.chapter > currentChapter.chapter)){
+                if (!can)
+                    return null;
+                can = false;
                 currentChapter = chapter;
                 fetch("/api/chapters/pages?chapter_id=" + currentChapter.id.toString())
                     .then(response => response.json())
@@ -28,7 +33,8 @@ window.addEventListener("scroll", function (){
                             `
                         }
                     })
-                break;
+                    .then(() => {can = true;})
+                return;
             }
         }
     }
