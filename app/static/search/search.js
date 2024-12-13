@@ -29,7 +29,8 @@ function chooseSearchSection(section){
             searchFilters.querySelector(".team").classList.add("search__filter_selected");
             break;
     }
-    debounceSearch(searchInput.value, section);
+    if (searchInput.value !== "")
+        debounceSearch(searchInput.value, section);
     chosenSection = section;
 }
 
