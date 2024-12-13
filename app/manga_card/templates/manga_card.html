@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block header %}
+<meta name="description" content="{{ title.description }}">
 <meta property="og:title" content="Читать {{ title.type.name }} {{ title.name_russian }} бесплатно">
 <meta property="og:description" content="{{ title.description }}">
 <meta property="og:image" content="{{ title.get_poster() }}">

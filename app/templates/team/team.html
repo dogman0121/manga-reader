@@ -1,80 +1,84 @@
 {% extends "base.html" %}
 {% block header %}
-    <link rel="stylesheet" href="{{ url_for('static', filename="team/team/style.css") }}">
-    <title>{{ team.name }}</title>
+<meta name="description" content="{{ team.about }}">
+<meta property="og:title" content="Профиль команды {{ team.name }}">
+<meta property="og:description" content="{{ team.about }}">
+<meta property="og:image" content="{{ team.get_poster() }}">
+<link rel="stylesheet" href="{{ url_for('static', filename="team/team/style.css") }}">
+<title>{{ team.name }}</title>
 {% endblock %}
 {% block content %}
-    <div class="left-side">
-        <div class="poster">
-            {% if team.get_poster() %}
-                <img class="poster__image" src="{{ team.get_poster() }}">
-            {% else %}
-                <div class="poster__no-poster"></div>
+<div class="left-side">
+    <div class="poster">
+        {% if team.get_poster() %}
+            <img class="poster__image" src="{{ team.get_poster() }}">
+        {% else %}
+            <div class="poster__no-poster"></div>
+        {% endif %}
+    </div>
+    {% if team.leader_id == user.id %}
+        <a href="{{ url_for("team.edit_team", team_id=team.id) }}">
+            <button class="edit">Редактировать</button>
+        </a>
+    {% endif %}
+    {% if user.team_id == team.id %}
+        <a href="{{ url_for("team.leave_team", team_id=team.id) }}">
+            <button class="edit">Выйти</button>
+        </a>
+    {% endif %}
+    <div class="members">
+        <h3 class="members__header">Участники</h3>
+        <div class="members__list">
+            {% for member in team.members %}
+                <a class="member" href="{{ url_for("profile.get_profile", profile_id=member.id) }}">
+                    <img class="member__avatar" src="{{ member.get_avatar() }}">
+                    <span class="member__name">{{ member.login }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="right-side">
+    <h1 class="name">{{ team.name }}</h1>
+    <div class="about">{{ team.about }}</div>
+    <div class="links">
+        <h2 class="links__header">Ссылки</h2>
+        <div class="links__list">
+            {% if team.discord_link %}
+                <a class="link" href="{{ team.discord_link }}">
+                    <img class="link__icon" src="{{ url_for('static', filename="team/team/images/discord-icon.svg") }}">
+                    <span class="link__text">Discord</span>
+                </a>
+            {% endif %}
+            {% if team.vk_link %}
+                <a class="link" href="{{ team.vk_link }}">
+                    <img class="link__icon" src="{{ url_for('static', filename="team/team/images/vk-icon.svg") }}">
+                    <span class="link__text">Вконтакте</span>
+                </a>
+            {% endif %}
+            {% if team.telegram_link %}
+                <a class="link" href="{{ team.telegram_link }}">
+                    <img class="link__icon" src="{{ url_for('static', filename="team/team/images/telegram-icon.svg") }}">
+                    <span class="link__text">Telegram</span>
+                </a>
             {% endif %}
         </div>
-        {% if team.leader_id == user.id %}
-            <a href="{{ url_for("team.edit_team", team_id=team.id) }}">
-                <button class="edit">Редактировать</button>
-            </a>
-        {% endif %}
-        {% if user.team_id == team.id %}
-            <a href="{{ url_for("team.leave_team", team_id=team.id) }}">
-                <button class="edit">Выйти</button>
-            </a>
-        {% endif %}
-        <div class="members">
-            <h3 class="members__header">Участники</h3>
-            <div class="members__list">
-                {% for member in team.members %}
-                    <a class="member" href="{{ url_for("profile.get_profile", profile_id=member.id) }}">
-                        <img class="member__avatar" src="{{ member.get_avatar() }}">
-                        <span class="member__name">{{ member.login }}</span>
-                    </a>
-                {% endfor %}
-            </div>
+    </div>
+    <div class="titles">
+        <h2 class="titles__header">Переводы</h2>
+        <div class="titles__list">
+            {% for title in team.translations %}
+                <a class="titles__item" src="{{ url_for("manga.manga_page", title_id=title.id) }}">
+                    <img class="titles__poster" src="{{ title.get_poster() }}">
+                    <span class="titles__name">{{ title.name }}</span>
+                </a>
+            {% endfor %}
         </div>
     </div>
-    <div class="right-side">
-        <h1 class="name">{{ team.name }}</h1>
-        <div class="about">{{ team.about }}</div>
-        <div class="links">
-            <h2 class="links__header">Ссылки</h2>
-            <div class="links__list">
-                {% if team.discord_link %}
-                    <a class="link" href="{{ team.discord_link }}">
-                        <img class="link__icon" src="{{ url_for('static', filename="team/team/images/discord-icon.svg") }}">
-                        <span class="link__text">Discord</span>
-                    </a>
-                {% endif %}
-                {% if team.vk_link %}
-                    <a class="link" href="{{ team.vk_link }}">
-                        <img class="link__icon" src="{{ url_for('static', filename="team/team/images/vk-icon.svg") }}">
-                        <span class="link__text">Вконтакте</span>
-                    </a>
-                {% endif %}
-                {% if team.telegram_link %}
-                    <a class="link" href="{{ team.telegram_link }}">
-                        <img class="link__icon" src="{{ url_for('static', filename="team/team/images/telegram-icon.svg") }}">
-                        <span class="link__text">Telegram</span>
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="titles">
-            <h2 class="titles__header">Переводы</h2>
-            <div class="titles__list">
-                {% for title in team.translations %}
-                    <a class="titles__item" src="{{ url_for("manga.manga_page", title_id=title.id) }}">
-                        <img class="titles__poster" src="{{ title.get_poster() }}">
-                        <span class="titles__name">{{ title.name }}</span>
-                    </a>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+</div>
 {% endblock %}
 {% block json_data %}
 {% endblock %}
 {% block footer %}
-    <script src="{{ url_for('static', filename="team/team/adaptive.js") }}"></script>
+<script src="{{ url_for('static', filename="team/team/adaptive.js") }}"></script>
 {% endblock %}
