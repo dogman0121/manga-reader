@@ -5,6 +5,7 @@ from app.models import Title
 
 
 @bp.route("/rating", methods=["POST"])
+@login_required
 def add_rating():
     if not current_user.is_authenticated:
         return {
@@ -12,7 +13,7 @@ def add_rating():
             "detail": "unauthorized"
         }
 
-    title = Title.get_by_id(request.json["title_id"])
+    title = Title.get(request.json["title_id"])
     rating = int(request.json["rating"])
 
     if abs(rating) <= 10:
@@ -23,14 +24,10 @@ def add_rating():
 
 
 @bp.route("/rating", methods=["UPDATE"])
+@login_required
 def update_rating():
-    if not current_user.is_authenticated:
-        return {
-            "status": "error",
-            "detail": "unauthorized"
-        }
 
-    title = Title.get_by_id(request.json["title_id"])
+    title = Title.get(request.json["title_id"])
     rating = int(request.json["rating"])
 
     if 0 <= rating <= 10:
@@ -42,13 +39,8 @@ def update_rating():
 
 @bp.route("/rating", methods=["DELETE"])
 def delete_rating():
-    if not current_user.is_authenticated:
-        return {
-            "status": "error",
-            "detail": "unauthorized"
-        }
 
-    title = Title.get_by_id(request.json["title_id"])
+    title = Title.get(request.json["title_id"])
     title.remove_rating(current_user)
 
     return {"status": "ok"}

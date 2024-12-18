@@ -20,21 +20,27 @@ def clean_folder(path):
 
 @bp.route("/<int:chapter_id>")
 def get_chapter(chapter_id):
-    chapter = Chapter.get_by_id(chapter_id)
-    title_json = json.dumps(chapter.title.to_dict(), ensure_ascii=False)
+    chapter = Chapter.get(chapter_id)
+    title = chapter.title
+
+    if not title.get_progress(current_user):
+        title.add_progress(current_user, chapter, 0)
+
+    title_json = json.dumps(title.to_dict(), ensure_ascii=False)
     chapter_json = json.dumps(chapter.to_dict(), ensure_ascii=False)
-    chapters_list_json = json.dumps([i.to_dict() for i in chapter.title.chapters])
-    referer = request.headers.get("Referer")
+    chapters_list_json = json.dumps([i.to_dict() for i in title.chapters])
+
     pages = chapter.get_pages()
     pages_json = json.dumps(pages)
+
     if chapter.title.type.name == "манга":
         template_url = "chapter_manga.html"
     else:
         template_url = "chapter_manhwa.html"
+
     return render_template(template_url,
                            chapter=chapter,
                            pages=pages,
-                           referer=referer,
                            user=current_user,
                            title_json=title_json,
                            chapter_json=chapter_json,
@@ -45,7 +51,7 @@ def get_chapter(chapter_id):
 
 @bp.route("/<int:chapter_id>/edit", methods=["GET", "POST"])
 def edit_chapter(chapter_id):
-    chapter = Chapter.get_by_id(chapter_id)
+    chapter = Chapter.get(chapter_id)
     form = ChapterForm()
     if form.validate_on_submit():
         chapter.tome = form.tome.data
@@ -72,7 +78,7 @@ def edit_chapter(chapter_id):
 
 @bp.route("/<int:chapter_id>/delete")
 def delete_chapter(chapter_id):
-    chapter = Chapter.get_by_id(chapter_id)
+    chapter = Chapter.get(chapter_id)
     chapter.delete()
     clean_folder(f"app/static/media/chapters/{chapter.id}")
     return redirect(url_for("manga.manga_page", title_id=chapter.title_id))
@@ -81,8 +87,8 @@ def delete_chapter(chapter_id):
 @bp.route("/add", methods=["GET", "POST"])
 def add_chapter():
     title_id = request.args.get("title_id")
-    title = Title.get_by_id(title_id)
-    team = Team.get_by_id(current_user.team_id)
+    title = Title.get(title_id)
+    team = Team.get(current_user.team_id)
     form = ChapterForm()
     if form.validate_on_submit():
         chapter = Chapter()

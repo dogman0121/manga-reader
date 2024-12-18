@@ -82,6 +82,9 @@ li {
     max-width: 870px;
     min-width: 400px;
     position: relative;
+
+    display: flex;
+    flex-direction: column;
 }
 
 #manga-info__header {
@@ -106,7 +109,7 @@ textarea:focus {
     outline:none;
 }
 
-#read-button {
+.read-button {
     height: 50px;
     width: 180px;
     background-color: #FFD600;
@@ -115,8 +118,17 @@ textarea:focus {
     border-radius: 12px;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.read-button__header {
+    font-size: 18px;
+}
+
+.read-button_text {
+    font-size: 12px;
 }
 
 .edit-button, .save-button {

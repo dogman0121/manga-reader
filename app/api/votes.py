@@ -9,7 +9,7 @@ from app.models import Comment
 def vote_up():
     vote_type = request.json["type"]
     comment_id = request.json["comment"]
-    comment = Comment.get_by_id(comment_id)
+    comment = Comment.get(comment_id)
     user_vote = comment.get_user_vote(current_user)
     if user_vote is not None:
         if user_vote == vote_type:

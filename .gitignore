@@ -4,3 +4,5 @@ venv/
 database/database.db
 app/static/media/
 .pytest_cache/
+manage.py
+create_db.py

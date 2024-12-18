@@ -8,15 +8,15 @@ from app.api import bp
 def get_comments():
     page = int(request.args.get("page") or 1)
     if request.args.get("parent"):
-        parent = Comment.get_by_id(request.args.get("parent"))
+        parent = Comment.get(request.args.get("parent"))
         return jsonify([i.to_dict() for i in parent.get_answers()])
 
     if request.args.get("root"):
-        root = Comment.get_by_id(request.args.get("root"))
+        root = Comment.get(request.args.get("root"))
         return jsonify([i.to_dict() for i in root.get_answers()])
 
     if request.args.get("title"):
-        title = Title.get_by_id(request.args.get("title"))
+        title = Title.get(request.args.get("title"))
         return jsonify([i.to_dict() for i in title.get_comments(page)])
 
     return jsonify([])

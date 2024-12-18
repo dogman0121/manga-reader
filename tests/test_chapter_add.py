@@ -46,7 +46,7 @@ def test_delete_translator(app):
 
         assert title.check_translator(team) == True
 
-        team.delete()
+        team.remove()
 
-        assert Team.get_by_id(team.id) == None
+        assert Team.get(team.id) == None
         assert title.check_translator(team) == False

@@ -34,33 +34,7 @@
         {% endif %}
     {% endif %}
     {% include "description.html" %}
-    <ul id="similar">
-        <h3>Похожее</h3>
-        <li class="similar-title">
-            <img class="similar-title__poster" src="{{ url_for('static', filename='manga_card/manga_card/images/simiar_manga-poster1.jpg') }}">
-            <p class="similar-title__description">
-                Я - дитя этого дома<br>
-                2018<br>
-                Манхва
-            </p>
-        </li>
-        <li class="similar-title">
-            <img class="similar-title__poster" src="{{ url_for('static', filename='manga_card/manga_card/images/similar_manga-poster2.jpg') }}">
-            <p class="similar-title__description">
-                Я стала женой принца-монстра<br>
-                2021<br>
-                Манхва
-            </p>
-        </li>
-        <li class="similar-title">
-            <img class="similar-title__poster" src="{{ url_for('static', filename='manga_card/manga_card/images/similar_manga-poster3.jpg') }}">
-            <p class="similar-title__description">
-                На самом деле я была настоящей<br>
-                2020
-                Манхва
-            </p>
-        </li>
-    </ul>
+    {% include "similar.html" %}
 </div>
 <div id="right-side">
     <div id="manga-info">
@@ -78,9 +52,26 @@
                 <h1 class="manga-names__russian">{{ title.name_russian }}</h1>
             </div>
             <div class="manga-subbuttons">
-                <div id="read-button">Читать</div>
-                <div class="rating__button">
-                    {% if user_rating %}
+                {% if progress %}
+                    <a href="{{ url_for("chapters.get_chapter", chapter_id=progress_chapter.id) }}">
+                        <button class="read-button">
+                            <span class="read-button_header">Продолжить</span>
+                            <span class="read-button_text">ТОМ {{ progress_chapter.tome }} ГЛАВА {{ '{0:g}'.format(progress_chapter.chapter) }}</span>
+                        </button>
+                    </a>
+                {% else %}
+                    {% if title.chapters %}
+                        <a href="{{ url_for("chapters.get_chapter", chapter_id=title.chapters[0].id) }}">
+                            <button class="read-button">Читать</button>
+                        </a>
+                    {% else %}
+                        <div class="read-button">
+                            Нет глав
+                        </div>
+                    {% endif %}
+                {% endif %}
+                {% if user_rating %}
+                    <div class="rating__button">
                         <span class="rating__text">Ваша оценка:</span>
                         {% if user_rating < 4 %}
                             <span class="user-rating user-rating_bad" data-stars="{{ user_rating }}">
@@ -99,15 +90,17 @@
                                 <span class="user-rating__number">{{ user_rating }}</span>
                             </span>
                         {% endif %}
-                    {% else %}
+                    </div>
+                {% else %}
+                    <div class="rating__button">
                         <span class="rating__text">
                             Оценить
                             <svg width="18px" height="18px" viewBox="0 -0.5 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M16.0005 0L21.4392 9.27275L32.0005 11.5439L24.8005 19.5459L25.889 30.2222L16.0005 25.895L6.11194 30.2222L7.20049 19.5459L0.000488281 11.5439L10.5618 9.27275L16.0005 0Z" fill="#FFCB45"/>
                             </svg>
                         </span>
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div id="manga-info__description">

@@ -70,7 +70,7 @@ def test_parse_comment_data(app):
         assert user_id == 1
         assert parent_id == 1
         assert root_id == 1
-        assert comment == Comment.get_by_id(comment.id)
+        assert comment == Comment.get(comment.id)
 
 
 def test_get_title_comment(app, client):

@@ -7,7 +7,7 @@ from app.models import Team, User
 
 @bp.route("/<int:team_id>")
 def get_team(team_id):
-    team = Team.get_by_id(team_id)
+    team = Team.get(team_id)
     return render_template("team/team.html", user=current_user, team=team)
 
 
@@ -38,7 +38,7 @@ def add_team():
 @bp.route("/<int:team_id>/edit", methods=["GET", "POST"])
 def edit_team(team_id):
     form = AddTeamForm()
-    team = Team.get_by_id(team_id)
+    team = Team.get(team_id)
     if form.validate_on_submit():
         team.name = form.name.data
         team.about = form.about.data
@@ -63,7 +63,7 @@ def edit_team(team_id):
 
 @bp.route("<int:team_id>/leave")
 def leave_team(team_id):
-    team = Team.get_by_id(team_id)
+    team = Team.get(team_id)
     if team.leader_id == current_user.id:
         team.delete()
         return redirect(url_for("profile.get_profile", profile_id=current_user.id))

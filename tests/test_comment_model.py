@@ -13,4 +13,4 @@ def test_adding_comment(app):
         comment = Comment(text="хехехе", user_id=1, title_id=1)
         comment.add()
 
-        assert comment == Comment.get_by_id(comment.id)
+        assert comment == Comment.get(comment.id)

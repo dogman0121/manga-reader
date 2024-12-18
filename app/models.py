@@ -1,7 +1,8 @@
 from flask import url_for
 from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
-from sqlalchemy import exists, ForeignKey, Table, Column, Integer, String, Select, and_, func, insert, delete, update, desc
+from sqlalchemy import (exists, ForeignKey, Table, Column, Integer, Float, String, Select, and_, func, insert, delete, update,
+                        desc, select, text)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
 from app import db, login_manager
@@ -22,6 +23,15 @@ oauth = Table(
     Column("user_id", Integer(), ForeignKey("users.id"), nullable=False),
     Column("oauth_type", String(), nullable=False),
     Column("oauth_id", Integer(), nullable=False)
+)
+
+progresses = Table(
+    "progresses",
+    db.metadata,
+    Column("user_id", Integer(), ForeignKey("users.id"), nullable=False),
+    Column("title_id", Integer(), ForeignKey("titles.id"), nullable=False),
+    Column("chapter_id", Integer(), ForeignKey("chapters.id"), nullable=False),
+    Column("progress", Float(), nullable=False)
 )
 
 
@@ -46,7 +56,7 @@ class User(db.Model, UserMixin):
     @staticmethod
     def get_by_oauth(oauth_type, oauth_id):
         user_id = db.session.execute(Select(oauth.c.user_id).where(and_(
-            oauth.c.oauth_type==oauth_type, oauth.c.oauth_id==oauth_id))).scalar()
+            oauth.c.oauth_type == oauth_type, oauth.c.oauth_id == oauth_id))).scalar()
         if not user_id:
             return None
         return User.get_by_id(user_id)
@@ -67,7 +77,7 @@ class User(db.Model, UserMixin):
         self.verified = True
         db.session.commit()
 
-    def delete(self):
+    def remove(self):
         db.session.delete(self)
         db.session.commit()
 
@@ -153,7 +163,7 @@ class Type(db.Model):
         return db.session.execute(Select(Type)).scalars()
 
     @staticmethod
-    def get_by_id(type_id):
+    def get(type_id):
         return db.session.execute(Select(Type).where(Type.id == type_id)).scalar()
 
     def add(self):
@@ -164,7 +174,7 @@ class Type(db.Model):
         self.verified = True
         db.session.commit()
 
-    def delete(self):
+    def remove(self):
         db.session.delete(self)
         db.session.commit()
 
@@ -186,7 +196,7 @@ class Status(db.Model):
         return db.session.execute(Select(Status)).scalars()
 
     @staticmethod
-    def get_by_id(status_id):
+    def get(status_id):
         return db.session.execute(Select(Status).where(Status.id == status_id)).scalar()
 
     def add(self):
@@ -197,7 +207,7 @@ class Status(db.Model):
         self.verified = True
         db.session.commit()
 
-    def delete(self):
+    def remove(self):
         db.session.delete(self)
         db.session.commit()
 
@@ -227,7 +237,7 @@ class Genre(db.Model):
         return db.session.execute(Select(Genre)).scalars()
 
     @staticmethod
-    def get_by_id(genre_id):
+    def get(genre_id):
         return db.session.execute(Select(Genre).where(Genre.id == genre_id)).scalar()
 
     def add(self):
@@ -238,7 +248,7 @@ class Genre(db.Model):
         self.verified = True
         db.session.commit()
 
-    def delete(self):
+    def remove(self):
         db.session.delete(self)
         db.session.commit()
 
@@ -265,14 +275,14 @@ class Chapter(db.Model):
     name: Mapped[str] = mapped_column(nullable=True)
     title_id: Mapped[int] = mapped_column(ForeignKey("titles.id"), nullable=False)
     title: Mapped["Title"] = relationship("Title", back_populates="chapters")
-    tome: Mapped[int] = mapped_column(nullable=False)
-    chapter: Mapped[float] = mapped_column(nullable=False)
+    tome: Mapped[int] = mapped_column()
+    chapter: Mapped[float] = mapped_column()
     date: Mapped[datetime] = mapped_column(default=lambda: datetime.utcnow().strftime("%Y-%m-%d"))
     team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=True)
     team: Mapped["Team"] = relationship("Team", back_populates="chapters")
 
     @staticmethod
-    def get_by_id(chapter_id):
+    def get(chapter_id):
         return db.session.execute(Select(Chapter).where(Chapter.id == chapter_id)).scalar()
 
     def add(self):
@@ -283,7 +293,7 @@ class Chapter(db.Model):
         self.verified = True
         db.session.commit()
 
-    def delete(self):
+    def remove(self):
         db.session.delete(self)
         db.session.commit()
 
@@ -323,12 +333,27 @@ class Title(db.Model):
     author: Mapped[User] = relationship("User")
     chapters: Mapped[list["Chapter"]] = relationship(uselist=True, back_populates="title")
     comments: Mapped[list["Comment"]] = relationship(uselist=True, back_populates="title")
-    translators: Mapped[list["Team"]] = relationship(uselist=True, secondary="titles_translators", back_populates="titles")
+    translators: Mapped[list["Team"]] = relationship(uselist=True, secondary="titles_translators",
+                                                     back_populates="titles")
 
+    # ----- CRUD -----
     @staticmethod
-    def get_by_id(title_id):
+    def get(title_id):
         return db.session.get(Title, title_id)
 
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        self.verified = True
+        db.session.commit()
+
+    def remove(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    # ----- Filters -----
     @hybrid_method
     def validate_types(self, type_ids: list[int]):
         if not type_ids:
@@ -397,22 +422,11 @@ class Title(db.Model):
             Select(Title).filter(func.lower(Title.name_russian).like(f"%{query.lower()}%"))
         ).scalars().all()
 
-    def add(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        self.verified = True
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
     def add_view(self):
         self.views += 1
         self.update()
 
+    # ----- Translators -----
     def add_translator(self, team):
         db.session.execute(insert(titles_translators).values(title_id=self.id, team_id=team.id))
         db.session.commit()
@@ -428,6 +442,13 @@ class Title(db.Model):
     def get_rating(self):
         rating = db.session.execute(Select(ratings.c.rating).where(ratings.c.title_id == self.id)).scalars().all()
         return sum(rating), len(rating)
+
+    @hybrid_method
+    def get_average_rating(self):
+        rating_sum, rating_count = self.get_rating()
+        if rating_count:
+            return rating_sum / rating_count
+        return 0
 
     @hybrid_method
     def add_rating(self, user, rating):
@@ -472,6 +493,28 @@ class Title(db.Model):
     def get_poster(self):
         if os.path.exists(f"app/static/media/posters/{self.id}.jpg"):
             return url_for("static", filename=f"media/posters/{self.id}.jpg", _external=True)
+
+    # ----- Progress -----
+    def add_progress(self, user, chapter, progress):
+        db.session.execute(insert(progresses).values(user_id=user.id, title_id=self.id,
+                                                     chapter_id=chapter.id, progress=progress))
+        db.session.commit()
+
+    @hybrid_method
+    def get_progress(self, user):
+        return db.session.execute(select(progresses.c.chapter_id, progresses.c.progress).where(
+            and_(progresses.c.title_id == self.id, progresses.c.user_id == user.id))).fetchone()
+
+    def delete_progress(self, user):
+        db.session.execute(delete(progresses).where(
+            and_(progresses.c.user_id == user.id, progresses.c.title_id == self.id)))
+        db.session.commit()
+
+    def update_progress(self, user, chapter, progress):
+        db.session.execute(update(progresses)
+                           .where(and_(progresses.c.user_id == user.id, progresses.c.title_id == self.id))
+                           .values(chapter_id=chapter.id, progress=progress))
+        db.session.commit()
 
     def to_dict(self):
         dct = {
@@ -527,7 +570,7 @@ class Comment(db.Model):
     parent_id: Mapped[Optional[int]] = mapped_column(nullable=True)
 
     @staticmethod
-    def get_by_id(comment_id):
+    def get(comment_id):
         return db.session.get(Comment, comment_id)
 
     def add(self):
@@ -538,7 +581,7 @@ class Comment(db.Model):
         self.verified = True
         db.session.commit()
 
-    def delete(self):
+    def remove(self):
         db.session.delete(self)
         db.session.commit()
 
@@ -602,9 +645,9 @@ class Team(db.Model):
     __tablename__ = "teams"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column()
     about: Mapped[str] = mapped_column(nullable=True)
-    leader_id: Mapped[int] = mapped_column(nullable=False)
+    leader_id: Mapped[int] = mapped_column()
     vk_link: Mapped[str] = mapped_column(nullable=True)
     discord_link: Mapped[str] = mapped_column(nullable=True)
     telegram_link: Mapped[str] = mapped_column(nullable=True)
@@ -616,7 +659,7 @@ class Team(db.Model):
                                                  back_populates="translators", viewonly=True)
 
     @staticmethod
-    def get_by_id(team_id):
+    def get(team_id):
         return db.session.get(Team, team_id)
 
     @staticmethod
@@ -631,12 +674,12 @@ class Team(db.Model):
         self.verified = True
         db.session.commit()
 
-    def delete(self):
+    def remove(self):
         db.session.execute(delete(titles_translators).where(titles_translators.c.title_id==self.id))
         for member in self.members:
             member.remove_team()
         for chapter in self.chapters:
-            chapter.delete()
+            chapter.remove()
 
         db.session.delete(self)
         db.session.commit()
