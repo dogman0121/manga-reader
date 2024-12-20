@@ -1,8 +1,21 @@
 let pageHeight;
 
+
+function calculateProgress(){
+    const scrollHeight = window.scrollY || document.documentElement.scrollTop;
+    const chapter = document.querySelector(`[data-id="${DATA.chapter.id}"]`);
+    const chapterHeight = chapter.scrollHeight;
+
+    const topCords = chapter.getBoundingClientRect().top + scrollHeight;
+
+    if (scrollHeight - topCords < 0)
+        return 0;
+    else
+        return (scrollHeight - topCords) / chapterHeight;
+}
+
 function saveProgress() {
-    const scrollHeight = window.pageYOffset || document.documentElement.scrollTop;
-    const progress = scrollHeight / pageHeight;
+    const progress = calculateProgress();
     fetch("/api/progress", {
         method: "UPDATE",
         headers: {

@@ -11,11 +11,13 @@
 </title>
 {% endblock %}
 {% block content %}
-{% for page in pages %}
-    <div class="page">
-        <img class="page__image" src={{ page }}>
-    </div>
-{% endfor %}
+<div class="chapter" data-id="{{ chapter.id }}">
+    {% for page in pages %}
+            <div class="page">
+                <img class="page__image" src={{ page }}>
+            </div>
+    {% endfor %}
+</div>
 {% endblock %}
 {% block json_data %}
     {"title": {{ title_json | safe }},

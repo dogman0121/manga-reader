@@ -1,8 +1,8 @@
 from flask import url_for
 from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
-from sqlalchemy import (exists, ForeignKey, Table, Column, Integer, Float, String, Select, and_, func, insert, delete, update,
-                        desc, select, text)
+from sqlalchemy import (exists, ForeignKey, Table, Column, Integer, Float, String, Select, and_, func, insert, delete,
+                        update, desc, select, not_, or_)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
 from app import db, login_manager
@@ -303,6 +303,22 @@ class Chapter(db.Model):
             images_list.append(url_for("static", filename=f"media/chapters/{self.id}/{i + 1}.jpeg"))
         return images_list
 
+    @hybrid_method
+    def __gt__(self, other):
+        return or_(self.tome > other.tome, and_(self.tome == other.tome, self.chapter > other.chapter))
+
+    @hybrid_method
+    def __lt__(self, other):
+        return or_(self.tome < other.tome, and_(self.tome == other.tome, self.chapter < other.chapter))
+
+    @hybrid_method
+    def get_next(self):
+        return db.session.execute(Select(Chapter).filter(Chapter > self).order_by(Chapter.tome, Chapter.chapter)).scalar()
+
+    @hybrid_method
+    def get_previous(self):
+        return db.session.execute(Select(Chapter).filter(Chapter < self).order_by(Chapter.tome, Chapter.chapter)).scalar()
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -310,7 +326,8 @@ class Chapter(db.Model):
             "title_id": self.title_id,
             "tome": self.tome,
             "chapter": self.chapter,
-            "date": self.date.strftime("%Y-%m-%d")
+            "date": self.date.strftime("%Y-%m-%d"),
+            "pages": self.get_pages()
         }
 
 

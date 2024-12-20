@@ -1,41 +1,61 @@
-let pages = document.querySelectorAll(".page");
-let lastPage = pages[pages.length - 1];
-let json = JSON.parse(document.querySelector(".DATA").textContent);
-let title = json.title;
-let chapters = DATA.chapters_list;
+let isLoading = false;
 
+window.addEventListener("load",function() {
+    window.onscroll = checkPosition;
+    window.onresize = checkPosition;
+})
 
-let can = true;
+async function checkPosition() {
+    const height = document.body.offsetHeight
+    const screenHeight = window.innerHeight
 
-window.addEventListener("scroll", function (){
-    let lastPageCords = lastPage.getBoundingClientRect();
-    if ((lastPageCords.bottom - document.documentElement.clientHeight) < 100) {
-        for (let chapter of chapters){
-            if (chapter.tome > DATA.chapter.tome ||
-                (chapter.tome === DATA.chapter.tome && chapter.chapter > DATA.chapter.chapter)){
-                if (!can)
-                    return null;
-                can = false;
-                DATA.chapter = chapter;
-                fetch("/api/chapters/pages?chapter_id=" + DATA.chapter.id.toString())
-                    .then(response => response.json())
-                    .then(pages => {
-                        let pagesContainer = document.querySelector(".main__inner");
-                        pagesContainer.innerHTML += `
-                            <div class="page-info">Том ${DATA.chapter.tome} Глава ${DATA.chapter.chapter}</div>
-                        `;
-                        for (page of pages){
-                            pagesContainer.innerHTML += `
-                                <div class="page">
-                                    <img class="page__image" src="${page}">
-                                </div>
-                            `
-                        }
-                    })
-                    .then(() => {can = true;})
-                return;
-            }
-        }
+    const scrolled = window.scrollY
+
+    const threshold = height - screenHeight / 4
+
+    const position = scrolled + screenHeight
+
+    if (position >= threshold) {
+        await loadChapters();
+    }
+}
+
+function fetchChapter() {
+    return fetch(`/api/chapters/next?chapter=${DATA.chapter.id}`)
+        .then(response => response.json())
+}
+
+function pushChapter(chapter) {
+    const pages = chapter.pages;
+
+    const chapterNode = document.querySelector(".chapter");
+    const pageNode = document.querySelector(".page");
+
+    const newChapter = chapterNode.cloneNode(false);
+    newChapter.dataset.id = chapter.id;
+    for(let page of pages){
+        let newPage = pageNode.cloneNode(true);
+        newPage.querySelector(".page__image").src = page;
+        newChapter.appendChild(newPage);
     }
 
-})
+    document.querySelector(".main__inner").appendChild(newChapter);
+}
+
+async function loadChapters() {
+    if (isLoading)
+        return;
+
+    isLoading = true;
+
+    let chapter = await fetchChapter();
+
+    if (!chapter)
+        return;
+
+    DATA.chapter = chapter;
+
+    pushChapter(DATA.chapter);
+
+    isLoading = false;
+}

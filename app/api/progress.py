@@ -32,7 +32,7 @@ def add_progress():
     chapter = Chapter.get(chapter_id)
     title.add_progress(current_user, chapter, progress)
 
-    return jsonify({"status": "ok"})
+    return
 
 
 @bp.route("/progress", methods=["DELETE"])
@@ -56,4 +56,4 @@ def update_progress():
 
     title.update_progress(current_user, chapter, progress)
 
-    return jsonify({"status": "ok"})
+    return "", 204
