@@ -330,9 +330,9 @@ class CommentForm extends Component{
     }
 
     validateInput() {
-        const currLength = parseInt(this.element.querySelector(".comments__form-current-length").textContent);
+        const currLength = this.element.querySelector(".comments__form-input").value.length;
         const maxLength = parseInt(this.element.querySelector(".comments__form-max-length").textContent);
-        return currLength <= maxLength;
+        return currLength !== 0 && currLength <= maxLength;
     }
 
     hide() {
