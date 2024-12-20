@@ -313,11 +313,11 @@ class Chapter(db.Model):
 
     @hybrid_method
     def get_next(self):
-        return db.session.execute(Select(Chapter).filter(Chapter > self).order_by(Chapter.tome, Chapter.chapter)).scalar()
+        return db.session.execute(Select(Chapter).where(Chapter.title_id == self.title_id).filter(Chapter > self).order_by(Chapter.tome, Chapter.chapter)).scalar()
 
     @hybrid_method
     def get_previous(self):
-        return db.session.execute(Select(Chapter).filter(Chapter < self).order_by(Chapter.tome, Chapter.chapter)).scalar()
+        return db.session.execute(Select(Chapter).where(Chapter.title_id == self.title_id).filter(Chapter < self).order_by(Chapter.tome, Chapter.chapter)).scalar()
 
     def to_dict(self):
         return {
