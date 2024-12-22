@@ -34,3 +34,16 @@ def add_comment():
     comment.add()
 
     return jsonify(comment.to_dict())
+
+
+@bp.route("/comments", methods=["DELETE"])
+@login_required
+def delete_comment():
+    if current_user.role < 4:
+        return "", 403
+    comment_id = request.json["comment"]
+
+    comment = Comment.get(comment_id)
+
+    comment.remove()
+    return {"status": "ok"}

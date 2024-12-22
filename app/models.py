@@ -567,15 +567,15 @@ votes = Table(
     "votes",
     db.metadata,
     Column("user_id", Integer(), ForeignKey("users.id")),
-    Column("comment_id", Integer(), ForeignKey("comments.id")),
-    Column("type", Integer(), )
+    Column("comment_id", Integer(), ForeignKey("comments.id", ondelete="CASCADE")),
+    Column("type", Integer()),
 )
 
 
 class Comment(db.Model):
     __tablename__ = "comments"
 
-    id: Mapped[int] = mapped_column(nullable=False, unique=True, autoincrement=True, primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, nullable=False, unique=True, autoincrement=True)
     text: Mapped[str] = mapped_column(nullable=False)
     date: Mapped[datetime] = mapped_column(nullable=False,
                                            default=lambda: datetime.utcnow())

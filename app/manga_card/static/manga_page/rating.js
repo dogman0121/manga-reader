@@ -26,52 +26,52 @@ class Rating extends Component {
         return `
             <ul class="rating__list">
                 <li class="rating__item rating__option" data-stars="10">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">10</span>
                     <span class="rating__option-description">Превосходно!!!</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="9">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">9</span>
                     <span class="rating__option-description">Превосходно</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="8">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">8</span>
                     <span class="rating__option-description">Супер</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="7">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">7</span>
                     <span class="rating__option-description">Отлично</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="6">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">6</span>
                     <span class="rating__option-description">Хорошо</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="5">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">5</span>
                     <span class="rating__option-description">Неплохо</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="4">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">4</span>
                     <span class="rating__option-description">С пивом пойдет</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="3">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">3</span>
                     <span class="rating__option-description">Плохо</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="2">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">2</span>
                     <span class="rating__option-description">Ужасно</span>
                 </li>
                 <li class="rating__item rating__option" data-stars="1">
-                    <img class="rating__option-image" src="../static/manga_card/manga_card/images/star.svg">
+                    <img class="rating__option-image" src="/manga/static/images/star.svg">
                     <span class="rating__option-number">1</span>
                     <span class="rating__option-description">Отвратительно</span>
                 </li>

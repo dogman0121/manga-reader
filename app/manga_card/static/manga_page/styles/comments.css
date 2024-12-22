@@ -114,6 +114,25 @@
     word-break: break-word;
 }
 
+.comments__options-button {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 0;
+}
+
+.comments__options-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.comments__option {
+    cursor: pointer;
+}
+
+.comments__option_delete {
+    color: #FF0000;
+}
 
 /* Comment Panel */
 
@@ -122,6 +141,7 @@
     flex-direction: row;
     column-gap: 20px;
     align-items: center;
+    margin-top: 5px;
 }
 
 .comments__reactions {

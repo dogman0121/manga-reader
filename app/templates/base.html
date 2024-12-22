@@ -18,7 +18,6 @@
             }
         }
         setColorScheme(localStorage.getItem("color-scheme")||"light");
-
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +26,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='base/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='header/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='header/dropdown.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename="theme/style.css") }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='footer/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='search/search.css')  }}">
@@ -71,12 +69,13 @@
         {% block json_data %}
         {% endblock %}
     </script>
+    <script src="{{ url_for('static', filename='modules/component/component.js') }}"></script>
     <script src="{{ url_for('static', filename='theme/switch_theme.js') }}"></script>
     <script src="{{ url_for('static', filename='header/adaptive.js') }}"></script>
-    <script src="{{ url_for('static', filename='base/dropdown.js') }}"></script>
     <script src="{{ url_for('static', filename='base/data.js') }}"></script>
     <script src="{{ url_for('static', filename='search/search.js') }}"></script>
     <script src="{{ url_for('static', filename='header/show-search.js') }}"></script>
+    <script src="{{ url_for('static', filename='header/profile.js') }}"></script>
     {% block footer %}
     {% endblock %}
 </body>

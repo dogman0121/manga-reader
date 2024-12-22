@@ -32,6 +32,8 @@
 
 .rating__option-image {
     vertical-align: middle;
+    width: 20px;
+    height: 20px;
 }
 
 .rating__option-number {

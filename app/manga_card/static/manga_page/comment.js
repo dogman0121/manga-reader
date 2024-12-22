@@ -1,3 +1,33 @@
+class CommentOptions extends Component{
+    constructor(comment) {
+        super();
+
+        this.comment = comment;
+    }
+    html() {
+        if (DATA.user.role === 4){
+            return `
+                <ul class="comments__options-list">
+                    <li class="comments__option comments__option_delete">Удалить</li>
+                </ul>
+            `
+        }
+        return `
+            <ul class="comments__options-list">
+                <li class="comments__option">Пожаловаться</li>
+            </ul>
+        `
+    }
+
+    events(element) {
+        this.element.addEventListener("click", this.onClick.bind(this));
+    }
+
+    onClick(event) {
+        this.dispatchEvent(new CustomEvent("optionSelected", {detail: {event: event}}));
+    }
+}
+
 class CommentBody extends Component{
     constructor(comment) {
         super();
@@ -17,10 +47,45 @@ class CommentBody extends Component{
                         <span class="comments__user-name">${this.comment.user.login}</span>
                         <span class="comments__date">${howOld}</span>
                     </div>
+                    <div class="comments__options-button">
+                        <svg width="100%" height="100%" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-three-dots-vertical">
+                          <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        </svg>
+                    </div>
                 </div>
                 <div class="comments__text">${this.comment.text}</div>
             </div>
         `;
+    }
+
+    events(element) {
+        this.element.querySelector(".comments__options-button").addEventListener("click", this.onCallOptions.bind(this));
+    }
+
+    onCallOptions(event) {
+        const options = new CommentOptions(this.comment);
+        this.dropDown = new Dropdown(this.element.querySelector(".comments__options-button"), options);
+        options.addEventListener("optionSelected", this.onClickOptions.bind(this));
+        this.dropDown.show();
+    }
+
+    onClickOptions(event) {
+        if (event.detail.event.target.classList.contains("comments__option_delete")) {
+            fetch("/api/comments", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    comment: this.comment.id
+                })
+            })
+                .then(response => response.json())
+                .then(text => {
+                    this.comment.element.remove();
+                    this.dropDown.hide();
+                })
+        }
     }
 
     formatTimedelta(timeDelta) {
@@ -476,7 +541,7 @@ class TitleComment extends Comment {
     events(){
         this.commentForm.addEventListener("commentSend", (e) => this.commentAnswers.addFront(e.detail.comment));
         window.addEventListener("scroll", () => {
-            let commentsList = document.querySelector(".comment__answers");
+            let commentsList = document.querySelector(".comments__answers-list");
             let commentsCords = commentsList.getBoundingClientRect();
             let commentsBottom = commentsCords.bottom;
             if((commentsBottom - document.documentElement.clientHeight) < 10)
