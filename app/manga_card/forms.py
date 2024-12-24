@@ -31,7 +31,7 @@ class AddMangaForm(FlaskForm):
             self.title = Title()
             return
 
-        self.title = Title.get_by_id(title_id)
+        self.title = Title.get(title_id)
 
         if self.validate_on_submit():
             return

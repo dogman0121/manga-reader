@@ -4,12 +4,30 @@
     box-sizing: border-box;
 }
 
+html, body {
+    scrollbar-gutter: stable;
+}
+
 body {
     overflow-x: hidden;
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
     background-color: var(--body-background);
     color: var(--text-color);
+}
+
+body::-webkit-scrollbar {
+    width: 12px;
+}
+
+body::-webkit-scrollbar-button {
+    display: none;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb-color);
+    border-radius: 8px;
+    border: 2px solid var(--body-background);
 }
 
 main {

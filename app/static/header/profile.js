@@ -1,6 +1,5 @@
 class ProfileMenu extends Component {
     html() {
-        console.log(localStorage.getItem("color-scheme") === "light");
         return `
             <div class="dropdown-menu profile-menu">
                 <a href="/profile/${DATA.user.id}" class="profile-menu__option">

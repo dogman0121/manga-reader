@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename="theme/style.css") }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='footer/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='search/search.css')  }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='modules/dropdown/dropdown.css') }}">
     <link type="image/png" sizes="96x96" rel="icon" href="{{ url_for('static', filename="base/images/icon-96.png") }}">
     {% block header %}
     {% endblock %}
@@ -66,10 +67,14 @@
         {% include "footer.html" %}
     </footer>
     <script class="DATA" type="application/json">
-        {% block json_data %}
-        {% endblock %}
+        {
+            "user": {{ user_json | safe }},
+            {% block json_data %}
+            {% endblock %}
+        }
     </script>
     <script src="{{ url_for('static', filename='modules/component/component.js') }}"></script>
+    <script src="{{ url_for('static', filename='modules/dropdown/dropdown.js') }}"></script>
     <script src="{{ url_for('static', filename='theme/switch_theme.js') }}"></script>
     <script src="{{ url_for('static', filename='header/adaptive.js') }}"></script>
     <script src="{{ url_for('static', filename='base/data.js') }}"></script>

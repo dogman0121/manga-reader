@@ -9,12 +9,12 @@ function Modal(element) {
 
     this.open = function () {
         document.body.append(this.modal);
-        document.body.style.overflowY = "hidden";
+        document.body.style.overflow = "hidden";
     }
 
     this.close = function () {
         this.modal.remove();
-        document.body.style.overflowY = null;
+        document.body.style.overflow = null;
     }
 
     this._callbackClose = function (event){

@@ -3,6 +3,7 @@
     padding: 0;
 }
 
+
 body {
     overflow-x: hidden;
     font-family: 'Poppins', sans-serif;
@@ -64,6 +65,7 @@ body {
 }
 
 .search__main {
+    margin-top: 5px;
     padding: 0 20px 15px;
 }
 
@@ -72,6 +74,19 @@ body {
     display: flex;
     flex-direction: column;
     row-gap: 10px;
+}
+
+.search__results::-webkit-scrollbar {
+    width: 7px;
+}
+
+.search__results::-webkit-scrollbar-button {
+    display: none;
+}
+
+.search__results::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb-color);
+    border-radius: 8px;
 }
 
 .search__filters {
