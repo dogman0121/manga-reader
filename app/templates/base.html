@@ -67,11 +67,7 @@
         {% include "footer.html" %}
     </footer>
     <script class="DATA" type="application/json">
-        {
-            "user": {{ user_json | safe }},
-            {% block json_data %}
-            {% endblock %}
-        }
+        {{ json | safe }}
     </script>
     <script src="{{ url_for('static', filename='modules/component/component.js') }}"></script>
     <script src="{{ url_for('static', filename='modules/dropdown/dropdown.js') }}"></script>

@@ -1,4 +1,4 @@
-from flask import request, render_template, url_for, redirect
+from flask import request, url_for, redirect
 from flask_login import current_user
 from app.models import Chapter, Title, Team
 from os import listdir
@@ -6,7 +6,7 @@ from app.chapters import bp
 from app.chapters.forms import ChapterForm
 import os
 import shutil
-import json
+from app.utils import render
 
 
 def clean_folder(path):
@@ -20,32 +20,29 @@ def clean_folder(path):
 
 @bp.route("/<int:chapter_id>")
 def get_chapter(chapter_id):
+    jsn = {}
     chapter = Chapter.get(chapter_id)
     title = chapter.title
 
     if current_user.is_authenticated and title.get_progress(current_user):
         title.add_progress(current_user, chapter, 0)
 
-    title_json = json.dumps(title.to_dict(), ensure_ascii=False)
-    chapter_json = json.dumps(chapter.to_dict(), ensure_ascii=False)
-    chapters_list_json = json.dumps([i.to_dict() for i in title.chapters])
+    jsn["title"] = title.to_dict()
+    jsn["chapter"] = chapter.to_dict()
 
     pages = chapter.get_pages()
-    pages_json = json.dumps(pages)
+    jsn["pages"] = pages
 
     if chapter.title.type.name == "манга":
         template_url = "chapter_manga.html"
     else:
         template_url = "chapter_manhwa.html"
 
-    return render_template(template_url,
+    return render(template_url,
                            chapter=chapter,
                            pages=pages,
                            user=current_user,
-                           title_json=title_json,
-                           chapter_json=chapter_json,
-                           chapters_list_json=chapters_list_json,
-                           pages_json=pages_json
+                           json=jsn
                            )
 
 
@@ -72,7 +69,7 @@ def edit_chapter(chapter_id):
     form.name.data = chapter.name
 
     chapter.pages_count = len(os.listdir(f"app/static/media/chapters/{chapter.id}"))
-    return render_template("add_chapter.html", user=current_user, form=form, chapter=chapter,
+    return render("add_chapter.html", user=current_user, form=form, chapter=chapter,
                            mode="edit")
 
 
@@ -108,4 +105,4 @@ def add_chapter():
             page.save(f"app/static/media/chapters/{chapter.id}/{page.filename}")
 
         return redirect(url_for("manga.manga_page", title_id=title_id))
-    return render_template("add_chapter.html", user=current_user, form=form, mode="add")
+    return render("add_chapter.html", user=current_user, form=form, mode="add")

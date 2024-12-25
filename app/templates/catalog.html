@@ -141,10 +141,6 @@
     </div>
 </div>
 {% endblock %}
-
-{% block json_data %}
-    "titles":  {{titles_json | safe}}
-{% endblock %}
 {% block footer %}
 <script src="{{ url_for('static', filename='catalog/get_titles.js') }}"></script>
 <script src="{{ url_for('static', filename='catalog/titles_on_enter.js') }}"></script>

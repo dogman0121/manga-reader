@@ -1,14 +1,15 @@
 from app.team import bp
-from flask import render_template, request, redirect, url_for
+from flask import  request, redirect, url_for
 from flask_login import current_user
 from app.team.forms import AddTeamForm
 from app.models import Team, User
+from app.utils import render
 
 
 @bp.route("/<int:team_id>")
 def get_team(team_id):
     team = Team.get(team_id)
-    return render_template("team/team.html", user=current_user, team=team)
+    return render("team/team.html", user=current_user, team=team)
 
 
 @bp.route("/add", methods=["GET", "POST"])
@@ -32,7 +33,7 @@ def add_team():
 
         return redirect(url_for("team.get_team", team_id=team.id))
 
-    return render_template("team/add_team.html", form=form, user=current_user, mode="add")
+    return render("team/add_team.html", form=form, user=current_user, mode="add")
 
 
 @bp.route("/<int:team_id>/edit", methods=["GET", "POST"])
@@ -58,7 +59,7 @@ def edit_team(team_id):
     form.discord_link.data = team.discord_link
     form.telegram_link.data = team.telegram_link
 
-    return render_template("team/add_team.html", form=form, user=current_user, team=team, mode="edit")
+    return render("team/add_team.html", form=form, user=current_user, team=team, mode="edit")
 
 
 @bp.route("<int:team_id>/leave")
