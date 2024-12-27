@@ -47,7 +47,10 @@ def create_app(config):
     from . import search
     app.register_blueprint(search.bp, url_prefix="/search")
 
-    from . import admin
-    admin.admin.init_app(app)
+    from .admin import admin
+    admin.init_app(app)
+
+    from .error import register_error_handlers
+    register_error_handlers(app)
 
     return app

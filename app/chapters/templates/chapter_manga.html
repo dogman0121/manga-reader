@@ -17,6 +17,3 @@
 {% block footer %}
 <script src="{{ url_for("chapters.static", filename="chapter_manga/click_page.js") }}"></script>
 {% endblock %}
-{% block json_data %}
-    {"title": {{ title_json | safe }}, "chapter": {{ chapter_json | safe }}, "pages": {{ pages_json | safe }}}
-{% endblock %}
