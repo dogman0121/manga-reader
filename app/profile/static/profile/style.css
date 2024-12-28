@@ -35,14 +35,15 @@ li {
 }
 
 .profile {
+    padding: 0 30px;
     display: flex;
     flex-direction: row;
     position: relative;
 }
 
 .profile__avatar {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
     border-radius: 50%;
 }
 
@@ -75,7 +76,7 @@ li {
 
 .profile__options {
     position: absolute;
-    right: 0;
+    right: 30px;
     top: 0;
     display: flex;
     flex-direction: row;

@@ -146,15 +146,6 @@
             </div>
         </div>
         <div class="sections">
-            <div class="sections__buttons sections-buttons">
-                <div class="sections-buttons__item sections-buttons__item_active" id="chapters-button">Главы</div>
-                <div class="sections-buttons__item" id="comments-button">Комментарии</div>
-            </div>
-            <section class="sections__content">
-                <div id="chapters" class="section section_selected">
-
-                </div>
-            </section>
         </div>
     </div>
 {% endblock %}
@@ -168,6 +159,7 @@
     <script src="{{ url_for('manga.static', filename='manga_page/chapters.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/comment.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/sections.js') }}"></script>
+    <script src="{{ url_for('manga.static', filename='manga_page/section.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/adaptive.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/rating.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/saves.js') }}"></script>

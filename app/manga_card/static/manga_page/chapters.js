@@ -233,13 +233,3 @@ class EditChapterSection extends Component {
         `
     }
 }
-
-const a = document.querySelector("#chapters");
-
-let translators;
-if (DATA.title.translators.length)
-    translators = new ChaptersBlock(DATA.title.translators);
-else
-    translators = new NoChaptersBlock();
-
-a.replaceWith(translators.render());

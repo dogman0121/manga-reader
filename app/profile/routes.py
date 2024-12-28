@@ -8,7 +8,7 @@ from app.utils import render
 
 @bp.route("/<int:profile_id>")
 def get_profile(profile_id):
-    return render("profile/profile.html",
+    return render("profile.html",
                            profile=User.get_by_id(profile_id),
                            user=current_user)
 
@@ -19,7 +19,7 @@ def edit_profile():
     section = request.args.get("section")
     general_information_form = GeneralInformationForm()
     change_password_form = ChangePasswordForm()
-    return render("profile/edit_profile.html",
+    return render("edit_profile.html",
                            general_settings=general_information_form,
                            password_settings=change_password_form,
                            user=current_user,

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block header %}
-<link rel="stylesheet" href="{{ url_for('static', filename='profile/profile/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('profile.static', filename='profile/style.css') }}">
 <title>{{ profile.login }}</title>
 {% endblock %}
 {% block content %}
@@ -34,7 +34,7 @@
                 {% endif %}
                 <a class="profile__settings settings_button" href="{{ url_for('profile.edit_profile') }}">
                     <span class="settings_button__text" >Настройки</span>
-                    <img class="settings_button__icon" src="{{ url_for('static', filename='profile/profile/images/settings.svg') }}">
+                    <img class="settings_button__icon" src="{{ url_for('profile.static', filename='profile/images/settings.svg') }}">
                 </a>
             </div>
         {% elif user.is_team_leader() and profile.team_id == None %}
@@ -48,17 +48,17 @@
         {% endif %}
     {% endif %}
 </div>
-<div class="saved-titles">
-    <h2 class="saved-titles__header">Сохраненные тайтлы</h2>
-    <div class="saved_titles__titles">
-        {% for title in user.saves %}
-            <a href="{{ url_for("manga.manga_page", title_id=title.id) }}">
-                <div class="saved-title">
-                    <img class="saved-title__poster" src="{{ title.get_poster() }}">
-                    <span class="saved-title__name">{{ title.name_russian }}</span>
-                </div>
-            </a>
-        {% endfor %}
+<div class="sections">
+    <div class="sections">
+        <div class="sections__buttons sections-buttons">
+            <div class="sections-buttons__item sections-buttons__item_active" id="chapters-button">Главы</div>
+            <div class="sections-buttons__item" id="comments-button">Комментарии</div>
+        </div>
+        <section class="sections__content">
+            <div id="chapters" class="section section_selected">
+
+            </div>
+        </section>
     </div>
 </div>
 {% endblock %}

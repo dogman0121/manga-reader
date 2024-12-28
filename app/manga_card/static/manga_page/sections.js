@@ -1,69 +1,105 @@
-function underLineSection(element) {
-    let chosen = document.querySelector(".sections-buttons__item_active");
+class SectionList extends Component {
+    constructor(sections) {
+        super();
 
-    if (chosen === element)
-        return null;
-
-    chosen.classList.remove("sections-buttons__item_active");
-
-    element.classList.add("sections-buttons__item_active");
-}
-
-
-let sections = document.querySelector(".sections-buttons");
-
-sections.addEventListener("click", (event) => {
-    if (!event.target.classList.contains("sections-buttons__item"))
-        return null;
-
-    if (event.target.id === "chapters-button")
-        chooseSection("chapters");
-    if (event.target.id === "comments-button")
-        chooseSection("comments");
-    if (event.target.id === "info-button")
-        chooseSection("info");
-    underLineSection(event.target);
-});
-
-function selectSection(sectionName){
-    document.querySelector(".section_selected").classList.remove("section_selected");
-    if (sectionName === "chapters")
-        document.querySelector("#chapters").classList.add("section_selected");
-    if (sectionName === "comments")
-        document.querySelector("#comments").classList.add("section_selected");
-    if (sectionName === "info")
-        document.querySelector("#info").classList.add("section_selected");
-}
-
-function chooseSection(sectionName){
-
-    if (sectionName === "chapters"){
-        selectSection("chapters");
+        this.sections = sections;
+        this.selectedSection = this.sections[0];
+        this.currentContent = new State(this.sections[0].content)
     }
 
-    if (sectionName === "comments") {
-        if (!document.querySelector("#comments"))
-            document.querySelector(".sections__content").append(new Section("comments", new TitleComment()).render());
-
-        selectSection("comments");
+    html() {
+        return `
+            <div class="sections">
+                <div class="sections__buttons sections-buttons">
+                    {{ this.sections.map(section => section.button) }}
+                </div>
+                <section class="sections__content">
+                    {{ this.currentContent }}
+                </section>
+            </div>
+        `
     }
 
-    if (sectionName === "info"){
-        selectSection("info");
+    addSection(sectionName, sectionPlaceholder, sectionContent){
+        this.sections.add(new Section(sectionName, sectionPlaceholder, sectionContent));
+    }
+
+    events(element) {
+        this.selectedSection.select();
+        this.sections.forEach((section) => section.addEventListener("chooseSection", this.onChooseSection.bind(this)));
+    }
+
+    onChooseSection(event) {
+        const section = event.detail.section;
+
+        section.select();
+        this.selectedSection.unselect();
+        this.selectedSection = section;
+
+        this.currentContent.set(this.selectedSection.content);
     }
 }
+
 
 class Section extends Component {
-    constructor(sectionName, content) {
+    constructor(name, placeholder, content) {
         super();
-        this.content = content;
+
+        this.name = name;
+        this.button = new SectionButton(name, placeholder);
+        this.content = new SectionContent(name, content);
+
+        this.button.addEventListener("click", this.onClick.bind(this));
+    }
+
+    onClick(event){
+        this.dispatchEvent(new CustomEvent("chooseSection", {detail: {section: this}}));
+    }
+
+    select() {
+        this.button.element.classList.add("sections-buttons__item_active");
+    }
+
+    unselect() {
+        this.button.element.classList.remove("sections-buttons__item_active");
+    }
+}
+
+class SectionButton extends Component{
+    constructor(sectionName, sectionPlaceholder) {
+        super();
+
         this.sectionName = sectionName;
+        this.sectionPlaceholder = sectionPlaceholder;
+    }
+
+    html() {
+        return `
+            <div class="sections-buttons__item" id=\"${ this.sectionName }\"-button">{{ this.sectionPlaceholder }}</div>
+        `
+    }
+
+    events(element) {
+        element.addEventListener("click", this.onClick.bind(this))
+    }
+
+    onClick(event) {
+        this.dispatchEvent(new CustomEvent("click"));
+    }
+}
+
+class SectionContent extends Component {
+    constructor(sectionName, sectionContent) {
+        super();
+
+        this.sectionName = sectionName;
+        this.sectionContent = sectionContent;
     }
 
     html() {
         return `
             <div id="${this.sectionName}" class="section">
-                {{ this.content }}
+                {{ this.sectionContent }}
             </div>
         `
     }

@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='modules/modal/modal.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='modules/inputs/inputs.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='inputs.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='profile/edit_profile/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('profile.static', filename='edit_profile/style.css') }}">
 <title>Редактирование профиля</title>
 {% endblock %}
 {% block content %}
@@ -85,10 +85,10 @@
 {% endblock %}
 {% block footer %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.js" integrity="sha512-Zt7blzhYHCLHjU0c+e4ldn5kGAbwLKTSOTERgqSNyTB50wWSI21z0q6bn/dEIuqf6HiFzKJ6cfj2osRhklb4Og==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="{{ url_for('static', filename='profile/edit_profile/change_form.js') }}"></script>
+<script src="{{ url_for('profile.static', filename='edit_profile/change_form.js') }}"></script>
 <script src="{{ url_for('static', filename='modules/modal/modal.js') }}"></script>
 <script src="{{ url_for('static', filename='modules/inputs/inputs.js') }}"></script>
-<script src="{{ url_for('static', filename='profile/edit_profile/show_loaded_photo.js') }}"></script>
-<script src="{{ url_for('static', filename='profile/edit_profile/cropp_user_photo.js') }}"></script>
-<script src="{{ url_for('static', filename='profile/edit_profile/improve_inputs.js') }}"></script>
+<script src="{{ url_for('profile.static', filename='edit_profile/show_loaded_photo.js') }}"></script>
+<script src="{{ url_for('profile.static', filename='edit_profile/cropp_user_photo.js') }}"></script>
+<script src="{{ url_for('profile.static', filename='edit_profile/improve_inputs.js') }}"></script>
 {% endblock %}
