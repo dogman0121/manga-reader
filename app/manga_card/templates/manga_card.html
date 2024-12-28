@@ -5,7 +5,7 @@
     <meta property="og:description" content="{{ title.description }}">
     <meta property="og:image" content="{{ title.get_poster() }}">
     <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/sections.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='modules/sections/sections.css') }}">
     <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/comments.css') }}">
     <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/description.css') }}">
     <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/chapters.css') }}">
@@ -158,7 +158,7 @@
     <script src="{{ url_for("static", filename="textarea.js") }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/chapters.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/comment.js') }}"></script>
-    <script src="{{ url_for('manga.static', filename='manga_page/sections.js') }}"></script>
+    <script src="{{ url_for('static', filename='modules/sections/sections.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/section.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/adaptive.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/rating.js') }}"></script>
