@@ -425,13 +425,15 @@ class CommentAnswers extends Component{
 
     addBack(comment) {
         this.answers.push(comment);
-        this.element.querySelector(".comments__answers-list").append(comment.render());
+        if (this.element)
+            this.element.querySelector(".comments__answers-list").append(comment.render());
         this.comment.answersCount ++;
     }
 
     addFront(comment){
         this.answers.push(comment);
-        this.element.querySelector(".comments__answers-list").prepend(comment.render());
+        if (this.element)
+            this.element.querySelector(".comments__answers-list").prepend(comment.render());
         this.comment.answersCount ++;
     }
 
