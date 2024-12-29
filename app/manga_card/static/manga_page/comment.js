@@ -425,15 +425,13 @@ class CommentAnswers extends Component{
 
     addBack(comment) {
         this.answers.push(comment);
-        if (this.element)
-            this.element.querySelector(".comments__answers-list").append(comment.render());
+        this.element.querySelector(".comments__answers-list").append(comment.render());
         this.comment.answersCount ++;
     }
 
     addFront(comment){
         this.answers.push(comment);
-        if (this.element)
-            this.element.querySelector(".comments__answers-list").prepend(comment.render());
+        this.element.querySelector(".comments__answers-list").prepend(comment.render());
         this.comment.answersCount ++;
     }
 
@@ -528,7 +526,6 @@ class TitleComment extends Comment {
     constructor() {
         super(undefined, DATA.title, {}, "");
         this.page = 1;
-        this.loadComments();
     }
 
     html() {
@@ -541,6 +538,7 @@ class TitleComment extends Comment {
     }
 
     events(){
+        this.loadComments();
         this.commentForm.addEventListener("commentSend", (e) => this.commentAnswers.addFront(e.detail.comment));
         window.addEventListener("scroll", () => {
             let commentsList = document.querySelector(".comments__answers-list");
