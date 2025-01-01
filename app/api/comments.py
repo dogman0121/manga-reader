@@ -23,10 +23,11 @@ def get_comments():
 
 
 @bp.route("/comments", methods=["POST"])
+@login_required
 def add_comment():
     text = request.json.get("text")
     title_id = int(request.json.get("title"))
-    user_id = int(request.json.get("user"))
+    user_id = current_user.id
     parent_id = int(request.json.get("parent")) if request.json.get("parent") is not None else None
     root_id = int(request.json.get("root")) if request.json.get("root") is not None else None
 
