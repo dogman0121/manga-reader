@@ -11,14 +11,13 @@ def test_adding_full_params_comments(app, client):
         title.add()
 
         response = client.post("/api/comments", json={
-            "user": 1,
             "title": 1,
             "root": 1,
             "parent": 1,
             "text": "хехехе"
         })
 
-        assert response.status_code == 200
+        assert response.status_code == 401
 
 
 def test_adding_semi_params_comments(app, client):
@@ -36,7 +35,7 @@ def test_adding_semi_params_comments(app, client):
             "text": "хехехе"
         })
 
-        assert response.status_code == 200
+        assert response.status_code == 401
 
 
 def test_parse_comment_data(app):
