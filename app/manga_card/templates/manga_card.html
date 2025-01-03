@@ -4,12 +4,13 @@
     <meta property="og:title" content="Читать {{ title.type.name }} {{ title.name_russian }} бесплатно">
     <meta property="og:description" content="{{ title.description }}">
     <meta property="og:image" content="{{ title.get_poster() }}">
-    <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/style.css') }}">
+    {% assets filters="cssmin", output="min/manga/style.css", "modules/comment/comment.css",
+        "manga/manga_page/styles/description.css", "manga/manga_page/styles/chapters.css",
+        "manga/manga_page/styles/rating.css", "manga/manga_page/styles/style.css"
+    %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
     <link rel="stylesheet" href="{{ url_for('static', filename='modules/sections/sections.css') }}">
-    <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/comments.css') }}">
-    <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/description.css') }}">
-    <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/chapters.css') }}">
-    <link rel="stylesheet" href="{{ url_for('manga.static', filename='manga_page/styles/rating.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='modules/modal/modal.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='modules/notify/notify.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='modules/comment/comment.css') }}">
@@ -158,15 +159,23 @@
     "title": {{ title_json | safe }}
 {% endblock %}
 {% block footer %}
-    <script src="{{ url_for('static', filename='modules/notify/notify.js') }}"></script>
-    <script src="{{ url_for('static', filename='modules/modal/modal.js') }}"></script>
-    <script src="{{ url_for('static', filename='modules/comment/comment.js') }}"></script>
-    <script src="{{ url_for('static', filename='modules/sections/sections.js') }}"></script>
+    {% assets filters="jsmin", output="min/manga/rating.js", "modules/modal/modal.js",
+        "modules/notify/notify.js", "manga/manga_page/rating.js"
+    %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% assets filters="jsmin", output="min/manga/comment.js", "modules/comment/comment.js",
+        "manga/manga_page/comment.js"
+    %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% assets filters="jsmin", output="min/manga/section.js", "modules/sections/sections.js",
+        "manga/manga_page/section.js"
+    %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
     <script src="{{ url_for("static", filename="textarea.js") }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/chapters.js') }}"></script>
-    <script src="{{ url_for('manga.static', filename='manga_page/comment.js') }}"></script>
-    <script src="{{ url_for('manga.static', filename='manga_page/section.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/adaptive.js') }}"></script>
-    <script src="{{ url_for('manga.static', filename='manga_page/rating.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/saves.js') }}"></script>
 {% endblock %}
