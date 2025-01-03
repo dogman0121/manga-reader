@@ -10,13 +10,13 @@ class CommentOptions extends Component{
                 <ul class="comments__options-list">
                     <li class="comments__option comments__option_delete">Удалить</li>
                 </ul>
-            `
+            `;
         }
         return `
             <ul class="comments__options-list">
                 <li class="comments__option">Пожаловаться</li>
             </ul>
-        `
+        `;
     }
 
     events(element) {
@@ -72,7 +72,7 @@ class CommentBody extends Component{
 
     onClickOptions(event) {
         if (event.detail.event.target.classList.contains("comments__option_delete"))
-            this.dispatchEvent(new CustomEvent("delete"))
+            this.dispatchEvent(new CustomEvent("delete"));
         this.dropDown.hide();
     }
 
@@ -87,11 +87,11 @@ class CommentBody extends Component{
 
         let findEnd = (n) => {
             if ((n % 10 > 4) || (20 < n < 10) || (n % 10 === 0))
-                return 3
+                return 3;
             else if (1 < n % 10 < 5)
-                return 2
+                return 2;
             else
-                return 1
+                return 1;
         }
 
         if (timeDelta / 31536000000 >= 1){ // Проверяем если прошел хотя бы год после публикации
@@ -140,7 +140,7 @@ class CommentPanel extends Component{
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor"/>
                 </svg>
             </span>
-        `
+        `;
 
         return `
             <div class="comments__panel">
@@ -160,7 +160,7 @@ class CommentPanel extends Component{
                 <span class="comments__answer-button">ответить</span>
                 ${ this.comment.answersCount ? answersButton : "" }
             </div>
-        `
+        `;
     }
 
     events(element) {
@@ -241,7 +241,7 @@ class CommentForm extends Component{
                         <button class="comments__form-send">Отправить</button>
                     <div>
                 </div>
-            `
+            `;
         else
             return `
                 <div class="comments__form">
@@ -250,7 +250,7 @@ class CommentForm extends Component{
                         <a href="/auth" class="comments__not-auth-login">Войти</a>
                     </div>
                 </div>
-            `
+            `;
     }
 
     events(element) {
@@ -311,7 +311,7 @@ class CommentAnswers extends Component{
                 <div class="comments__answers-list">
                 </div>
             </div>
-        `
+        `;
     }
 
     addBack(comment) {
