@@ -3,12 +3,15 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_assets import Environment
+from flask_minify import Minify
 
 
 login_manager = LoginManager()
 migrate = Migrate()
 db = SQLAlchemy()
 mail = Mail()
+assets = Environment()
 
 
 def create_app(config):
@@ -19,6 +22,7 @@ def create_app(config):
     db.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
+    assets.init_app(app)
 
     from . import main
     app.register_blueprint(main.bp, url_prefix="/")
@@ -52,5 +56,7 @@ def create_app(config):
 
     from .error import register_error_handlers
     register_error_handlers(app)
+
+    Minify(app=app, js=True, cssless=True, html=True)
 
     return app

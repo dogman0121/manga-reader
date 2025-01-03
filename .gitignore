@@ -6,3 +6,5 @@ app/static/media/
 .pytest_cache/
 manage.py
 create_db.py
+app/static/min/
+app/static/.webassets-cache/

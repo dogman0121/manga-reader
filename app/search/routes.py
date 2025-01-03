@@ -1,8 +1,5 @@
-from flask import Blueprint, request, jsonify
+from app.search import bp
 from app.models import Title, Team
-
-bp = Blueprint("search", __name__)
-
 
 @bp.route("/")
 def search():
