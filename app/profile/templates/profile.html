@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block header %}
-    <link rel="stylesheet" href="{{ url_for('profile.static', filename='profile/post.css') }}">
-    <link rel="stylesheet" href="{{ url_for('profile.static', filename='profile/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='modules/sections/sections.css') }}">
+    {% assets filters="cssmin", output="min/profile/style.css", "modules/comment/comment.css", "profile/profile/post.css",
+        "profile/profile/style.css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+    {% assets filters="cssmin", output="min/sections.css", "modules/sections/sections.css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
     <title>{{ profile.login }}</title>
 {% endblock %}
 {% block content %}
@@ -58,7 +62,14 @@
     </div>
 {% endblock %}
 {% block footer %}
-    <script src="{{ url_for('static', filename='modules/sections/sections.js') }}"></script>
-    <script src="{{ url_for('profile.static', filename='profile/post.js') }}"></script>
-    <script src="{{ url_for('profile.static', filename='profile/section.js') }}"></script>
+    {% assets filters="jsmin", output="min/textarea.js", "textarea.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets%}
+    {% assets filters="jsmin", output="min/profile/section.js", "modules/sections/sections.js",
+        "profile/profile/section.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% assets filters="jsmin", output="min/profile/post.js", "modules/comment/comment.js", "profile/profile/post.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 {% endblock %}

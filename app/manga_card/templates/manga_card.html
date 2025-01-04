@@ -159,6 +159,9 @@
     "title": {{ title_json | safe }}
 {% endblock %}
 {% block footer %}
+    {% assets filters="jsmin", output="min/textarea.js", "textarea.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets%}
     {% assets filters="jsmin", output="min/manga/rating.js", "modules/modal/modal.js",
         "modules/notify/notify.js", "manga/manga_page/rating.js"
     %}
@@ -174,7 +177,6 @@
     %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    <script src="{{ url_for("static", filename="textarea.js") }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/chapters.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/adaptive.js') }}"></script>
     <script src="{{ url_for('manga.static', filename='manga_page/saves.js') }}"></script>

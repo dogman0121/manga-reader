@@ -1,9 +1,5 @@
 class CommentOptions extends Component{
-    constructor(comment) {
-        super();
 
-        this.comment = comment;
-    }
     html() {
         if (DATA.user.role === 4){
             return `
@@ -29,22 +25,25 @@ class CommentOptions extends Component{
 }
 
 class CommentBody extends Component{
-    constructor(comment) {
+    constructor(user, text, date) {
         super();
-        this.comment = comment;
+
+        this.user = user;
+        this.text = text;
+        this.date = date;
     }
 
     html() {
         let dateUTC = new Date().getTime() + new Date().getTimezoneOffset() * 60000;
-        let commentDate = this.comment.date;
+        let commentDate = this.date;
         let howOld = this.formatTimedelta(dateUTC - commentDate);
 
         return `
             <div class="comments__body">
                 <div class="comments__user user">
-                    <img class="comments__user-avatar" src="${this.comment.user.avatar}">
+                    <img class="comments__user-avatar" src="${this.user.avatar}">
                     <div class="comments__user-info">
-                        <span class="comments__user-name">${this.comment.user.login}</span>
+                        <span class="comments__user-name">${this.user.login}</span>
                         <span class="comments__date">${howOld}</span>
                     </div>
                     <div class="comments__options-button">
@@ -53,7 +52,7 @@ class CommentBody extends Component{
                         </svg>
                     </div>
                 </div>
-                <div class="comments__text">${this.comment.text}</div>
+                <div class="comments__text">${this.text}</div>
             </div>
         `;
     }
@@ -63,7 +62,7 @@ class CommentBody extends Component{
     }
 
     onCallOptions(event) {
-        const options = new CommentOptions(this.comment);
+        const options = new CommentOptions();
         options.addEventListener("optionSelected", this.onClickOptions.bind(this));
 
         this.dropDown = new Dropdown(this.element.querySelector(".comments__options-button"), options);
@@ -127,15 +126,19 @@ class CommentBody extends Component{
 }
 
 class CommentPanel extends Component{
-    constructor(comment) {
+    constructor(upVotes, downVotes, userVote, answersCount) {
         super();
-        this.comment = comment;
+
+        this.upVotes = upVotes;
+        this.downVotes = downVotes;
+        this.userVote = userVote;
+        this.answersCount = answersCount;
     }
 
     html() {
         let answersButton = `
             <span class="comments__show-answers show-answers">
-                ПОКАЗАТЬ ОТВЕТЫ(<span class="comments__show-answers-answers-count">${this.comment.answersCount}</span>)
+                ПОКАЗАТЬ ОТВЕТЫ(<span class="comments__show-answers-answers-count">${this.answersCount}</span>)
                 <svg class="comments__rating-down-image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor"/>
                 </svg>
@@ -145,20 +148,20 @@ class CommentPanel extends Component{
         return `
             <div class="comments__panel">
                 <div class="comments__rating">
-                    <div class="comments__rating-button comments__rating-up ${(this.comment.userVote === 1) ? " comments__rating-button_active" : ""}">
+                    <div class="comments__rating-button comments__rating-up ${(this.userVote === 1) ? " comments__rating-button_active" : ""}">
                         <svg class="comments__rating-image comments__rating-up-image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C12.2652 7 12.5196 7.10536 12.7071 7.29289L19.7071 14.2929C20.0976 14.6834 20.0976 15.3166 19.7071 15.7071C19.3166 16.0976 18.6834 16.0976 18.2929 15.7071L12 9.41421L5.70711 15.7071C5.31658 16.0976 4.68342 16.0976 4.29289 15.7071C3.90237 15.3166 3.90237 14.6834 4.29289 14.2929L11.2929 7.29289C11.4804 7.10536 11.7348 7 12 7Z" fill="currentColor"/>
                         </svg>
                     </div>
-                    <span class="comments__rating-text">${this.comment.upVotes - this.comment.downVotes}</span>
-                    <div class="comments__rating-button comments__rating-down${(this.comment.userVote === 0) ? " comments__rating-button_active" : ""}">
+                    <span class="comments__rating-text">${this.upVotes - this.downVotes}</span>
+                    <div class="comments__rating-button comments__rating-down${(this.userVote === 0) ? " comments__rating-button_active" : ""}">
                         <svg class="comments__rating-image comments__rating-down-image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor"/>
                         </svg>
                     </div>
                 </div>
                 <span class="comments__answer-button">ответить</span>
-                ${ this.comment.answersCount ? answersButton : "" }
+                ${ this.answersCount ? answersButton : "" }
             </div>
         `;
     }
@@ -220,9 +223,8 @@ class CommentPanel extends Component{
 }
 
 class CommentForm extends Component{
-    constructor(comment, minLength=0, maxLength=300 ) {
+    constructor(minLength=0, maxLength=300 ) {
         super();
-        this.comment = comment;
         this.minLength = minLength;
         this.maxLength = maxLength;
     }
@@ -300,11 +302,6 @@ class CommentForm extends Component{
 class CommentAnswers extends Component{
     answers = [];
 
-    constructor(comment) {
-        super();
-        this.comment = comment;
-    }
-
     html() {
         return `
             <div class="comments__answers">
@@ -354,10 +351,10 @@ class Comment extends Component{
         this.root = root;
         this.parent = parent;
 
-        this.commentBody = new CommentBody(this);
-        this.commentPanel = new CommentPanel(this);
-        this.commentForm = new CommentForm(this);
-        this.commentAnswers = new CommentAnswers(this);
+        this.commentBody = new CommentBody(this.user, this.text, this.date);
+        this.commentPanel = new CommentPanel(this.upVotes, this.downVotes, this.userVote, this.answersCount);
+        this.commentForm = new CommentForm();
+        this.commentAnswers = new CommentAnswers();
     }
 
     static createFromObj(obj) {

@@ -23,13 +23,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='base/normalize.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='base/color-scheme.css') }}">
-    {% assets filters="cssmin", output="min/base.css", "header/style.css", "base/style.css", "footer/style.css" %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='base/theme-button.css') }}">
+    {% assets filters="cssmin", output="min/base.css", "base/color-scheme.css", "header/style.css",
+        "base/style.css", "footer/style.css" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}">
     {% endassets %}
-    <link rel="stylesheet" href="{{ url_for('static', filename="theme/style.css") }}">
-    <link rel="stylesheet" href="{{ url_for('search.static', filename='search.css')  }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='modules/dropdown/dropdown.css') }}">
+    {% assets filters="cssmin", output="min/search.css", "search/search.css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+    {% assets filters="cssmin", output="min/dropdown.css", "modules/dropdown/dropdown.css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
     <link type="image/png" sizes="96x96" rel="icon" href="{{ url_for('static', filename="base/images/icon-96.png") }}">
     {% block header %}
     {% endblock %}
@@ -70,9 +74,10 @@
         {{ json | safe }}
     </script>
     <script src="{{ url_for('static', filename='base/data.js') }}"></script>
-    {% assets filters="jsmin", output="min/modules.js", "modules/component/component.js",
-        "modules/dropdown/dropdown.js"
-    %}
+    {% assets filters="jsmin", output="min/component.js", "modules/component/component.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets%}
+    {% assets filters="jsmin", output="min/dropdown.js", "modules/dropdown/dropdown.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets%}
     {% assets filters="jsmin", output="min/header.js", "header/show-search.js", "header/profile.js",

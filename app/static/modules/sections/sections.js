@@ -32,8 +32,8 @@ class SectionList extends Component {
     onChooseSection(event) {
         const section = event.detail.section;
 
-        section.select();
         this.selectedSection.unselect();
+        section.select();
         this.selectedSection = section;
 
         this.currentContent.set(this.selectedSection.content);

@@ -17,7 +17,7 @@ body {
 }
 
 body::-webkit-scrollbar {
-    width: 12px;
+    width: 8px;
 }
 
 body::-webkit-scrollbar-button {
@@ -27,7 +27,7 @@ body::-webkit-scrollbar-button {
 body::-webkit-scrollbar-thumb {
     background-color: var(--scroll-thumb-color);
     border-radius: 8px;
-    border: 2px solid var(--body-background);
+    border: 0px solid var(--body-background);
 }
 
 main {
@@ -47,8 +47,12 @@ a:visited {
 }
 
 input, textarea {
-    background-color: var(--body-background);
+    background-color: var(--inputs-option-background);
     color: var(--text-color);
+}
+
+textarea:focus {
+    outline: none;
 }
 
 button, input[type="submit"] {

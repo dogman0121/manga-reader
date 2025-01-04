@@ -24,7 +24,7 @@ class ProfileMenu extends Component {
                         Тема
                     </div>
                     <div class="theme-switcher">
-                        <input ${localStorage.getItem("color-scheme") === "light" ? "checked" : ""} type="checkbox" id="hide-checkbox">
+                        <input ${localStorage.getItem("color-scheme") === "light" ? "checked " : ""} type="checkbox" id="hide-checkbox">
                         <label for="hide-checkbox" class="toggle">
                             <span class="toggle-button">
                                 <span class="crater crater-1"></span>
@@ -55,7 +55,9 @@ class ProfileMenu extends Component {
     }
 
     events(element) {
-        element.querySelector(".theme-switcher").addEventListener("input", function (event){
+        console.log(element.querySelector(".theme-switcher > input"));
+        element.querySelector(".theme-switcher > input").addEventListener("input", function (event){
+            console.log(1234);
         if (event.target.checked)
             setColorScheme("light");
         else

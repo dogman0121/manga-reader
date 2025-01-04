@@ -1,0 +1,16 @@
+.comments__form {
+    display: block;
+}
+
+.posts__list {
+    margin-top: 20px;
+}
+
+.post {
+    padding: 20px 30px;
+    border-radius: 12px;
+    background-color: var(--body-background);
+
+    max-width: 800px;
+    border: 1px solid #D9D9D9;
+}
