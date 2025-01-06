@@ -87,21 +87,27 @@ class Post extends Comment {
     }
 
     html() {
+        let howOld = this.commentBody.formatTimedelta(
+            new Date().getTime() + new Date().getTimezoneOffset() * 60000 - this.date
+        );
+
         return `
             <div class="post" data-id="${this.id}">
-                <div class="comments__user user">
-                    <img class="comments__user-avatar" src="${this.user.avatar}">
-                    <div class="comments__user-info">
-                        <span class="comments__user-name">${this.user.login}</span>
-                        <span class="comments__date">${howOld}</span>
+                <div class="post__inner">
+                    <div class="post__author author">
+                        <img class="post__author-avatar" src="${this.user.avatar}">
+                        <div class="post__author-info">
+                            <span class="post__author-name">${this.user.login}</span>
+                            <span class="post__date">${howOld}</span>
+                        </div>
+                        <div class="post__options-button">
+                            <svg width="100%" height="100%" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-three-dots-vertical">
+                              <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="comments__options-button">
-                        <svg width="100%" height="100%" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-three-dots-vertical">
-                          <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                        </svg>
-                    </div>
+                    <div class="post__text">${this.text}</div>
                 </div>
-                <div class="comments__text">${this.text}</div>
             </div>
         `;
     }
