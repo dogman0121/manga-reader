@@ -59,6 +59,25 @@
             <div class="sections-buttons__item sections-buttons__item_active" id="posts">Посты</div>
             <div class="sections-buttons__item" id="saves">Закладки</div>
         </div>
+        {% if user.is_authenticated %}
+            <section class="sections__content">
+                <div class="section" id="posts">
+                    <div class="posts">
+                        <div class="comments__form">
+                            <textarea class="comments__form-input" placeholder="Введите текст"></textarea>
+                            <div class="comments__form-panel">
+                                <div class="comments__form-length">
+                                    <span class="comments__form-current-length">0</span>
+                                    /
+                                    <span class="comments__form-max-length">300</span>
+                                </div>
+                                <button class="comments__form-send">Отправить</button>
+                            <div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
     </div>
 {% endblock %}
 {% block footer %}
