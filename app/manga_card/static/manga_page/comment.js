@@ -30,7 +30,7 @@ class TitleComment extends Comment {
                             this.userVote = undefined;
                             this.commentPanel.removeVoteDown();
                         } else {
-                            this.userVote = 0;
+                            this.userVote = 1;
                             this.commentPanel.removeVoteDown();
                             this.commentPanel.addVoteUp();
                         }

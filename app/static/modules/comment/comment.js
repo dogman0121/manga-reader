@@ -154,7 +154,7 @@ class CommentPanel extends Component{
                         </svg>
                     </div>
                     <span class="comments__rating-text">${this.upVotes - this.downVotes}</span>
-                    <div class="comments__rating-button comments__rating-down${(this.userVote === 0) ? " comments__rating-button_active" : ""}">
+                    <div class="comments__rating-button comments__rating-down ${(this.userVote === 0) ? " comments__rating-button_active" : ""}">
                         <svg class="comments__rating-image comments__rating-down-image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29289 8.29289C4.68342 7.90237 5.31658 7.90237 5.70711 8.29289L12 14.5858L18.2929 8.29289C18.6834 7.90237 19.3166 7.90237 19.7071 8.29289C20.0976 8.68342 20.0976 9.31658 19.7071 9.70711L12.7071 16.7071C12.3166 17.0976 11.6834 17.0976 11.2929 16.7071L4.29289 9.70711C3.90237 9.31658 3.90237 8.68342 4.29289 8.29289Z" fill="currentColor"/>
                         </svg>
@@ -167,10 +167,10 @@ class CommentPanel extends Component{
     }
 
     events(element) {
-        this.element.querySelector(".comments__rating-up").addEventListener("click", this.onVoteUp.bind(this));
-        this.element.querySelector(".comments__rating-down").addEventListener("click", this.onVoteDown.bind(this));
-        this.element.querySelector(".comments__answer-button").addEventListener("click", this.onShowForm.bind(this));
-        this.element.querySelector(".comments__show-answers")?.addEventListener("click", this.onShowAnswers.bind(this));
+        element.querySelector(".comments__rating-up").addEventListener("click", this.onVoteUp.bind(this));
+        element.querySelector(".comments__rating-down").addEventListener("click", this.onVoteDown.bind(this));
+        element.querySelector(".comments__answer-button").addEventListener("click", this.onShowForm.bind(this));
+        element.querySelector(".comments__show-answers")?.addEventListener("click", this.onShowAnswers.bind(this));
     }
 
     onVoteUp() {
