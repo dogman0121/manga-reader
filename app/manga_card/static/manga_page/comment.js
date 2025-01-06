@@ -77,13 +77,13 @@ class TitleComment extends Comment {
     }
 
     loadAnswers() {
-    fetch("../api/comments?"+ new URLSearchParams({parent: this.id}))
-        .then((response) => response.json())
-        .then((comments) => {
-            for (let comment of comments){
-                this.commentAnswers.addBack(TitleComment.createFromObj(comment));
-            }
-        })
+        fetch("../api/comments?"+ new URLSearchParams({parent: this.id}))
+            .then((response) => response.json())
+            .then((comments) => {
+                for (let comment of comments){
+                    this.commentAnswers.addBack(TitleComment.createFromObj(comment));
+                }
+            })
     }
 
     onCommentSend(event) {
@@ -98,7 +98,7 @@ class TitleComment extends Comment {
             body: JSON.stringify({
                 "title": DATA.title.id,
                 "text": text,
-                "root": this.root,
+                "root": this.root | this.id,
                 "parent": this.id
             })
         })
