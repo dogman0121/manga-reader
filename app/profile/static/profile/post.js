@@ -12,11 +12,15 @@ class PostsList extends Component {
     }
 
     html() {
+        const form = `
+            <div class="posts__form">
+                {{ this.commentForm }}
+            </div>
+        `;
+
         return `
             <div class="posts">
-                <div class="posts__form">
-                    {{ this.commentForm }}
-                </div>
+                ${ DATA.user.id === DATA.profile.id ? form : ""}
                 <div class="posts__list">
                     {{ this.posts }}
                 </div>
