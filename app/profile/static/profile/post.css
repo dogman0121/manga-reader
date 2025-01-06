@@ -14,3 +14,7 @@
     max-width: 800px;
     border: 1px solid #D9D9D9;
 }
+
+.post + .post {
+    margin-top: 10px;
+}

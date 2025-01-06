@@ -57,6 +57,9 @@ def create_app(config):
     from .error import register_error_handlers
     register_error_handlers(app)
 
+    from . import posts
+    app.register_blueprint(posts.bp, url_prefix="/posts")
+
     Minify(app=app, js=True, cssless=True, html=True)
 
     return app

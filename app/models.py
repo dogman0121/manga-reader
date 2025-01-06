@@ -1,6 +1,6 @@
 from flask import url_for
 from flask_login import UserMixin
-from sqlalchemy.ext.hybrid import hybrid_method, hybrid_property
+from sqlalchemy.ext.hybrid import hybrid_method
 from sqlalchemy import (exists, ForeignKey, Table, Column, Integer, Float, String, Select, and_, func, insert, delete,
                         update, desc, select, not_, or_)
 from sqlalchemy.orm import Mapped, mapped_column, relationship

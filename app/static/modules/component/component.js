@@ -48,6 +48,7 @@ class Component {
         }
         this.element = parsedElement;
         this.events(this.element);
+        this.onRender();
         return this.element;
     }
 
@@ -56,6 +57,8 @@ class Component {
     events(element){} // Abstract function
 
     onInit(){} // Abstract function
+
+    onRender(){}
 
     renderHTML(html){
         let wrapper = document.createElement("div");

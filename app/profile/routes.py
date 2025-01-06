@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import redirect, url_for, flash, request, abort
 from app.profile.forms import GeneralInformationForm, ChangePasswordForm
 from app.models import User
 from flask_login import current_user, login_required
@@ -8,9 +8,14 @@ from app.utils import render
 
 @bp.route("/<int:profile_id>")
 def get_profile(profile_id):
+    profile = User.get_by_id(profile_id)
+    if profile is None:
+        return abort(404)
     return render("profile.html",
-                           profile=User.get_by_id(profile_id),
-                           user=current_user)
+                           profile=profile,
+                           user=current_user,
+                           json={"profile": profile.to_dict()}
+                  )
 
 
 @bp.route("/edit", methods=["GET", "POST"])
