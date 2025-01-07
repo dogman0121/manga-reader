@@ -3,7 +3,7 @@
 }
 
 .posts__list {
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .post {
@@ -12,11 +12,12 @@
     background-color: var(--body-background);
 
     max-width: 800px;
+    width: 100%;
     border: 1px solid #D9D9D9;
 }
 
 .post + .post {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .post__inner {

@@ -32,7 +32,7 @@ function addSave(){
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            title_id: DATA.title.id,
+            title: DATA.title.id,
         }),
     })
         .then(response => response.json())
@@ -52,7 +52,7 @@ function removeSave(){
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            title_id: DATA.title.id,
+            title: DATA.title.id,
         }),
     })
         .then(response => response.json())

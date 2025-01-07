@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block header %}
     {% assets filters="cssmin", output="min/profile/style.css", "modules/comment/comment.css", "profile/profile/post.css",
-        "profile/profile/style.css" %}
+        "profile/profile/style.css", "profile/profile/save.css" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}">
     {% endassets %}
     {% assets filters="cssmin", output="min/sections.css", "modules/sections/sections.css" %}
@@ -59,7 +59,7 @@
             <div class="sections-buttons__item sections-buttons__item_active" id="posts">Посты</div>
             <div class="sections-buttons__item" id="saves">Закладки</div>
         </div>
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and user.id == profile.id %}
             <section class="sections__content">
                 <div class="section" id="posts">
                     <div class="posts">
@@ -89,6 +89,9 @@
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
     {% assets filters="jsmin", output="min/profile/post.js", "modules/comment/comment.js", "profile/profile/post.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% assets filters="jsmin", output="min/profile/save.js", "profile/profile/save.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
 {% endblock %}

@@ -1,34 +1,35 @@
-class PostsList extends Component {
+class Posts extends Component {
     constructor(posts) {
         super();
 
-        this.commentForm = new CommentForm();
-        this.posts = posts ? posts : [];
-        this.page = 1;
+        this.postForm = new CommentForm(0, 500);
+
+        this.postsList = new PostsList(posts);
+        this.noPosts = new NoPosts();
+
+        this.postSection = new State(this.postsList);
     }
 
     events(element) {
-        this.commentForm.addEventListener("send", this.onCommentSend.bind(this));
+        this.postsList.addEventListener("empty", this.onEmpty.bind(this));
+        this.postForm.addEventListener("send", this.onSend.bind(this));
     }
 
     html() {
-        const form = `
-            <div class="posts__form">
-                {{ this.commentForm }}
-            </div>
-        `;
-
         return `
             <div class="posts">
-                ${ DATA.user.id === DATA.profile.id ? form : ""}
-                <div class="posts__list">
-                    {{ this.posts }}
-                </div>
+                {{ DATA.user.id === DATA.profile.id ? this.postForm : "" }}
+                {{ this.postSection }}
             </div>
-        `;
+        `
     }
 
-    onCommentSend(event) {
+    onEmpty(){
+        this.postSection.set(this.noPosts);
+    }
+
+    onSend(event) {
+        this.postForm.clean();
         fetch("/api/posts", {
             method: "POST",
             headers: {
@@ -40,16 +41,43 @@ class PostsList extends Component {
         })
             .then(response => response.json())
             .then(post => {
-                this.addFront(Post.fromObj(post));
+                this.postsList.addFront(Post.fromObj(post));
             })
+    }
+}
+
+class NoPosts extends Component {
+    html() {
+        return `
+            <p class="posts__no-posts">
+                Вы не опубликовали ни одного поста!
+            </p>
+        `
+    }
+}
+
+class PostsList extends Component {
+    constructor(posts) {
+        super();
+
+        this.posts = posts ? posts : [];
+        this.page = 1;
+    }
+
+    html() {
+        return `
+            <div class="posts__list">
+                {{ this.posts }}
+            </div>
+        `;
     }
 
     addFront(post){
-        this.element.querySelector(".posts__list").prepend(post.element || post.render());
+        this.element?.prepend(post.element || post.render());
     }
 
     addBack(post){
-        this.element.querySelector(".posts__list").append(post.element || post.render());
+        this.element?.append(post.element || post.render());
     }
 
     onRender(){
@@ -60,6 +88,9 @@ class PostsList extends Component {
         fetch("/api/posts?" + new URLSearchParams({page: this.page, user: DATA.profile.id}).toString())
             .then(response => response.json())
             .then(posts => {
+                if (posts.length === 0)
+                    return this.dispatchEvent(new CustomEvent("empty"));
+
                 let post;
                 for(let postObj of posts) {
                     post = Post.fromObj(postObj);
@@ -70,7 +101,6 @@ class PostsList extends Component {
             })
     }
 }
-
 
 class Post extends Comment {
     constructor(id, author, text, date) {

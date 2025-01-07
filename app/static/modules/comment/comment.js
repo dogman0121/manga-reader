@@ -263,7 +263,7 @@ class CommentForm extends Component{
 
     onSend(event) {
         const text = this.element.querySelector(".comments__form-input").value;
-        if (this.validateInput(text))
+        if (this.validateInput(text) && text !== "")
             this.dispatchEvent(new CustomEvent("send", {detail: {value: text}}));
     }
 
