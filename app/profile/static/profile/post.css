@@ -2,6 +2,12 @@
     display: block;
 }
 
+.posts__no-posts {
+    font-size: 28px;
+    padding: 64px 0;
+    text-align: center;
+}
+
 .posts__list {
     margin-top: 30px;
 }

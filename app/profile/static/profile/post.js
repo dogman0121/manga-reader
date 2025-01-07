@@ -41,6 +41,7 @@ class Posts extends Component {
         })
             .then(response => response.json())
             .then(post => {
+                this.postSection.set(this.postsList);
                 this.postsList.addFront(Post.fromObj(post));
             })
     }
