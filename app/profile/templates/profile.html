@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block header %}
-    {% assets filters="cssmin", output="min/profile/style.css", "modules/comment/comment.css", "profile/profile/post.css",
+    {% assets filters="cssmin", output="min/profile/style.css", "modules/comment/comment.css", "modules/post/post.css",
         "profile/profile/style.css", "profile/profile/save.css" %}
         <link rel="stylesheet" href="{{ ASSET_URL }}">
     {% endassets %}
@@ -88,7 +88,7 @@
         "profile/profile/section.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    {% assets filters="jsmin", output="min/profile/post.js", "modules/comment/comment.js", "profile/profile/post.js" %}
+    {% assets filters="jsmin", output="min/profile/post.js", "modules/comment/comment.js", "modules/post/post.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
     {% assets filters="jsmin", output="min/profile/save.js", "profile/profile/save.js" %}

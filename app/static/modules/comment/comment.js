@@ -25,25 +25,25 @@ class CommentOptions extends Component{
 }
 
 class CommentBody extends Component{
-    constructor(user, text, date) {
+    constructor(obj, options) {
         super();
 
-        this.user = user;
-        this.text = text;
-        this.date = date;
+        this.user = obj.user;
+        this.text = obj.text;
+        this.date = new Date(obj.date);
     }
 
     html() {
         let dateUTC = new Date().getTime() + new Date().getTimezoneOffset() * 60000;
         let commentDate = this.date;
-        let howOld = this.formatTimedelta(dateUTC - commentDate);
+        let howOld = CommentBody.formatTimedelta(dateUTC - commentDate) + " назад";
 
         return `
             <div class="comments__body">
                 <div class="comments__user user">
-                    <img class="comments__user-avatar" src="${this.user.avatar}">
+                    <a href="/profile/${this.user.id}"><img class="comments__user-avatar" src="${this.user.avatar}"></a>
                     <div class="comments__user-info">
-                        <span class="comments__user-name">${this.user.login}</span>
+                        <a href="/profile/${this.user.id}"><span class="comments__user-name">${this.user.login}</span></a>
                         <span class="comments__date">${howOld}</span>
                     </div>
                     <div class="comments__options-button">
@@ -75,7 +75,7 @@ class CommentBody extends Component{
         this.dropDown.hide();
     }
 
-    formatTimedelta(timeDelta) {
+    static formatTimedelta(timeDelta) {
         let yearsEnd = {1: "год", 2: "года", 3: "лет"}
         let monthsEnd = {1: "месяц", 2: "месяца", 3: "месяцев"}
         let weeksEnd = {1: "неделя", 2: "недели", 3: "недель"}
@@ -85,9 +85,9 @@ class CommentBody extends Component{
         let secondsEnd = {1: "секунда", 2: "секунды", 3: "секунд"}
 
         let findEnd = (n) => {
-            if ((n % 10 > 4) || (20 < n < 10) || (n % 10 === 0))
+            if ((n % 10 > 4) || (10 < n && n < 20) || (n % 10 === 0))
                 return 3;
-            else if (1 < n % 10 < 5)
+            else if (1 < n % 10 && n % 10 < 5)
                 return 2;
             else
                 return 1;
@@ -103,7 +103,7 @@ class CommentBody extends Component{
         }
         else if (timeDelta / 604800000 >= 1) { // Проверяем если прошел хотя бы неделя после публикации
             let weeks = parseInt(timeDelta / 604800000);
-            return weeks.toString() + " " + monthsEnd[findEnd(weeks)];
+            return weeks.toString() + " " + weeksEnd[findEnd(weeks)];
         }
         else if (timeDelta / 86400000 >= 1) { // Проверяем если прошел хотя бы день после публикации
             let days = parseInt(timeDelta / 86400000);
@@ -126,13 +126,13 @@ class CommentBody extends Component{
 }
 
 class CommentPanel extends Component{
-    constructor(upVotes, downVotes, userVote, answersCount) {
+    constructor(obj) {
         super();
 
-        this.upVotes = upVotes;
-        this.downVotes = downVotes;
-        this.userVote = userVote;
-        this.answersCount = answersCount;
+        this.upVotes = obj.up_votes;
+        this.downVotes = obj.down_votes;
+        this.userVote = obj.user_vote;
+        this.answersCount = obj.answers_count;
     }
 
     html() {
@@ -223,16 +223,18 @@ class CommentPanel extends Component{
 }
 
 class CommentForm extends Component{
-    constructor(minLength=0, maxLength=300 ) {
+    constructor(obj, options={}) {
         super();
-        this.minLength = minLength;
-        this.maxLength = maxLength;
+
+        this.shown = options.showForm;
+        this.minLength = options.minLength || 0;
+        this.maxLength = options.maxLength || 300;
     }
 
     html() {
         if (Object.keys(DATA.user).length !== 0)
             return `
-                <div class="comments__form">
+                <div class="comments__form ${ this.shown ? "comments__form_visible" : ""}">
                     <textarea class="comments__form-input" placeholder="Введите текст"></textarea>
                     <div class="comments__form-panel">
                         <div class="comments__form-length">
@@ -246,7 +248,7 @@ class CommentForm extends Component{
             `;
         else
             return `
-                <div class="comments__form">
+                <div class="comments__form  ${ this.shown ? "comments__form_visible" : ""}">
                     <p class="comments__not-auth-text">Чтобы написать комментарий необходимо авторизоваться</p>
                     <div class="comments__not-auth-button">
                         <a href="/auth" class="comments__not-auth-login">Войти</a>
@@ -302,6 +304,10 @@ class CommentForm extends Component{
 class CommentAnswers extends Component{
     answers = [];
 
+    constructor(obj, options) {
+        super();
+    }
+
     html() {
         return `
             <div class="comments__answers">
@@ -333,42 +339,29 @@ class CommentAnswers extends Component{
 }
 
 class Comment extends Component{
-    constructor(id, title, user, text, date=new Date(), upVotes=0, downVotes=0,
-                userVote=undefined, answersCount=0, root=undefined,
-                parent=undefined) {
+    constructor(obj, options) {
         super();
-        this.id = id;
-        this.title = title;
-        this.user = user;
-        this.text = text;
-        this.date = date;
-        this.upVotes = upVotes;
-        this.downVotes = downVotes;
-        this.userVote = userVote;
-        this.answersCount = answersCount
-        this.root = root;
-        this.parent = parent;
+        this.id = obj.id;
+        this.title = obj.title;
+        this.user = obj.user;
+        this.text = obj.text;
+        this.date = new Date(obj.date);
+        this.upVotes = obj.upVotes;
+        this.downVotes = obj.downVotes;
+        this.userVote = obj.userVote;
+        this.answersCount = obj.answersCount
+        this.root = obj.root;
+        this.parent = obj.parent;
 
-        this.commentBody = new CommentBody(this.user, this.text, this.date);
-        this.commentPanel = new CommentPanel(this.upVotes, this.downVotes, this.userVote, this.answersCount);
-        this.commentForm = new CommentForm();
-        this.commentAnswers = new CommentAnswers();
+        this.options = options;
+        this.commentBody = new CommentBody(obj, options);
+        this.commentPanel = new CommentPanel(obj, options);
+        this.commentForm = new CommentForm(obj, options);
+        this.commentAnswers = new CommentAnswers(obj, options);
     }
 
     static createFromObj(obj) {
-        return new this(
-            obj.id,
-            obj.title,
-            obj.user,
-            obj.text,
-            new Date(obj.date),
-            obj.up_votes,
-            obj.down_votes,
-            obj.user_vote,
-            obj.answers_count,
-            obj.root,
-            obj.parent
-        )
+        return new this(obj)
     }
 
     html() {
@@ -391,16 +384,130 @@ class Comment extends Component{
         this.commentPanel.addEventListener("showAnswers", this.onShowAnswers.bind(this));
     }
 
-    onDelete() {console.log("delete")}
+    async onDelete(event) {
+        if (this.deleting)
+            return null;
 
-    onCommentSend() {console.log("send")}
+        this.deleting = true;
+        await fetch("/api/comments", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                comment: this.id
+            })
+        })
+        this.element.remove();
+        this.deleting = false;
+    }
+
+    onCommentSend(event) {
+        const text = event.detail.value;
+
+        fetch("/api/comments", {
+            method: "POST",
+             headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "title": DATA.title.id,
+                "text": text,
+                "root": this.root | this.id,
+                "parent": this.id
+            })
+        })
+            .then((response) => response.json())
+            .then((comment) => {
+                const commentObj = new TitleComment(comment);
+                this.commentAnswers.addFront(commentObj);
+                if (!this.commentAnswers.opened)
+                    this.commentAnswers.show();
+            })
+    }
 
     // Comment panel
-    onVoteUp() {console.log("vote up")}
+    onVoteUp() {
+        this.sendVote(1);
+    }
 
-    onVoteDown() {console.log("vote down")}
+    onVoteDown() {
+        this.sendVote(0);
+    }
 
-    onShowForm() {console.log("show form")}
+    sendVote(voteType){
+        return fetch("/api/vote", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                comment: this.id,
+                type: voteType
+            })
+        })
+            .then(response => response.json())
+            .then((json) => {
+                switch (this.userVote) {
+                    case 0:
+                        if (voteType === 0){
+                            this.userVote = undefined;
+                            this.commentPanel.removeVoteDown();
+                        } else {
+                            this.userVote = 1;
+                            this.commentPanel.removeVoteDown();
+                            this.commentPanel.addVoteUp();
+                        }
+                        break;
+                    case 1:
+                        if (voteType === 0){
+                            this.userVote = 0;
+                            this.commentPanel.removeVoteUp();
+                            this.commentPanel.addVoteDown();
+                        } else {
+                            this.userVote = undefined;
+                            this.commentPanel.removeVoteUp();
+                        }
+                        break;
+                    default:
+                        if (voteType === 0){
+                            this.userVote = 0;
+                            this.commentPanel.addVoteDown();
+                        } else {
+                            this.userVote = 1;
+                            this.commentPanel.addVoteUp();
+                        }
+                        break;
+                }
+            })
+    }
 
-    onShowAnswers(){console.log("show answers")}
+    onShowForm() {
+        if (!this.commentForm.opened)
+            this.commentForm.show();
+        else
+            this.commentForm.hide();
+    }
+
+    onShowAnswers() {
+        if (!this.commentAnswers.opened) {
+            this.commentAnswers.show();
+            if (this.answersCount !== this.commentAnswers.answers.length)
+                this.loadAnswers();
+        }
+
+        else
+            this.commentAnswers.hide();
+    }
+
+    loadAnswers() {
+        fetch("../api/comments?"+ new URLSearchParams({parent: this.id}))
+            .then((response) => response.json())
+            .then((comments) => {
+                for (let comment of comments){
+                    this.commentAnswers.addBack(new this.__proto__.constructor(comment));
+                }
+            })
+    }
 }

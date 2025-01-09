@@ -19,6 +19,9 @@ def add_post():
 
 @bp.route("/posts", methods=["GET"])
 def get_posts():
+    if "id" in request.args:
+        return jsonify(Post.get(request.args.get("id")).to_dict())
+
     user = request.args.get("user")
     team = request.args.get("team")
     page = int(request.args.get("page") or 1)

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block header %}
+    {% assets filters="cssmin", output="min/posts/post.css", "modules/comment/comment.css", "modules/post/post.css",
+        "posts/post.css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+{% endblock %}
+{% block content %}
+    <div class="post"></div>
+{% endblock %}
+{% block footer %}
+    {% assets filters="jsmin", output="min/textarea.js", "textarea.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets%}
+    {% assets filters="jsmin", output="min/posts/post.js", "modules/comment/comment.js", "modules/post/post.js",
+        "posts/post.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+{% endblock %}

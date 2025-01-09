@@ -7,9 +7,9 @@
 .comments__form {
     margin-top: 5px;
     display: none;
-    border-radius: 12px;
+    border-radius: 8px;
     border: 1px solid #CFCECE;
-    padding: 12px 14px 45px 14px;
+    padding: 12px 14px 35px 14px;
     position: relative;
     width: 100%;
 
@@ -48,7 +48,7 @@
 }
 
 .comments__form-send {
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 6px;
 
     font-size: 14px;

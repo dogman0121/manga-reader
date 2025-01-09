@@ -16,8 +16,8 @@ header {
 }
 
 #logo {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     margin: auto 0 auto;
 }
 
@@ -37,7 +37,9 @@ header {
 
 
 .nav-left__nav {
-    margin-left: 24px;
+    margin-left: 30px;
+    display: flex;
+    column-gap: 25px;
 }
 
 .theme-switcher {
@@ -64,7 +66,7 @@ nav {
 
 .nav__item {
     display: block;
-    font-size: 20px;
+    font-size: 16px;
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -73,13 +75,9 @@ nav {
     cursor: pointer;
 }
 
-.nav__item + .nav__item {
-    margin-left: 24px;
-}
-
 .user-avatar, .empty-icon {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 
@@ -115,5 +113,4 @@ nav {
 .nav__icon {
     width: 30px;
     height: 30px;
-    margin-right: 15px;
 }

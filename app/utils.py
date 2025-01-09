@@ -14,6 +14,7 @@ def render(template_path, **kwargs):
     else:
         jsn["user"] = {}
 
+    kwargs["user"] = current_user
     kwargs["json"] = json.dumps(jsn, ensure_ascii=False)
 
     return render_template(template_path, **kwargs)

@@ -1,4 +1,5 @@
-from app.models import Title, User, Comment
+from app.models import Title, User
+from app.comments.models import Comment
 
 
 def test_adding_full_params_comments(app, client):
@@ -61,7 +62,7 @@ def test_parse_comment_data(app):
         parent_id = int(dct.get("parent"))
         root_id = int(dct.get("root"))
 
-        comment = Comment(text=text, title_id=title_id, user_id=user_id, parent_id=parent_id, root_id=root_id)
+        comment = Comment(text=text, user_id=user_id, parent_id=parent_id, root_id=root_id)
         comment.add()
 
         assert text == "хехехе"
@@ -81,10 +82,10 @@ def test_get_title_comment(app, client):
         title = Title(name_russian="abaga")
         title.add()
 
-        comment = Comment(text="123456", user_id=user.id, title_id=title.id)
-        comment.add()
+        comment = Comment(text="123456", user_id=user.id)
+        comment.add_for_title(title)
 
-        answer = Comment(text="654321", user_id=user.id, title_id=title.id, root_id=comment.id, parent_id=comment.id)
+        answer = Comment(text="654321", user_id=user.id, root_id=comment.id, parent_id=comment.id)
         answer.add()
 
         response = client.get("/api/comments", query_string={"title": title.id, "page": 1})
@@ -101,10 +102,10 @@ def test_get_answer_comment(app, client):
         title = Title(name_russian="abaga")
         title.add()
 
-        comment = Comment(text="123456", user_id=user.id, title_id=title.id)
+        comment = Comment(text="123456", user_id=user.id)
         comment.add()
 
-        answer = Comment(text="654321", user_id=user.id, title_id=title.id, root_id=comment.id, parent_id=comment.id)
+        answer = Comment(text="654321", user_id=user.id, root_id=comment.id, parent_id=comment.id)
         answer.add()
 
         response = client.get("/api/comments", query_string={"root": title.id, "page": 1})

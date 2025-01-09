@@ -4,6 +4,7 @@ from sqlalchemy.ext.hybrid import hybrid_method
 from sqlalchemy import (exists, ForeignKey, Table, Column, Integer, Float, String, Select, and_, func, insert, delete,
                         update, desc, select, not_, or_)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.comments.models import Comment
 from typing import Optional
 from app import db, login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -46,7 +47,6 @@ class User(db.Model, UserMixin):
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("teams.id"), nullable=True)
     team: Mapped[Optional["Team"]] = relationship(uselist=False, back_populates="members",
                                                   primaryjoin="User.team_id == Team.id")
-    comments: Mapped["Comment"] = relationship(back_populates="user")
     saves: Mapped[list["Title"]] = relationship(uselist=True, secondary="saves")
 
     @staticmethod
@@ -349,7 +349,6 @@ class Title(db.Model):
     author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
     author: Mapped[User] = relationship("User")
     chapters: Mapped[list["Chapter"]] = relationship(uselist=True, back_populates="title")
-    comments: Mapped[list["Comment"]] = relationship(uselist=True, back_populates="title")
     translators: Mapped[list["Team"]] = relationship(uselist=True, secondary="titles_translators",
                                                      back_populates="titles")
 
@@ -493,13 +492,6 @@ class Title(db.Model):
     def get_chapters(self):
         return self.chapters
 
-    def get_comments(self, page):
-        comments = db.session.execute(
-            Select(Comment).where(and_(Comment.title_id == self.id, Comment.root_id == None)
-                                  ).offset(20 * (page - 1)).limit(20)
-        ).scalars()
-        return comments
-
     def get_comments_count(self):
         return db.session.execute(Select(func.count(Comment.id).filter(
             and_(Comment.title_id == self.id, Comment.root_id == None)))).scalar()
@@ -561,93 +553,6 @@ class Title(db.Model):
 
         dct["translators"] = translators_lst
         return dct
-
-
-votes = Table(
-    "votes",
-    db.metadata,
-    Column("user_id", Integer(), ForeignKey("users.id")),
-    Column("comment_id", Integer(), ForeignKey("comments.id", ondelete="CASCADE")),
-    Column("type", Integer()),
-)
-
-
-class Comment(db.Model):
-    __tablename__ = "comments"
-
-    id: Mapped[int] = mapped_column(primary_key=True, nullable=False, unique=True, autoincrement=True)
-    text: Mapped[str] = mapped_column(nullable=False)
-    date: Mapped[datetime] = mapped_column(nullable=False,
-                                           default=lambda: datetime.utcnow())
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    user: Mapped["User"] = relationship(back_populates="comments")
-    title_id: Mapped[int] = mapped_column(ForeignKey("titles.id"), nullable=False)
-    title: Mapped["Title"] = relationship(back_populates="comments")
-    root_id: Mapped[Optional[int]] = mapped_column(nullable=True)
-    parent_id: Mapped[Optional[int]] = mapped_column(nullable=True)
-
-    @staticmethod
-    def get(comment_id):
-        return db.session.get(Comment, comment_id)
-
-    def add(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        self.verified = True
-        db.session.commit()
-
-    def remove(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    def get_up_votes(self):
-        return db.session.execute(
-            Select(func.count(votes.c.type).filter(and_(votes.c.comment_id == self.id, votes.c.type == 1)))
-        ).scalar()
-
-    def get_down_votes(self):
-        return db.session.execute(
-            Select(func.count(votes.c.type).filter(and_(votes.c.comment_id == self.id, votes.c.type == 0)))
-        ).scalar()
-
-    def add_vote(self, user, vote_type):
-        db.session.execute(insert(votes).values(comment_id=self.id, user_id=user.id, type=vote_type))
-        db.session.commit()
-
-    def remove_vote(self, user):
-        db.session.execute(delete(votes).where(and_(votes.c.comment_id == self.id, votes.c.user_id == user.id)))
-        db.session.commit()
-
-    def update_vote(self, user, new_vote_type):
-        db.session.execute(update(votes).where(
-            and_(votes.c.comment_id == self.id, votes.c.user_id == user.id)).values(type=new_vote_type)
-                           )
-        db.session.commit()
-
-    def get_user_vote(self, user):
-        return db.session.execute(
-            Select(votes.c.type).where(and_(votes.c.comment_id == self.id, votes.c.user_id == user.id))
-        ).scalar()
-
-    def get_answers(self):
-        return db.session.execute(Select(Comment).where(Comment.parent_id == self.id)).scalars().all()
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "text": self.text,
-            "date": self.date.strftime("%Y-%m-%dT%H:%M:%S"),
-            "user": self.user.to_dict(),
-            "title_id": self.title_id,
-            "root_id": self.root_id,
-            "parent_id": self.parent_id,
-            "up_votes": self.get_up_votes(),
-            "down_votes": self.get_down_votes(),
-            "answers_count": len(self.get_answers()),
-            "user_vote": self.get_user_vote(self.user)
-        }
 
 
 titles_translators = Table(

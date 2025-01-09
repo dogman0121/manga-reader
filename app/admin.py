@@ -1,5 +1,6 @@
 from app import db
-from app.models import User, Title, Comment, Team, Genre, Status, Type, Chapter
+from app.models import User, Title, Team, Genre, Status, Type, Chapter
+from app.comments.models import Comment
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
@@ -18,7 +19,7 @@ class TitleAdmin(ModelView):
 
 
 class CommentAdmin(ModelView):
-    column_list = ('id', 'text', 'date', 'user_id', 'title_id', 'root_id', 'parent_id')
+    column_list = ('id', 'text', 'date', 'user_id', 'root_id', 'parent_id')
 
 
 class ChaptersAdmin(ModelView):

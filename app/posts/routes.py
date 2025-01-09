@@ -1,7 +1,8 @@
 from app.posts import bp
 from app.posts.models import Post
+from app.utils import render
 
 
-@bp.route("/<int:post_id>")
-def get_post(post_id):
-    return "1"
+@bp.route("/")
+def get_post():
+    return render("post.html")
