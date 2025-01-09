@@ -43,13 +43,13 @@ class Comment(db.Model):
     @hybrid_property
     def up_votes(self):
         return db.session.execute(
-            Select(func.count(votes.c.type).filter(and_(votes.c.comment_id == self.id, votes.c.type == 1)))
+            Select(func.count(comment_votes.c.type).filter(and_(comment_votes.c.comment_id == self.id, comment_votes.c.type == 1)))
         ).scalar()
 
     @hybrid_property
     def down_votes(self):
         return db.session.execute(
-            Select(func.count(votes.c.type).filter(and_(votes.c.comment_id == self.id, votes.c.type == 0)))
+            Select(func.count(comment_votes.c.type).filter(and_(comment_votes.c.comment_id == self.id, comment_votes.c.type == 0)))
         ).scalar()
 
     @staticmethod
@@ -69,22 +69,22 @@ class Comment(db.Model):
         db.session.commit()
 
     def add_vote(self, user, vote_type):
-        db.session.execute(insert(votes).values(comment_id=self.id, user_id=user.id, type=vote_type))
+        db.session.execute(insert(comment_votes).values(comment_id=self.id, user_id=user.id, type=vote_type))
         db.session.commit()
 
     def remove_vote(self, user):
-        db.session.execute(delete(votes).where(and_(votes.c.comment_id == self.id, votes.c.user_id == user.id)))
+        db.session.execute(delete(comment_votes).where(and_(comment_votes.c.comment_id == self.id, comment_votes.c.user_id == user.id)))
         db.session.commit()
 
     def update_vote(self, user, new_vote_type):
-        db.session.execute(update(votes).where(
-            and_(votes.c.comment_id == self.id, votes.c.user_id == user.id)).values(type=new_vote_type)
+        db.session.execute(update(comment_votes).where(
+            and_(comment_votes.c.comment_id == self.id, comment_votes.c.user_id == user.id)).values(type=new_vote_type)
                            )
         db.session.commit()
 
     def get_vote(self, user):
         return db.session.execute(
-            Select(votes.c.type).where(and_(votes.c.comment_id == self.id, votes.c.user_id == user.id))
+            Select(comment_votes.c.type).where(and_(comment_votes.c.comment_id == self.id, comment_votes.c.user_id == user.id))
         ).scalar()
 
     def get_answers(self):
