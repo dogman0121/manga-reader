@@ -14,7 +14,9 @@
 }
 
 @media (max-width: 1024px) {
-    padding: 15px 20px
+    .post__inner{
+        padding: 15px 10px;
+    }
 }
 
 .post + .post {

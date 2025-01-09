@@ -114,3 +114,9 @@ nav {
     width: 30px;
     height: 30px;
 }
+
+@media (max-width: 480px) {
+    .content__inner {
+        padding: 0 20px;
+    }
+}
