@@ -346,10 +346,10 @@ class Comment extends Component{
         this.user = obj.user;
         this.text = obj.text;
         this.date = new Date(obj.date);
-        this.upVotes = obj.upVotes;
-        this.downVotes = obj.downVotes;
-        this.userVote = obj.userVote;
-        this.answersCount = obj.answersCount
+        this.upVotes = obj.up_votes;
+        this.downVotes = obj.down_votes;
+        this.userVote = obj.user_vote;
+        this.answersCount = obj.answers_count
         this.root = obj.root;
         this.parent = obj.parent;
 
