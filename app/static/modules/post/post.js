@@ -111,6 +111,7 @@ class Post extends Component {
         this.user = obj.author;
         this.text = obj.text;
         this.date = new Date(obj.date);
+        this.userVote = obj.user_vote
 
         this.options = options ? options : {};
 
