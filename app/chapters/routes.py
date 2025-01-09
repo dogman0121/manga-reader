@@ -24,7 +24,7 @@ def get_chapter(chapter_id):
     chapter = Chapter.get(chapter_id)
     title = chapter.title
 
-    if current_user.is_authenticated and title.get_progress(current_user):
+    if current_user.is_authenticated and title.get_progress(current_user) is None:
         title.add_progress(current_user, chapter, 0)
 
     jsn["title"] = title.to_dict()
