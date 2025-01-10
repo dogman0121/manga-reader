@@ -73,6 +73,7 @@ li {
 
 #poster {
     width: 100%;
+    position: relative;
 }
 
 #poster__image {
@@ -81,51 +82,6 @@ li {
     border-radius: 14px;
 }
 
-#similar {
-    margin-top: 10px;
-}
-
-.similar__header {
-    font-size: 24px;
-}
-
-.similar-title {
-    display: flex;
-    flex-direction: row;
-    margin-top: 8px;
-}
-
-.similar-title + .similar-title {
-    margin-top: 7px;
-}
-
-.similar-title__poster {
-    aspect-ratio: 0.7;
-    width: 60px;
-    border-radius: 4px;
-}
-
-.similar-title__description {
-    margin-left: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    row-gap: 5px;
-}
-
-.similar-title__name {
-    font-size: 15px;
-}
-
-.similar-title__info {
-    display: flex;
-    flex-direction: row;
-    font-size: 14px;
-}
-
-.similar-title__year {
-    margin-left: 5px;
-}
 
 #manga-info__header {
     display: flex;
@@ -150,11 +106,11 @@ textarea:focus {
 }
 
 .read-button {
-    height: 50px;
-    width: 180px;
+    height: 40px;
+    width: 150px;
     background-color: #FFD600;
     color: #000000;
-    font-size: 20px;
+    font-size: 16px;
     border-radius: 12px;
 
     display: flex;
@@ -270,6 +226,26 @@ textarea:focus {
 .modal__inner {
     font-size: 16px;
     padding: 20px 30px;
+}
+
+.bottom-panel {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+}
+
+@media (max-width: 1096px) {
+    .content_left {
+        max-width: none;
+        width: 100%;
+    }
+}
+
+@media (max-width: 872px) {
+    .read-button {
+        margin: 0 auto;
+        width: 200px;
+    }
 }
 
 @media (max-width: 700px){
