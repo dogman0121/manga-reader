@@ -40,8 +40,35 @@ li {
 }
 
 #left-side {
-    max-width: 250px;
-    min-width: 220px;
+    max-width: 215px;
+    min-width: 150px;
+    width: 100%;
+}
+
+#right-side {
+    width: 100%;
+    margin-left: 25px;
+    max-width: 920px;
+    min-width: 400px;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.content {
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+}
+
+.content_left {
+    width: 650px;
+}
+
+.content_right {
+    width: 255px;
 }
 
 #poster {
@@ -58,9 +85,14 @@ li {
     margin-top: 10px;
 }
 
+.similar__header {
+    font-size: 18px;
+}
+
 .similar-title {
     display: flex;
     flex-direction: row;
+    margin-top: 8px;
 }
 
 .similar-title + .similar-title {
@@ -68,23 +100,31 @@ li {
 }
 
 .similar-title__poster {
-    width: 64px;
-    height: 90px;
+    aspect-ratio: 0.7;
+    width: 60px;
+    border-radius: 4px;
 }
 
 .similar-title__description {
     margin-left: 8px;
-}
-
-#right-side {
-    width: 100%;
-    margin-left: 25px;
-    max-width: 870px;
-    min-width: 400px;
-    position: relative;
-
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    row-gap: 5px;
+}
+
+.similar-title__name {
+    font-size: 15px;
+}
+
+.similar-title__info {
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+}
+
+.similar-title__year {
+    margin-left: 5px;
 }
 
 #manga-info__header {

@@ -1,27 +1,33 @@
 <ul id="similar">
-    <h3>Похожее</h3>
+    <h3 class="similar__header">Похожее</h3>
     <li class="similar-title">
-        <img class="similar-title__poster" src="{{ url_for('manga/static', filename='manga_page/images/simiar_manga-poster1.jpg') }}">
-        <p class="similar-title__description">
-            Я - дитя этого дома<br>
-            2018<br>
-            Манхва
-        </p>
+        <img class="similar-title__poster" src="{{ url_for('manga.static', filename='manga_page/images/1.jpg') }}">
+        <div class="similar-title__description">
+            <div class="similar-title__name">Я - дитя этого дома</div>
+            <div class="similar-title__info">
+                <div class="similar-title__type">манхва</div>
+                <div class="similar-title__year">2018</div>
+            </div>
+        </div>
     </li>
     <li class="similar-title">
-        <img class="similar-title__poster" src="{{ url_for('manga.static', filename='manga_page/images/similar_manga-poster2.jpg') }}">
-        <p class="similar-title__description">
-            Я стала женой принца-монстра<br>
-            2021<br>
-            Манхва
-        </p>
+        <img class="similar-title__poster" src="{{ url_for('manga.static', filename='manga_page/images/2.jpg') }}">
+        <div class="similar-title__description">
+            <div class="similar-title__name">Я стала женой принца-монстра</div>
+            <div class="similar-title__info">
+                <div class="similar-title__type">манхва</div>
+                <div class="similar-title__year">2021</div>
+            </div>
+        </div>
     </li>
     <li class="similar-title">
-        <img class="similar-title__poster" src="{{ url_for('manga.static', filename='manga_page/images/similar_manga-poster3.jpg') }}">
-        <p class="similar-title__description">
-            На самом деле я была настоящей<br>
-            2020
-            Манхва
-        </p>
+        <img class="similar-title__poster" src="{{ url_for('manga.static', filename='manga_page/images/3.jpg') }}">
+        <div class="similar-title__description">
+            <div class="similar-title__name">На самом деле я была настоящей</div>
+            <div class="similar-title__info">
+                <div class="similar-title__type">манхва</div>
+                <div class="similar-title__year">2020</div>
+            </div>
+        </div>
     </li>
 </ul>
