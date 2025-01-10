@@ -60,11 +60,11 @@ li {
 .content {
     display: flex;
     flex-direction: row;
-    column-gap: 20px;
+    column-gap: 25px;
 }
 
 .content_left {
-    width: 650px;
+    width: 645px;
 }
 
 .content_right {
@@ -86,7 +86,7 @@ li {
 }
 
 .similar__header {
-    font-size: 18px;
+    font-size: 24px;
 }
 
 .similar-title {
