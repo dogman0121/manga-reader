@@ -56,9 +56,9 @@
                     <div class="read-button">
                         {% if progress %}
                             <a href="{{ url_for("chapters.get_chapter", chapter_id=progress_chapter.id) }}">
-                                <button class="read-button_button">
-                                    <span class="read-button_header">Продолжить</span>
-                                    <span class="read-button_text">ТОМ {{ progress_chapter.tome }} ГЛАВА {{ '{0:g}'.format(progress_chapter.chapter) }}</span>
+                                <button class="read-button__button">
+                                    <span class="read-button__header">Продолжить</span>
+                                    <span class="read-button__text">ТОМ {{ progress_chapter.tome }} ГЛАВА {{ '{0:g}'.format(progress_chapter.chapter) }}</span>
                                 </button>
                             </a>
                         {% else %}
