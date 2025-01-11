@@ -511,7 +511,7 @@ class Title(db.Model):
 
     @hybrid_method
     def get_progress(self, user):
-        return db.session.execute(select(progresses.c.chapter_id, progresses.c.progress).where(
+        return db.session.execute(select(progresses.c.chapter_id, progresses.c.progress).filter(
             and_(progresses.c.title_id == self.id, progresses.c.user_id == user.id))).fetchone()
 
     def delete_progress(self, user):

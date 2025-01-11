@@ -19,13 +19,13 @@ def manga_page(title_id):
     jsn["title"] = title.to_dict()
 
     if current_user.is_authenticated:
-        user_json = json.dumps(current_user.to_dict(), ensure_ascii=False)
         user_rating = title.get_user_rating(current_user)
-        if Title.get_progress(current_user):
-            chapter_id, progress = Title.get_progress(current_user)
+        if title.get_progress(current_user):
+            chapter_id, progress = title.get_progress(current_user)
+            progress_chapter = Chapter.get(chapter_id)
         else:
-            chapter_id, progress = None, None
-        progress_chapter = Chapter.get(chapter_id)
+            progress = None
+            progress_chapter = None
         saved = title in current_user.saves
     else:
         user_rating = None
