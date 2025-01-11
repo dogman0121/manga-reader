@@ -244,7 +244,12 @@ textarea:focus {
 @media (max-width: 872px) {
     .read-button {
         margin: 0 auto;
-        width: 200px;
+        width: 260px;
+        height: 50px;
+    }
+
+    .read-button__header {
+        font-size: 20px;
     }
 }
 
