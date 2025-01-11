@@ -20,8 +20,8 @@ function adaptManga() {
         document.body.append(bottomPanel)
         bottomPanel.append(readButton);
         // Изменение кнопки рейтинга
-        // const rating = document.querySelector(".rating__button");
-        // const poster = document.querySelector("#poster");
-        // poster.append(rating);
+        const rating = document.querySelector(".rating__button");
+        const poster = document.querySelector("#poster");
+        poster.append(rating);
     }
 }

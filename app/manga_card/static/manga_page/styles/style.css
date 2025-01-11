@@ -117,6 +117,8 @@ textarea:focus {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    cursor: pointer;
 }
 
 .read-button__header {
@@ -242,10 +244,15 @@ textarea:focus {
 }
 
 @media (max-width: 872px) {
+    .content_left {
+        margin-top: 20px;
+    }
+
     .read-button {
         margin: 0 auto;
         width: 260px;
         height: 50px;
+        border-radius: 50px;
     }
 
     .read-button__header {

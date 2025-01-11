@@ -53,24 +53,26 @@
                     <h1 class="manga-names__russian">{{ title.name_russian }}</h1>
                 </div>
                 <div class="manga-subbuttons">
-                    {% if progress %}
-                        <a href="{{ url_for("chapters.get_chapter", chapter_id=progress_chapter.id) }}">
-                            <button class="read-button">
-                                <span class="read-button_header">Продолжить</span>
-                                <span class="read-button_text">ТОМ {{ progress_chapter.tome }} ГЛАВА {{ '{0:g}'.format(progress_chapter.chapter) }}</span>
-                            </button>
-                        </a>
-                    {% else %}
-                        {% if title.chapters %}
-                            <a href="{{ url_for("chapters.get_chapter", chapter_id=title.chapters[0].id) }}">
-                                <button class="read-button">Читать</button>
+                    <div class="read-button">
+                        {% if progress %}
+                            <a href="{{ url_for("chapters.get_chapter", chapter_id=progress_chapter.id) }}">
+                                <button class="read-button_button">
+                                    <span class="read-button_header">Продолжить</span>
+                                    <span class="read-button_text">ТОМ {{ progress_chapter.tome }} ГЛАВА {{ '{0:g}'.format(progress_chapter.chapter) }}</span>
+                                </button>
                             </a>
                         {% else %}
-                            <div class="read-button">
-                                Нет глав
-                            </div>
+                            {% if title.chapters %}
+                                <a href="{{ url_for("chapters.get_chapter", chapter_id=title.chapters[0].id) }}">
+                                    <button class="read-button__button">Читать</button>
+                                </a>
+                            {% else %}
+                                <div class="read-button__button">
+                                    Нет глав
+                                </div>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
+                    </div>
                     {% if user_rating %}
                         <div class="rating__button">
                             <span class="rating__text">Ваша оценка:</span>

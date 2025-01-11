@@ -8,6 +8,8 @@
     background-color: var(--dropdown-background);
     border-radius: 6px;
     height: 30px;
+
+    cursor: pointer;
 }
 
 .rating__text {
@@ -25,6 +27,8 @@
 .rating__option {
     display: flex;
     flex-direction: row;
+
+    cursor: pointer;
 }
 
 .rating__option + .rating__option {
@@ -69,4 +73,13 @@
 
 .user-rating_excellent{
     background: #339900;
+}
+
+@media (max-width: 872px) {
+    .rating__button {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
