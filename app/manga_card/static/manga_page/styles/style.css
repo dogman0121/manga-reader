@@ -105,7 +105,8 @@ textarea:focus {
     outline:none;
 }
 
-.read-button {
+
+.read-button__button {
     height: 40px;
     width: 150px;
     font-size: 16px;
@@ -246,7 +247,7 @@ textarea:focus {
         margin-top: 20px;
     }
 
-    .read-button {
+    .read-button__button {
         margin: 0 auto;
         width: 260px;
         height: 50px;
