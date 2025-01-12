@@ -40,7 +40,7 @@ li {
 }
 
 #left-side {
-    max-width: 215px;
+    max-width: 240px;
     min-width: 150px;
     width: 100%;
 }
@@ -48,7 +48,7 @@ li {
 #right-side {
     width: 100%;
     margin-left: 25px;
-    max-width: 920px;
+    max-width: 895px;
     min-width: 400px;
     position: relative;
 
@@ -64,11 +64,11 @@ li {
 }
 
 .content_left {
-    width: 645px;
+    width: 625px;
 }
 
 .content_right {
-    width: 255px;
+    width: 250px;
 }
 
 #poster {
