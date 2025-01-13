@@ -23,17 +23,21 @@
         </div>
         {% if user.is_authenticated %}
             {% if user.role > 1 or title.author_id == user.id %}
-                <a href="{{ url_for("manga.edit_manga", title_id=title.id) }}">
-                    <button class="edit-button">
-                        Редактировать
-                    </button>
-                </a>
+                <div class="edit-button">
+                    <a href="{{ url_for("manga.edit_manga", title_id=title.id) }}">
+                        <button class="edit-button__button">
+                            Редактировать
+                        </button>
+                    </a>
+                </div>
             {% endif %}
-            {% if saved %}
-                <button class="save-button">Сохранено</button>
-            {% else %}
-                <button class="save-button">Сохранить</button>
-            {% endif %}
+            <div class="save-button">
+                {% if saved %}
+                    <button class="save-button__button">Сохранено</button>
+                {% else %}
+                    <button class="save-button__button">Сохранить</button>
+                {% endif %}
+            </div>
         {% endif %}
         {% include "description.html" %}
     </div>
