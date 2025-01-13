@@ -128,9 +128,14 @@ textarea:focus {
     font-size: 12px;
 }
 
-.edit-button__button, .save-button__button {
+.edit-button, .save-button {
     margin-top: 5px;
     height: 40px;
+    width: 100%;
+}
+
+.edit-button__button, .save-button__button {
+    height: 100%;
     width: 100%;
     background-color: var(--button2-background);
     font-size: 16px;
@@ -252,11 +257,17 @@ textarea:focus {
         justify-content: center;
         align-items: center;
         column-gap: 5px;
+        padding: 0 10px;
+    }
+
+    .read-button {
+        width: 260px;
+        height: 50px;
     }
 
     .read-button__button {
-        width: 260px;
-        height: 50px;
+        width: 100%;
+        height: 100%;
         border-radius: 50px;
     }
 
@@ -307,6 +318,10 @@ textarea:focus {
     .stats-option {
         flex-direction: column;
         width: 100px;
+    }
+
+    .read-button {
+        width: 100%;
     }
 
     .edit-button__button, .save-button__button {
