@@ -301,13 +301,13 @@ textarea:focus {
     .manga-names__russian {
         text-align: center;
         margin-top: 8px;
-        font-size: 18px;
+        font-size: 24px;
     }
 
     .manga-names__languages {
         text-align: center;
         margin-top: 10px;
-        font-size: 24px;
+        font-size: 18px;
     }
 
     #stats {
