@@ -311,8 +311,9 @@ textarea:focus {
     }
 
     #stats {
-        justify-content: space-around;
         align-items: center;
+        column-gap: 5px;
+        margin-top: 35px;
     }
 
     .stats-option {
@@ -346,5 +347,9 @@ textarea:focus {
         width: 25px;
         height: 25px;
         margin: auto;
+    }
+
+    .sections {
+        margin-top: 10px;
     }
 }

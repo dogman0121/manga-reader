@@ -51,6 +51,12 @@ function adaptManga() {
         // Update main content
         const poster = document.querySelector("#poster");
         const names = document.querySelector("#manga-names");
+
+        const stats = document.querySelector("#stats");
+
+        const sections = document.querySelector(".sections");
+        poster.after(sections);
+        poster.after(stats);
         poster.after(names);
     }
 }
