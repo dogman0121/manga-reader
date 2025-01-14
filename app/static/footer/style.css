@@ -55,4 +55,8 @@ footer {
     .footer__section + .footer__section {
         margin-top: 50px;
     }
+
+    footer {
+        margin-top: 20px;
+    }
 }
