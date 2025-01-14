@@ -314,11 +314,11 @@ textarea:focus {
         align-items: center;
         column-gap: 5px;
         margin-top: 35px;
+        justify-content: center;
     }
 
     .stats-option {
         flex-direction: column;
-        width: 100px;
     }
 
     .read-button {
