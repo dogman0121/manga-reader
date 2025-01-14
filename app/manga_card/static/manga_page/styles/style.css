@@ -314,7 +314,7 @@ textarea:focus {
         align-items: center;
         column-gap: 5px;
         margin-top: 35px;
-        justify-content: center;
+        justify-content: space-around;
     }
 
     .stats-option {
