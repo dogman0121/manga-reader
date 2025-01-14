@@ -1,13 +1,18 @@
 window.addEventListener("resize", adaptManga);
 window.addEventListener("load", adaptManga);
+let mangaAdaptiveState = 0;
 
 function adaptManga() {
-    if (window.innerWidth < 1096) {
+    if (window.innerWidth < 1096 && mangaAdaptiveState > 1) {
+        mangaAdaptiveState = 1;
+
         const similar = document.querySelector("#similar");
         const mangaInfo = document.querySelector("#manga-info");
         mangaInfo.append(similar);
     }
-    if (window.innerWidth < 872) {
+    if (window.innerWidth < 872 && mangaAdaptiveState > 2) {
+        mangaAdaptiveState = 2;
+
         // Изменение кнопки чтения
         if (document.querySelector(".bottom-panel"))
             return;
@@ -23,7 +28,9 @@ function adaptManga() {
         const poster = document.querySelector("#poster");
         poster.append(rating);
     }
-    if (window.innerWidth < 700){
+    if (window.innerWidth < 700 && mangaAdaptiveState > 3){
+        mangaAdaptiveState = 3;
+
         // Update buttons panel
         const bottomPanel = document.querySelector(".bottom-panel");
         const editButton = document.querySelector(".edit-button");
