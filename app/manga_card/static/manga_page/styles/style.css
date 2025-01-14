@@ -191,18 +191,18 @@ textarea:focus {
     overflow-wrap: break-word;
 }
 
-#genres-list {
+#genres {
     margin-top: 20px;
     display: flex;
 }
 
-.genres-list__item {
+.genres__item {
     padding: 0 8px 2px;
     background-color: var(--inputs-option-selected-background);
     border-radius: 8px;
 }
 
-.genres-list__link {
+.genres__link {
     color: var(--inputs-option-selected-text-color);
 }
 
@@ -276,7 +276,7 @@ textarea:focus {
     }
 }
 
-@media (max-width: 700px){
+@media (max-width: 700px) {
 
     #right-side {
         display: none;
@@ -315,6 +315,10 @@ textarea:focus {
         column-gap: 5px;
         margin-top: 35px;
         justify-content: space-around;
+    }
+
+    #about {
+        margin-top: 20px;
     }
 
     .stats-option {

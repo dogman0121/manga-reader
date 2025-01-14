@@ -18,9 +18,11 @@ class Render {
                     return object.element;
                 if (object.html)
                     return object.render();
+                return object;
+            case "string":
                 return document.createTextNode(object.toString());
             default:
-                return document.createTextNode(object.toString());
+                return object;
         }
     }
 }
@@ -156,8 +158,10 @@ class State {
     set(value){
         this.value = value;
         const newElem = Render.renderObject(value);
-        this.element.replaceWith(newElem);
-        this.element = newElem;
+        if (this.element){
+            this.element.replaceWith(newElem);
+            this.element = newElem;
+        }
     }
 
     get(){

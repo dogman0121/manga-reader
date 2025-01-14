@@ -2,15 +2,21 @@ class SectionList extends Component {
     constructor(sections) {
         super();
 
-        this.sections = sections;
-        this.selectedSection = this.sections[0];
-        this.currentContent = new State(this.sections[0].content)
+        if (sections) {
+            this.sections = sections;
+            this.selectedSection = this.sections[0];
+            this.currentContent = new State(this.sections[0].content)
+        } else {
+            this.sections = [];
+            this.selectedSection = new Section("empty", "Empty", "");
+            this.currentContent = new State(this.selectedSection);
+        }
     }
 
     html() {
         return `
             <div class="sections">
-                <div class="sections__buttons sections-buttons">
+                <div class="sections__buttons">
                     {{ this.sections.map(section => section.button) }}
                 </div>
                 <section class="sections__content">
@@ -20,8 +26,24 @@ class SectionList extends Component {
         `
     }
 
-    addSection(sectionName, sectionPlaceholder, sectionContent){
-        this.sections.add(new Section(sectionName, sectionPlaceholder, sectionContent));
+    addFront(section){
+        if (this.element)
+            this.element.querySelector(".sections__buttons").prepend(section.button.element || section.button.render());
+
+        section.addEventListener("chooseSection", this.onChooseSection.bind(this));
+
+        const newArr = [section];
+        this.sections.forEach((section) => newArr.push(section))
+        this.sections = newArr;
+    }
+
+    addBack(section) {
+        if (this.element)
+            this.element.querySelector(".sections__buttons").append(section.button.element || section.button.render());
+
+        section.addEventListener("chooseSection", this.onChooseSection.bind(this));
+
+        this.sections.push(section);
     }
 
     events(element) {
@@ -40,7 +62,6 @@ class SectionList extends Component {
     }
 }
 
-
 class Section extends Component {
     constructor(name, placeholder, content) {
         super();
@@ -57,11 +78,15 @@ class Section extends Component {
     }
 
     select() {
-        this.button.element.classList.add("sections-buttons__item_active");
+        this.button.element?.classList.add("sections-buttons__item_active");
     }
 
     unselect() {
-        this.button.element.classList.remove("sections-buttons__item_active");
+        this.button.element?.classList.remove("sections-buttons__item_active");
+    }
+
+    choose() {
+        this.dispatchEvent(new CustomEvent("chooseSection", {detail: {section: this}}));
     }
 }
 

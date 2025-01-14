@@ -1,6 +1,5 @@
 window.addEventListener("resize", adaptManga);
 window.addEventListener("load", adaptManga);
-window.addEventListener("DOMContentLoaded", adaptManga);
 
 function adaptManga() {
     if (window.innerWidth < 1096) {
@@ -58,5 +57,22 @@ function adaptManga() {
         poster.after(sections);
         poster.after(stats);
         poster.after(names);
+
+        const info = document.createElement("div");
+        info.className = "information";
+        console.log(info);
+
+        const description = document.querySelector("#about");
+        const genres = document.querySelector("#genres");
+        const similar = document.querySelector("#similar");
+        info.append(description);
+        info.append(genres);
+        info.append(similar);
+
+        const infoSection = new Section("info", "Информация", info);
+
+        sectionsList.addFront(infoSection);
+        infoSection.choose();
+
     }
 }
