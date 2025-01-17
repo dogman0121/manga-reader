@@ -129,3 +129,14 @@ a:hover {
 .oauth {
     margin: 5px 0;
 }
+
+@media (max-width: 460px) {
+    main {
+        width: min(420px, calc(100% - 10px*2));
+        margin: 0 10px;
+    }
+
+    .main__inner {
+        padding: 30px 15px;
+    }
+}

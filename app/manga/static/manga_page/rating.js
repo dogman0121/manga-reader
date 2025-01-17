@@ -74,16 +74,24 @@ class Rating extends Component {
         this.list.addEventListener("chooseRating", this.onChooseRating.bind(this));
     }
 
-    onRender(){
+    async onRender(){
         this.content.bindElement(this.element.querySelector(".rating-button__text"));
-        fetch("/api/rating?" + new URLSearchParams({title: DATA.title.id}).toString())
-            .then(response => response.json())
-            .then(rating => {
+
+        try {
+            const response = await fetch(`/api/rating?title=${DATA.title.id}`);
+
+            if (response.ok) {
+                const rating = response.json();
+
                 this.setRating(rating);
-            })
-            .catch(e => {
-                console.log(e);
-            })
+            }
+            else {
+                this.content.set(this.emptyLabel);
+            }
+        }
+        catch (e){
+            console.error(e);
+        }
     }
 
     onClick(event) {
@@ -101,65 +109,90 @@ class Rating extends Component {
             this.updateRating(rating);
     }
 
-    deleteRating(){
-        fetch("../api/rating", {
-            method: "DELETE",
-            headers: {
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title: DATA.title.id,
-                rating: this.rating
-            })
-        })
-            .then(response => {
-                this.setRating(undefined);
-            })
-            .catch((e) => {
-                console.log(e);
-            })
-    }
-
-    updateRating(rating){
-        console.log(rating);
-        fetch("../api/rating", {
-            method: "UPDATE",
-            headers: {
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title: DATA.title.id,
-                rating: rating,
-            })
-        })
-            .then(response => {
-                this.setRating(rating);
-            })
-            .catch(e => {
-                console.log(e);
+    async deleteRating(){
+        try {
+            const response = await fetch("../api/rating", {
+                method: "DELETE",
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: DATA.title.id,
+                })
             });
+
+            if (response.ok) {
+                this.setRating(undefined);
+            }
+            else {
+                if (response.status === 401){
+                    const notify = new NotifyManager();
+                    notify.push(new Notify("Ошибка", "Вы не авторизированы!"));
+                }
+            }
+        }
+        catch (e) {
+
+        }
     }
 
-    addRating(rating){
-        fetch("../api/rating", {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title: DATA.title.id,
-                rating: rating,
-            }),
-        })
-            .then(response => {
+    async updateRating(rating){
+        try {
+            const response = fetch("../api/rating", {
+                method: "UPDATE",
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: DATA.title.id,
+                    rating: rating,
+                })
+            })
+
+            if (response.ok) {
                 this.setRating(rating);
-            })
-            .catch((e) => {
-                console.log(e);
-            })
+            }
+            else {
+                if (response.status === 401){
+                    const notify = new NotifyManager();
+                    notify.push(new Notify("Ошибка", "Вы не авторизированы!"));
+                }
+            }
+        }
+        catch (e) {
+
+        }
+    }
+
+    async addRating(rating){
+        try {
+            const response = await fetch("../api/rating", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    title: DATA.title.id,
+                    rating: rating,
+                })
+            });
+
+            if (response.ok) {
+                this.setRating(rating);
+            }
+            else {
+                if (response.status === 401){
+                    const notify = new NotifyManager();
+                    notify.push(new Notify("Ошибка", "Вы не авторизированы!"));
+                }
+            }
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
 
     setRating(rating) {

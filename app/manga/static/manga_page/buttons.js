@@ -61,7 +61,7 @@ class SaveButton extends Component {
     }
 
     onClick(event){
-        if (DATA.user){
+        if (Object.keys(DATA.user).length !== 0){
             if (this.saved)
                 this.delete();
             else
@@ -73,20 +73,29 @@ class SaveButton extends Component {
         }
     }
 
-    onRender() {
+    async onRender() {
         this.content.bindElement(this.element.querySelector(".save-button__button"));
 
-        fetch("/api/save?" + new URLSearchParams({title: DATA.title.id}).toString())
-            .then(response => response.json())
-            .then(saved => {
-                this.saved = saved;
+        try {
+            const response = await fetch(`/api/save?title=${DATA.title.id}`);
 
-                console.log(this.options);
-                if (this.saved)
+            if (response.ok){
+                const saved = await response.json();
+
+                if (saved)
                     this.content.set(this.options.size === "min" ? SAVEBUTTONMIN1 : SAVEBUTTONMAX1);
                 else
                     this.content.set(this.options.size === "min" ? SAVEBUTTONMIN2 : SAVEBUTTONMAX2);
-            })
+
+                this.saved = saved;
+            }
+            else {
+                this.content.set(this.options.size === "min" ? SAVEBUTTONMIN2 : SAVEBUTTONMAX2);
+            }
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
 
     delete() {
@@ -136,18 +145,22 @@ class EditButton extends Component {
         if (this.options.size === "max")
             return `
                 <div class="edit-button">
-                    <button class="edit-button__button">Редактировать</button>
+                    <a href="/manga/${DATA.title.id}/edit">
+                        <button class="edit-button__button">Редактировать</button>
+                    </a>
                 </div>
             `;
         else if (this.options.size === "min")
             return `
                 <div class="edit-button">
-                    <button class="edit-button__button">
-                        <svg class="edit-button__image" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <title/><g id="Complete"><g id="edit"><g><path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                            <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></g></g></g>
-                        </svg>
-                    </button>
+                    <a href="/manga/${DATA.title.id}/edit">
+                        <button class="edit-button__button">
+                            <svg class="edit-button__image" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <title/><g id="Complete"><g id="edit"><g><path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                                <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></g></g></g>
+                            </svg>
+                        </button>
+                    </a>
                 </div>
             `
     }
@@ -162,10 +175,13 @@ class ReadButton extends Component {
         `
     }
 
-    onRender() {
-        fetch("/api/progress?" + new URLSearchParams({title: DATA.title.id}).toString())
-            .then(response => response.json())
-            .then(chapter => {
+    async onRender() {
+        try {
+            const response = await fetch(`/api/progress?title=${DATA.title.id}`);
+
+            if (response.ok){
+                const chapter = await response.json();
+
                 if (!chapter)
                     this.element.innerHTML = `
                         <button class="read-button__button">
@@ -190,7 +206,18 @@ class ReadButton extends Component {
                             </button>
                         </a>
                     `;
-            })
+            }
+            else {
+                this.element.innerHTML = `
+                    <button class="read-button__button">
+                        Нет глав
+                    </button>  
+                `;
+            }
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
 
 }

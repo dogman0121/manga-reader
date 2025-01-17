@@ -33,7 +33,6 @@ function adaptManga() {
 
         const info = document.createElement("div");
         info.className = "information";
-        console.log(info);
 
         const description = document.querySelector("#about");
         const genres = document.querySelector("#genres");
