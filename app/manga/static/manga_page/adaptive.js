@@ -11,6 +11,7 @@ function adaptManga() {
         mangaInfo.append(similar);
     }
     if (window.innerWidth < 872 && mangaAdaptiveState === 2) {
+        mangaAdaptiveState = 3;
         // Изменение кнопки рейтинга
         const rating = document.querySelector(".rating-button");
         const poster = document.querySelector("#poster");
