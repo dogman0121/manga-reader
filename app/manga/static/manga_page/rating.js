@@ -81,7 +81,7 @@ class Rating extends Component {
             const response = await fetch(`/api/rating?title=${DATA.title.id}`);
 
             if (response.ok) {
-                const rating = response.json();
+                const rating = await response.json();
 
                 this.setRating(rating);
             }
