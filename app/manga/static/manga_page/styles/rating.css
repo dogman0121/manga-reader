@@ -75,7 +75,7 @@
 }
 
 @media (max-width: 872px) {
-    .rating__button {
+    .rating-button {
         position: absolute;
         bottom: 8px;
         left: 50%;

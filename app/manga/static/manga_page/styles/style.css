@@ -146,7 +146,7 @@ textarea:focus {
     align-items: center;
 }
 
-.manga-subbuttons {
+.nav-buttons{
     display: flex;
     flex-direction: column;
 }
@@ -206,7 +206,7 @@ textarea:focus {
     color: var(--inputs-option-selected-text-color);
 }
 
-.genres-list__item + .genres-list__item {
+.genres__item + .genres__item {
     margin-left: 5px;
 }
 

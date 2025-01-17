@@ -52,25 +52,19 @@ class Rating extends Component {
     constructor() {
         super();
 
-        this.fetchRating();
-
         this.list = new RatingList();
         this.modal = new Modal(this.list);
-
 
         this.emptyLabel = new NoRatingLabel();
         this.ratingLabel = new RatingLabel(this.rating);
 
-        if (this.rating)
-            this.content = new State(this.ratingLabel);
-        else
-            this.content = new State(this.emptyLabel);
+        this.content = new State(this.emptyLabel);
     }
 
     html() {
         return `
             <div class="rating-button">
-                {{ this.content }}
+                <div class="rating-button__text"></div>
             </div>
         `
     }
@@ -80,11 +74,12 @@ class Rating extends Component {
         this.list.addEventListener("chooseRating", this.onChooseRating.bind(this));
     }
 
-    fetchRating(){
+    onRender(){
+        this.content.bindElement(this.element.querySelector(".rating-button__text"));
         fetch("/api/rating?" + new URLSearchParams({title: DATA.title.id}).toString())
             .then(response => response.json())
             .then(rating => {
-                this.rating = rating;
+                this.setRating(rating);
             })
             .catch(e => {
                 console.log(e);
@@ -168,8 +163,9 @@ class Rating extends Component {
     }
 
     setRating(rating) {
-        if (!rating)
+        if (!rating){
             this.content.set(this.emptyLabel);
+        }
         else {
             this.content.set(this.ratingLabel)
             this.ratingLabel.set(rating)

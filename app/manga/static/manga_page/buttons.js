@@ -108,64 +108,40 @@ class EditButton extends Component {
     }
 }
 
-class MangaButtons extends Component {
-    html(){
-        if (DATA.user)
-            return `
-                <div class="manga-buttons">
-                    {{ new SaveButton() }}
-                    {{ new EditButton() }}
-                </div>
-            `;
-        else
-            return ``;
-    }
-}
-
 class ProgressButton extends Component {
-    constructor() {
-        super();
-
-        this.fetchProgress();
-    }
-
     html() {
-        if (!this.progress)
-            return `
-                <div class="read-button">
-                    <button class="read-button__button">
-                        Нет глав
-                    </button>  
-                </div>
-            `;
-        else if (!this.progress.progress)
-            return `
-                <div class="read-button">
-                    <a href="/chapters/${this.progress.id}">
-                        <button class="read-button__button">Читать</button>
-                    </a>
-                </div>
-            `;
-        else
-            return `
-                <div class="read-button">
-                    <a href="/chapters/${this.progress.id}">
-                        <button class="read-button__button">
-                            <span class="read-button__header">Продолжить</span>
-                            <span class="read-button__text">
-                                ТОМ ${this.progress.tome} ГЛАВА ${this.progress.chapter}
-                                </span>
-                        </button>
-                    </a>
-                </div>
-            `;
+        return `
+            <div class="read-button"></div>
+        `
     }
 
-    fetchProgress() {
-        fetch("/api/progress?" + new URLSearchParams({title: DATA.title.id, chapter: true}).toString())
+    onRender() {
+        fetch("/api/progress?" + new URLSearchParams({title: DATA.title.id}).toString())
             .then(response => response.json())
             .then(chapter => {
-                this.progress = chapter;
+                if (!chapter)
+                    this.element.innerHTML = `
+                        <button class="read-button__button">
+                            Нет глав
+                        </button>  
+                    `;
+                else if (!chapter.progress)
+                    this.element.innerHTML = `
+                        <a href="/chapters/${chapter.id}">
+                            <button class="read-button__button">Читать</button>
+                        </a>
+                    `;
+                else
+                    return `
+                        <a href="/chapters/${chapter.id}">
+                            <button class="read-button__button">
+                                <span class="read-button__header">Продолжить</span>
+                                <span class="read-button__text">
+                                    ТОМ ${chapter.tome} ГЛАВА ${chapter.chapter}
+                                    </span>
+                            </button>
+                        </a>
+                    `;
             })
     }
 
@@ -190,8 +166,11 @@ class BottomButtonsPanel1 extends Component {
 }
 
 window.addEventListener("load", function () {
-    const mangaButtons = document.querySelector(".manga-buttons");
-    mangaButtons.replaceWith(new MangaButtons().render());
+    const saveButton = document.querySelector(".save-button");
+    const editButton = document.querySelector(".edit-button");
+
+    saveButton.replaceWith(new SaveButton().render());
+    editButton.replaceWith(new EditButton().render());
 
     const navigationButtons = document.querySelector(".read-button");
     navigationButtons.replaceWith(new ProgressButton().render());
