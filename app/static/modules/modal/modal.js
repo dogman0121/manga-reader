@@ -1,28 +1,37 @@
-function Modal(element) {
-    this.modal = new DOMParser().parseFromString(`
-        <div class="modal">
-            <div class="modal__inner">
-            </div>
-        </div>
-    `, "text/html").querySelector(".modal");
-    this.modal.querySelector(".modal__inner").append(element);
+class Modal extends Component {
+    constructor(element) {
+        super();
 
-    this.open = function () {
-        document.body.append(this.modal);
+        this.content = element;
+    }
+
+    html() {
+        return `
+            <div class="modal">
+                <div class="modal__inner">
+                    {{ this.content }}
+                </div>
+            </div>
+        `
+    }
+    events(element) {
+        element.addEventListener("click", this._callbackClose.bind(this))
+    }
+
+    open() {
+        document.body.append(this.element || this.render());
         document.body.style.overflow = "hidden";
     }
 
-    this.close = function () {
-        this.modal.remove();
+    close() {
+        this.element.remove();
         document.body.style.overflow = null;
     }
 
-    this._callbackClose = function (event){
+    _callbackClose(event){
         if (event.target.closest(".modal__inner"))
             return null;
 
         this.close();
     }
-
-    this.modal.addEventListener("click", this._callbackClose.bind(this));
 }

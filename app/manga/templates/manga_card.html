@@ -21,24 +21,14 @@
         <div id="poster">
             <img id="poster__image" src="{{ title.get_poster() }}">
         </div>
-        {% if user.is_authenticated %}
-            {% if user.role > 1 or title.author_id == user.id %}
-                <div class="edit-button">
-                    <a href="{{ url_for("manga.edit_manga", title_id=title.id) }}">
-                        <button class="edit-button__button">
-                            Редактировать
-                        </button>
-                    </a>
-                </div>
-            {% endif %}
+        <div class="manga-buttons">
             <div class="save-button">
-                {% if saved %}
-                    <button class="save-button__button">Сохранено</button>
-                {% else %}
-                    <button class="save-button__button">Сохранить</button>
-                {% endif %}
+                <button class="save-button__button"></button>
             </div>
-        {% endif %}
+            <div class="edit-button">
+                <button class="edit-button__button"></button>
+            </div>
+        </div>
         {% include "description.html" %}
     </div>
     <div id="right-side">
@@ -56,58 +46,11 @@
                     </span>
                     <h1 class="manga-names__russian">{{ title.name_russian }}</h1>
                 </div>
-                <div class="manga-subbuttons">
+                <div class="navigation-buttons">
                     <div class="read-button">
-                        {% if progress %}
-                            <a href="{{ url_for("chapters.get_chapter", chapter_id=progress_chapter.id) }}">
-                                <button class="read-button__button">
-                                    <span class="read-button__header">Продолжить</span>
-                                    <span class="read-button__text">ТОМ {{ progress_chapter.tome }} ГЛАВА {{ '{0:g}'.format(progress_chapter.chapter) }}</span>
-                                </button>
-                            </a>
-                        {% else %}
-                            {% if title.chapters %}
-                                <a href="{{ url_for("chapters.get_chapter", chapter_id=title.chapters[0].id) }}">
-                                    <button class="read-button__button">Читать</button>
-                                </a>
-                            {% else %}
-                                <button class="read-button__button">
-                                    Нет глав
-                                </button>
-                            {% endif %}
-                        {% endif %}
+                        <button class="read-button__button"></button>
                     </div>
-                    {% if user_rating %}
-                        <div class="rating__button">
-                            <span class="rating__text">Ваша оценка:</span>
-                            {% if user_rating < 4 %}
-                                <span class="user-rating user-rating_bad" data-stars="{{ user_rating }}">
-                                    <span class="user-rating__number">{{ user_rating }}</span>
-                                </span>
-                            {% elif user_rating < 7 %}
-                                <span class="user-rating user-rating_normal" data-stars="{{ user_rating }}">
-                                    <span class="user-rating__number">{{ user_rating }}</span>
-                                </span>
-                            {% elif user_rating < 10 %}
-                                <span class="user-rating user-rating_good" data-stars="{{ user_rating }}">
-                                    <span class="user-rating__number">{{ user_rating }}</span>
-                                </span>
-                            {% elif user_rating == 10 %}
-                                <span class="user-rating user-rating_excellent" data-stars="{{ user_rating }}">
-                                    <span class="user-rating__number">{{ user_rating }}</span>
-                                </span>
-                            {% endif %}
-                        </div>
-                    {% else %}
-                        <div class="rating__button">
-                            <span class="rating__text">
-                                Оценить
-                                <svg width="18px" height="18px" viewBox="0 -0.5 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16.0005 0L21.4392 9.27275L32.0005 11.5439L24.8005 19.5459L25.889 30.2222L16.0005 25.895L6.11194 30.2222L7.20049 19.5459L0.000488281 11.5439L10.5618 9.27275L16.0005 0Z" fill="#FFCB45"/>
-                                </svg>
-                            </span>
-                        </div>
-                    {% endif %}
+                    <div class="rating-button"></div>
                 </div>
             </div>
         </div>
@@ -196,6 +139,8 @@
     {% assets filters="jsmin", output="min/manga/adaptive.js", "manga/manga_page/adaptive.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    {% assets filters="jsmin", output="min/manga/buttons.js", "manga/manga_page/buttons.js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
     <script src="{{ url_for('manga.static', filename='manga_page/chapters.js') }}"></script>
-    <script src="{{ url_for('manga.static', filename='manga_page/saves.js') }}"></script>
 {% endblock %}

@@ -2,8 +2,8 @@ import json
 from flask import render_template, redirect, url_for, request
 from app.models import Title, Chapter
 from flask_login import current_user
-from app.manga_card import bp
-from app.manga_card.forms import AddMangaForm
+from app.manga import bp
+from app.manga.forms import AddMangaForm
 from app.utils import render
 
 

@@ -1,8 +1,7 @@
-.rating__button {
+.rating-button {
     align-self: end;
     padding: 0 15px;
     display: flex;
-    align-items: center;
     justify-content: center;
     margin-top: 4px;
     background-color: var(--dropdown-background);
@@ -12,14 +11,14 @@
     cursor: pointer;
 }
 
-.rating__text {
+.rating-button__text {
     display: flex;
     align-items: center;
     column-gap: 5px;
     white-space: nowrap;
 }
 
-.rating__button-icon {
+.rating-button__icon {
     width: 20px;
     height: 20px;
 }

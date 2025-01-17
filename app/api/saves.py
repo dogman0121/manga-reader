@@ -25,5 +25,9 @@ def delete_save():
 @bp.route("/save", methods=["GET"])
 @login_required
 def get_save():
+    if "title" in request.args:
+        title = Title.get(request.args.get("title"))
+        return jsonify(title in current_user.saves)
+
     saves = [i.to_dict() for i in current_user.saves]
     return jsonify(saves)
