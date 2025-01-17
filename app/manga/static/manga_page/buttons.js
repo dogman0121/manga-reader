@@ -11,21 +11,49 @@ function debounce(func, timeout){
     }
 }
 
+const SAVEBUTTONMIN1 = new Component(`
+    <button class="save-button__button">
+        <svg class="save-button__image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+`); // saved
+
+const SAVEBUTTONMIN2 = new Component(`
+    <button class="save-button__button">
+        <svg class="save-button__image" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.75 20.75C17.5974 20.747 17.4487 20.702 17.32 20.62L12 16.91L6.68 20.62C6.56249 20.6915 6.42757 20.7294 6.29 20.7294C6.15243 20.7294 6.01751 20.6915 5.9 20.62C5.78491 20.5607 5.68741 20.4722 5.61722 20.3634C5.54703 20.2546 5.50661 20.1293 5.5 20V6C5.5 5.27065 5.78973 4.57118 6.30546 4.05546C6.82118 3.53973 7.52065 3.25 8.25 3.25H15.75C16.4793 3.25 17.1788 3.53973 17.6945 4.05546C18.2103 4.57118 18.5 5.27065 18.5 6V20C18.5005 20.1362 18.4634 20.2698 18.3929 20.3863C18.3223 20.5027 18.2209 20.5974 18.1 20.66C17.9927 20.7189 17.8724 20.7498 17.75 20.75ZM12 15.25C12.1532 15.2484 12.3033 15.2938 12.43 15.38L17 18.56V6C17 5.66848 16.8683 5.35054 16.6339 5.11612C16.3995 4.8817 16.0815 4.75 15.75 4.75H8.25C7.91848 4.75 7.60054 4.8817 7.36612 5.11612C7.1317 5.35054 7 5.66848 7 6V18.56L11.57 15.38C11.6967 15.2938 11.8468 15.2484 12 15.25Z" fill="#000000"/>
+        </svg>
+    </button>
+`); // unsaved
+
+
+const SAVEBUTTONMAX1 = new Component(`
+    <button class="save-button__button">
+        Сохранено
+    </button>
+`); // saved
+
+const SAVEBUTTONMAX2 = new Component(`
+    <button class="save-button__button">
+        Сохранить
+    </button>
+`) // unsaved
+
 class SaveButton extends Component {
-    constructor(options) {
+    constructor(options={}) {
         super();
 
         this.saved = false;
         this.options = options;
+        this.content = new State();
     }
     html() {
         return `
             <div class="save-button">
-                <button class="save-button__button">
-                    Сохранить
-                </button>
+                <div class="save-button__button" />
             </div>
-        `
+        `;
     }
 
     events(element) {
@@ -46,13 +74,18 @@ class SaveButton extends Component {
     }
 
     onRender() {
+        this.content.bindElement(this.element.querySelector(".save-button__button"));
+
         fetch("/api/save?" + new URLSearchParams({title: DATA.title.id}).toString())
             .then(response => response.json())
             .then(saved => {
-                if (saved) {
-                    this.element.querySelector(".save-button__button").textContent = "Сохранено";
-                }
                 this.saved = saved;
+
+                console.log(this.options);
+                if (this.saved)
+                    this.content.set(this.options.size === "min" ? SAVEBUTTONMIN1 : SAVEBUTTONMAX1);
+                else
+                    this.content.set(this.options.size === "min" ? SAVEBUTTONMIN2 : SAVEBUTTONMAX2);
             })
     }
 
@@ -69,7 +102,7 @@ class SaveButton extends Component {
         })
             .then(() => {
                 this.saved = false;
-                this.element.querySelector(".save-button__button").textContent = "Сохранить";
+                this.content.set(this.options.size === "min" ? SAVEBUTTONMIN2 : SAVEBUTTONMAX2);
             })
 
     }
@@ -87,7 +120,7 @@ class SaveButton extends Component {
         })
             .then(() => {
                 this.saved = true;
-                this.element.querySelector(".save-button__button").textContent = "Сохранено";
+                this.content.set(this.options.size === "min" ? SAVEBUTTONMIN1 : SAVEBUTTONMAX1);
             })
     }
 }
@@ -100,18 +133,32 @@ class EditButton extends Component {
     }
 
     html() {
-        return `
-            <div class="edit-button">
-                <button class="edit-button__button">Редактировать</button>
-            </div>
-        `
+        if (this.options.size === "max")
+            return `
+                <div class="edit-button">
+                    <button class="edit-button__button">Редактировать</button>
+                </div>
+            `;
+        else if (this.options.size === "min")
+            return `
+                <div class="edit-button">
+                    <button class="edit-button__button">
+                        <svg class="edit-button__image" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <title/><g id="Complete"><g id="edit"><g><path d="M20,16v4a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V6A2,2,0,0,1,4,4H8" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                            <polygon fill="none" points="12.5 15.8 22 6.2 17.8 2 8.3 11.5 8 16 12.5 15.8" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></g></g></g>
+                        </svg>
+                    </button>
+                </div>
+            `
     }
 }
 
-class ProgressButton extends Component {
+class ReadButton extends Component {
     html() {
         return `
-            <div class="read-button"></div>
+            <div class="read-button">
+                <button class="read-button__button"></button>
+            </div>
         `
     }
 
@@ -132,13 +179,14 @@ class ProgressButton extends Component {
                         </a>
                     `;
                 else
-                    return `
+                    this.element.innerHTML = `
                         <a href="/chapters/${chapter.id}">
                             <button class="read-button__button">
                                 <span class="read-button__header">Продолжить</span>
                                 <span class="read-button__text">
-                                    ТОМ ${chapter.tome} ГЛАВА ${chapter.chapter}
-                                    </span>
+                                    ТОМ ${chapter.tome} 
+                                    ГЛАВА ${chapter.chapter}
+                                   </span>
                             </button>
                         </a>
                     `;
@@ -147,31 +195,45 @@ class ProgressButton extends Component {
 
 }
 
-class NavigationButtons extends Component {
-    html() {
-        return `
-            sdfsdf
-        `
+window.addEventListener("DOMContentLoaded", function () {
+    let bottomPanel, saveButton, editButton, readButton;
+    const saveButtonEl = document.querySelector(".save-button");
+    const editButtonEl = document.querySelector(".edit-button");
+    const readButtonEl = document.querySelector(".read-button");
+    if (window.innerWidth < 700){
+        if (document.querySelector(".bottom-panel"))
+            return;
+
+        bottomPanel = document.createElement("div");
+        bottomPanel.className = "bottom-panel";
+
+        saveButton = new SaveButton({size: "min"});
+        editButton = new EditButton({size: "min"});
+        readButton = new ReadButton();
+
+        bottomPanel.prepend(editButtonEl);
+        bottomPanel.append(readButtonEl);
+        bottomPanel.append(saveButtonEl);
+
+        document.body.append(bottomPanel);
     }
-}
+    else if (window.innerWidth < 872) {
+        if (document.querySelector(".bottom-panel"))
+            return;
 
-class BottomButtonsPanel1 extends Component {
-    html() {
-        return `
-            <div class="buttons-panel">
-                {{  }}
-            </div>
-        `
+        bottomPanel = document.createElement("div");
+        bottomPanel.className = "bottom-panel";
+
+        bottomPanel.append(readButtonEl);
+
+        document.body.append(bottomPanel);
     }
-}
-
-window.addEventListener("load", function () {
-    const saveButton = document.querySelector(".save-button");
-    const editButton = document.querySelector(".edit-button");
-
-    saveButton.replaceWith(new SaveButton().render());
-    editButton.replaceWith(new EditButton().render());
-
-    const navigationButtons = document.querySelector(".read-button");
-    navigationButtons.replaceWith(new ProgressButton().render());
+    else {
+        saveButton = new SaveButton({size: "max"});
+        editButton = new EditButton({size: "max"});
+        readButton = new ReadButton();
+    }
+    editButtonEl.replaceWith(editButton.render());
+    readButtonEl.replaceWith(readButton.render());
+    saveButtonEl.replaceWith(saveButton.render());
 });

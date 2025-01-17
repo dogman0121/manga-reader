@@ -30,6 +30,23 @@ class Render {
 class Component {
     eventsDict = {};
 
+    constructor(html) {
+        if (!html)
+            return;
+
+        let parsedElement = this.renderHTML(html);
+        if (!parsedElement){
+            parsedElement = document.createTextNode(html);
+            this.replaceComponents([parsedElement]);
+        }
+        else {
+            this.replaceComponents(this.findTextNodes(parsedElement));
+        }
+
+        this.element = parsedElement;
+    }
+
+
     init(element) {
         this.element = element;
         this.onInit();
@@ -48,6 +65,7 @@ class Component {
         else {
             this.replaceComponents(this.findTextNodes(parsedElement));
         }
+
         this.element = parsedElement;
         this.events(this.element);
         this.onRender();
