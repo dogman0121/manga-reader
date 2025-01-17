@@ -195,6 +195,18 @@ class ReadButton extends Component {
 
 }
 
+function scrollButtonPanel(event) {
+    const footer = document.querySelector("footer");
+    const footerCords = footer.getBoundingClientRect();
+    const bottomPanel = document.querySelector(".bottom-panel");
+    const windowHeight = window.innerHeight;
+
+    if (windowHeight >= (footerCords.top - bottomPanel.clientHeight))
+        bottomPanel.style.bottom = (footerCords.top - bottomPanel.clientHeight) - windowHeight + 10 + "px";
+    else
+        bottomPanel.style.bottom = "10px";
+}
+
 window.addEventListener("DOMContentLoaded", function () {
     let bottomPanel, saveButton, editButton, readButton;
     const saveButtonEl = document.querySelector(".save-button");
@@ -206,6 +218,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
         bottomPanel = document.createElement("div");
         bottomPanel.className = "bottom-panel";
+        window.addEventListener("scroll", scrollButtonPanel);
 
         saveButton = new SaveButton({size: "min"});
         editButton = new EditButton({size: "min"});
@@ -223,6 +236,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
         bottomPanel = document.createElement("div");
         bottomPanel.className = "bottom-panel";
+
+        saveButton = new SaveButton({size: "max"});
+        editButton = new EditButton({size: "max"});
+        readButton = new ReadButton();
 
         bottomPanel.append(readButtonEl);
 

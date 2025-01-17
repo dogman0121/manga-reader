@@ -55,9 +55,7 @@ class ProfileMenu extends Component {
     }
 
     events(element) {
-        console.log(element.querySelector(".theme-switcher > input"));
         element.querySelector(".theme-switcher > input").addEventListener("input", function (event){
-            console.log(1234);
         if (event.target.checked)
             setColorScheme("light");
         else
@@ -67,6 +65,9 @@ class ProfileMenu extends Component {
     }
 }
 
-document.querySelector(".dropdown-button").addEventListener("click", function () {
-    new Dropdown(document.querySelector(".dropdown-button"), new ProfileMenu()).show();
+
+window.addEventListener("load", function (){
+    document.querySelector(".dropdown-button")?.addEventListener("click", function () {
+        new Dropdown(document.querySelector(".dropdown-button"), new ProfileMenu()).show();
+    })
 })
