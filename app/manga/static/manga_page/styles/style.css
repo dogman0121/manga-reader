@@ -185,7 +185,7 @@ textarea:focus {
 }
 
 #about {
-    margin-top: 40px;
+    margin-top: 30px;
     line-height: 2;
     width: 100%;
     overflow-wrap: break-word;
@@ -199,7 +199,7 @@ textarea:focus {
 }
 
 #genres {
-    margin-top: 20px;
+    margin-top: 30px;
     display: flex;
 }
 
