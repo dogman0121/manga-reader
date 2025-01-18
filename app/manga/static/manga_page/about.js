@@ -3,20 +3,21 @@ window.addEventListener("load", function (){
     const lineHeight = parseFloat(window.getComputedStyle(about).lineHeight);
     about.style.maxHeight = 4 * lineHeight + "px";
 
-    let shown = false;
-    const show = new Component("<div class='show-about'>Показать</div>");
-    show.addEventListener("click", function() {
-        if (shown) {
-            about.style.maxHeight = 4 * lineHeight + "px";
-            show.element.innerHTML = "Показать";
-            shown = false;
-        }
-        else {
-            about.style.maxHeight = "";
-            show.element.innerHTML = "Скрыть";
-            shown = true;
-        }
-    });
+    if (parseFloat(window.getComputedStyle(about).height) > lineHeight * 4) {
+        let shown = false;
+        const show = new Component("<div class='show-about'>Показать</div>");
+        show.addEventListener("click", function () {
+            if (shown) {
+                about.style.maxHeight = 4 * lineHeight + "px";
+                show.element.innerHTML = "Показать";
+                shown = false;
+            } else {
+                about.style.maxHeight = "";
+                show.element.innerHTML = "Скрыть";
+                shown = true;
+            }
+        });
+        about.after(show.render());
+    }
 
-    about.after(show.render());
 })
