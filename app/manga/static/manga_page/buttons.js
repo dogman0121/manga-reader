@@ -182,13 +182,13 @@ class ReadButton extends Component {
             if (response.ok){
                 const chapter = await response.json();
 
-                if (!chapter)
+                if (chapter === null)
                     this.element.innerHTML = `
                         <button class="read-button__button">
                             Нет глав
                         </button>  
                     `;
-                else if (!chapter.progress)
+                else if (chapter.progress === null)
                     this.element.innerHTML = `
                         <a href="/chapters/${chapter.id}">
                             <button class="read-button__button">Читать</button>
