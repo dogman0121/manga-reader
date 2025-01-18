@@ -136,7 +136,8 @@
     %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
-    {% assets filters="jsmin", output="min/manga/adaptive.js", "manga/manga_page/adaptive.js" %}
+    {% assets filters="jsmin", output="min/manga/adaptive.js", "manga/manga_page/adaptive.js",
+        "manga/manga_page/about.js" %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
     {% assets filters="jsmin", output="min/manga/buttons.js", "manga/manga_page/buttons.js" %}

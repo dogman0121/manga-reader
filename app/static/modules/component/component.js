@@ -44,6 +44,8 @@ class Component {
         }
 
         this.element = parsedElement;
+
+        this._propagateEvents();
     }
 
 
@@ -67,6 +69,7 @@ class Component {
         }
 
         this.element = parsedElement;
+        this._propagateEvents();
         this.events(this.element);
         this.onRender();
         return this.element;
@@ -89,7 +92,7 @@ class Component {
 
     findTextNodes(element){
         let textNodes = [];
-        let walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
 
         while (walker.nextNode())
             textNodes.push(walker.currentNode);
@@ -128,14 +131,12 @@ class Component {
     }
 
     renderElement(text){ // Returns a rendered node
-        let evaluated = eval(text);
-
-        return Render.renderObject(evaluated);
+        return Render.renderObject(eval(text));
     }
 
     replaceComponents(textNodes){
         for (let node of textNodes){
-            let vars = this.splitTextNode(node)
+            const vars = this.splitTextNode(node)
 
             if (!vars || vars.length === 0)
                 continue;
@@ -144,7 +145,7 @@ class Component {
             for(let tempVar of vars){
                 parsed = this.parseTextNode(tempVar.data);
 
-                let rendered = this.renderElement(parsed);
+                const rendered = this.renderElement(parsed);
                 if (Array.isArray(rendered))
                     tempVar.replaceWith(...rendered);
                 else
@@ -157,6 +158,9 @@ class Component {
         if (!this.eventsDict[name])
             this.eventsDict[name] = [];
         this.eventsDict[name].push(handler);
+
+        if (this.element)
+            this.element.addEventListener(name, this.dispatchEvent.bind(this));
     }
 
     dispatchEvent(event) {
@@ -165,6 +169,12 @@ class Component {
 
         for (let handler of this.eventsDict[event.type])
             handler(event);
+    }
+
+    _propagateEvents(){
+        for(let event of Object.keys(this.eventsDict)){
+            this.element.addEventListener(event, this.dispatchEvent.bind(this));
+        }
     }
 }
 
