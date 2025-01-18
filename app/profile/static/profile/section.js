@@ -1,3 +1,5 @@
+const PROFILE = parseInt(window.location.href.match(/\d+$/)[0]);
+
 window.addEventListener("load", function () {
     const sections = document.querySelector(".sections");
 

@@ -49,11 +49,20 @@ class Posts extends Component {
 
 class NoPosts extends Component {
     html() {
-        return `
-            <p class="posts__no-posts">
-                Вы не опубликовали ни одного поста!
-            </p>
-        `
+        if (PROFILE === DATA.user.id)
+            return `
+                <p class="posts__no-posts">
+                    Вы не опубликовали ни одного поста!
+                </p>
+            `;
+        else
+            return `
+                <p class="posts__no-posts">
+                    Пользователь еще не опубликовал
+                    <br>
+                    ни одного поста!
+                </p>
+            `;
     }
 }
 

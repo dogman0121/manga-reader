@@ -27,13 +27,22 @@ class Saves extends Component {
 
 class NoSaves extends Component {
     html() {
-        return `
-            <p class="saves__no-saves">
-                У вас нет сохраненных
-                <br>
-                тайтлов!
-            </p>
-        `
+        if (DATA.user.id === PROFILE)
+            return `
+                <p class="saves__no-saves">
+                    У вас нет сохраненных
+                    <br>
+                    тайтлов!
+                </p>
+            `;
+        else
+            return `
+                <p class="saves__no-saves">
+                    Пользователь еще не добавил
+                    <br>
+                    сохраненные тайтлы!
+                </p>
+            `
     }
 }
 
@@ -52,16 +61,22 @@ class SavesList extends Component {
         `
     }
 
-    onRender() {
-        fetch("/api/save")
-            .then(response => response.json())
-            .then(titles => {
-                if (titles.length === 0)
+    async onRender() {
+        try {
+            const response = await fetch(`/api/save?user=${PROFILE}`);
+
+            if (response.ok){
+                const saves = await response.json();
+
+                if (saves.length === 0)
                     return this.dispatchEvent(new CustomEvent("empty"));
 
-                for(let title of titles)
-                    this.addSave(Save.fromObj(title));
-            })
+                for(let title of saves)
+                    this.addSave(new Save(title));
+            }
+        }
+        catch (e) {
+        }
     }
 
     addSave(save) {
@@ -97,41 +112,49 @@ class SavesList extends Component {
 }
 
 class Save extends Component {
-    constructor(id, poster, name) {
+    constructor(title) {
         super();
 
-        this.id = id;
-        this.poster = poster;
-        this.name = name;
-    }
-
-    static fromObj(title) {
-        const id = title.id;
-        const poster = title.poster;
-        const name = title.name_russian;
-
-        return new Save(id, poster, name);
+        this.id = title.id;
+        this.poster = title.poster;
+        this.name = title.name_russian;
     }
 
     events(element) {
-        element.querySelector(".save__delete-option").addEventListener("click", this.onDelete.bind(this));
+        element.querySelector(".save__delete-option")?.addEventListener("click", this.onDelete.bind(this));
     }
 
     onDelete(event) {
         this.dispatchEvent(new CustomEvent("delete", {detail: {target: this}}));
+
+        event.preventDefault();
     }
 
     html() {
-        return `
-            <div class="save">
-                <img src="${this.poster}" class="save__image">
-                <div class="save__name">
-                    <span class="save__name-russian">{{ this.name }}</span>
+        if (PROFILE === DATA.user.id)
+            return `
+                <div class="save">
+                    <a href="/manga/${this.id}">
+                        <img src="${this.poster}" class="save__image">
+                        <div class="save__name">
+                            <span class="save__name-russian">{{ this.name }}</span>
+                        </div>
+                        <svg class="save__delete-option" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 5L4.99998 19M5.00001 5L19 19" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
                 </div>
-                <svg class="save__delete-option" width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 5L4.99998 19M5.00001 5L19 19" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-        `;
+            `;
+        else
+            return `
+                <div class="save">
+                    <a href="/manga/${this.id}">
+                        <img src="${this.poster}" class="save__image">
+                        <div class="save__name">
+                            <span class="save__name-russian">{{ this.name }}</span>
+                        </div>
+                    </a>
+                </div>
+            `
     }
 }

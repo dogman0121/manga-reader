@@ -23,11 +23,18 @@ def delete_save():
 
 
 @bp.route("/save", methods=["GET"])
-@login_required
 def get_save():
     if "title" in request.args:
         title = Title.get(request.args.get("title"))
         return jsonify(title in current_user.saves)
 
-    saves = [i.to_dict() for i in current_user.saves]
-    return jsonify(saves)
+    if "user" in request.args:
+        user = User.get_by_id(int(request.args.get("user")))
+        saves = [i.to_dict() for i in user.saves]
+        return jsonify(saves)
+
+    if current_user.is_authenticated:
+        saves = [i.to_dict() for i in current_user.saves]
+        return jsonify(saves)
+
+    return "", 401
