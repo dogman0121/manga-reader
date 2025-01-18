@@ -94,7 +94,6 @@ class SaveButton extends Component {
             }
         }
         catch (e) {
-            console.error(e);
         }
     }
 

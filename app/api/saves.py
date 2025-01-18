@@ -26,7 +26,8 @@ def delete_save():
 def get_save():
     if "title" in request.args:
         title = Title.get(request.args.get("title"))
-        return jsonify(title in current_user.saves)
+        if current_user.is_authenticated:
+            return jsonify(title in current_user.saves)
 
     if "user" in request.args:
         user = User.get_by_id(int(request.args.get("user")))
