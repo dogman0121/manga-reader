@@ -317,6 +317,10 @@ textarea:focus {
         font-size: 18px;
     }
 
+    #about {
+        margin-top: 0;
+    }
+
     #stats {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
