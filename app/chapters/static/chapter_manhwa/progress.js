@@ -88,7 +88,7 @@ window.addEventListener("load",async function(){
 
                  const progressChapter = progressDict[DATA.chapter.title_id];
 
-                 if (progressChapter.id === DATA.chapter.id) {
+                 if (progressChapter || progressChapter.id === DATA.chapter.id) {
                      progress = progressChapter.progress;
                  }
                  else {
