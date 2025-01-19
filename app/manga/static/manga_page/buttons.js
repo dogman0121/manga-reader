@@ -61,7 +61,7 @@ class SaveButton extends Component {
     }
 
     onClick(event){
-        if (Object.keys(DATA.user).length !== 0){
+        if (DATA.user){
             if (this.saved)
                 this.delete();
             else
@@ -76,24 +76,27 @@ class SaveButton extends Component {
     async onRender() {
         this.content.bindElement(this.element.querySelector(".save-button__button"));
 
-        try {
-            const response = await fetch(`/api/save?title=${DATA.title.id}`);
+        if (DATA.user) {
+            try {
+                const response = await fetch(`/api/save?title=${DATA.title.id}`);
 
-            if (response.ok){
-                const saved = await response.json();
+                if (response.ok) {
+                    const saved = await response.json();
 
-                if (saved)
-                    this.content.set(this.options.size === "min" ? SAVEBUTTONMIN1 : SAVEBUTTONMAX1);
-                else
+                    if (saved)
+                        this.content.set(this.options.size === "min" ? SAVEBUTTONMIN1 : SAVEBUTTONMAX1);
+                    else
+                        this.content.set(this.options.size === "min" ? SAVEBUTTONMIN2 : SAVEBUTTONMAX2);
+
+                    this.saved = saved;
+                } else {
                     this.content.set(this.options.size === "min" ? SAVEBUTTONMIN2 : SAVEBUTTONMAX2);
-
-                this.saved = saved;
-            }
-            else {
-                this.content.set(this.options.size === "min" ? SAVEBUTTONMIN2 : SAVEBUTTONMAX2);
+                }
+            } catch (e) {
             }
         }
-        catch (e) {
+        else {
+            this.content.set(this.options.size === "min" ? SAVEBUTTONMIN2 : SAVEBUTTONMAX2);
         }
     }
 
@@ -175,26 +178,27 @@ class ReadButton extends Component {
     }
 
     async onRender() {
-        try {
-            const response = await fetch(`/api/progress?title=${DATA.title.id}`);
+        if (DATA.user) {
+            try {
+                const response = await fetch(`/api/progress?title=${DATA.title.id}`);
 
-            if (response.ok){
-                const chapter = await response.json();
+                if (response.ok) {
+                    const chapter = await response.json();
 
-                if (chapter === null)
-                    this.element.innerHTML = `
+                    if (chapter === null)
+                        this.element.innerHTML = `
                         <button class="read-button__button">
                             Нет глав
                         </button>  
                     `;
-                else if (chapter.progress === null)
-                    this.element.innerHTML = `
+                    else if (chapter.progress === null)
+                        this.element.innerHTML = `
                         <a href="/chapters/${chapter.id}">
                             <button class="read-button__button">Читать</button>
                         </a>
                     `;
-                else
-                    this.element.innerHTML = `
+                    else
+                        this.element.innerHTML = `
                         <a href="/chapters/${chapter.id}">
                             <button class="read-button__button">
                                 <span class="read-button__header">Продолжить</span>
@@ -205,13 +209,28 @@ class ReadButton extends Component {
                             </button>
                         </a>
                     `;
-            }
-            else {
+                } else {
 
+                }
+            } catch (e) {
+                console.error(e);
             }
         }
-        catch (e) {
-            console.error(e);
+        else {
+            const chapter = JSON.parse(localStorage.getItem("progress"))[DATA.title.id];
+
+            if (chapter && chapter.progress)
+                this.element.innerHTML = `
+                    <a href="/chapters/${chapter.id}">
+                        <button class="read-button__button">
+                            <span class="read-button__header">Продолжить</span>
+                            <span class="read-button__text">
+                                ТОМ ${chapter.tome} 
+                                ГЛАВА ${chapter.chapter}
+                               </span>
+                        </button>
+                    </a>
+                `;
         }
     }
 

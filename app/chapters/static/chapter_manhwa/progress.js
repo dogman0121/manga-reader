@@ -1,6 +1,3 @@
-let pageHeight;
-
-
 function calculateProgress(){
     const scrollHeight = window.scrollY || document.documentElement.scrollTop;
     const chapter = document.querySelector(`[data-id="${DATA.chapter.id}"]`);
@@ -14,33 +11,93 @@ function calculateProgress(){
         return (scrollHeight - topCords) / chapterHeight;
 }
 
-function saveProgress() {
-    const progress = calculateProgress();
-    fetch("/api/progress", {
-        method: "UPDATE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            title: DATA.title.id,
-            chapter: DATA.chapter.id,
-            progress: progress
+async function saveProgress() {
+    const CHAPTER = parseInt(window.location.href.match(/\d+$/)[0]);
+    const progress = await calculateProgress();
+
+    if (DATA.user) {
+        const response = await fetch("/api/progress", {
+            method: "UPDATE",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                chapter: DATA.chapter.id,
+                progress: progress
+            })
         })
-    })
+
+        if (!response.ok){
+            const progressDict = JSON.parse(localStorage.getItem("progress"));
+
+            const newProgress = DATA.chapter;
+            newProgress.progress = progress;
+
+            progressDict[DATA.chapter.title_id] = newProgress;
+
+            localStorage.setItem("progress", JSON.stringify(progressDict));
+        }
+    }
+    else {
+        const progressDict = JSON.parse(localStorage.getItem("progress"));
+
+        const newProgress = DATA.chapter;
+        newProgress.progress = progress;
+
+        progressDict[DATA.chapter.title_id] = newProgress;
+
+        localStorage.setItem("progress", JSON.stringify(progressDict));
+    }
 }
 
-window.onload = function () {
-     pageHeight = Math.max( document.body.scrollHeight, document.body.offsetHeight,
+function throttle(callee, timeout) {
+    let timer = null
+
+    return function perform(...args) {
+        if (timer) return
+
+        timer = setTimeout(() => {
+            callee(...args)
+
+            clearTimeout(timer)
+            timer = null
+        }, timeout)
+    }
+}
+
+window.addEventListener("scroll", throttle(saveProgress, 1000));
+
+window.addEventListener("load",async function(){
+     const pageHeight = Math.max( document.body.scrollHeight, document.body.offsetHeight,
         document.documentElement.clientHeight, document.documentElement.scrollHeight,
         document.documentElement.offsetHeight);
 
-    fetch(`/api/progress?title=${DATA.title.id}&chapter=${DATA.chapter.id}`)
-        .then(response => response.json())
-        .then(function (progress){
-            const p = progress.progress;
-            if (p)
-                window.scrollTo(0, pageHeight * p);
-        });
+     if (DATA.user) {
+         try {
+             const response = await fetch(`/api/progress?chapter=${CHAPTER}`);
 
-    setInterval(saveProgress, 10000);
-}
+             let progress;
+             if (response.ok) {
+                 const chapter = await response.json();
+                 progress = await chapter.progress;
+             }
+             else {
+                 const progressDict = JSON.parse(localStorage.getItem("progress"));
+
+                 const progressChapter = progressDict[DATA.chapter.title_id].json() || {};
+
+                 if (progressChapter.id === DATA.chapter.id) {
+                     progress = progressChapter.progress;
+                 }
+                 else {
+                     progress = 0;
+                 }
+             }
+
+             window.scrollTo(0, pageHeight * progress);
+         }
+         catch (e) {
+
+         }
+     }
+})

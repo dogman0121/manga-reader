@@ -11,8 +11,6 @@ def render(template_path, **kwargs):
 
     if current_user.is_authenticated:
         jsn["user"] = current_user.to_dict()
-    else:
-        jsn["user"] = {}
 
     kwargs["user"] = current_user
     kwargs["json"] = json.dumps(jsn, ensure_ascii=False)

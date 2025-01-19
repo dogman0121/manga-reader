@@ -56,10 +56,9 @@ def delete_progress():
 @login_required
 def update_progress():
 
-    title = Title.get(request.json["title"])
     chapter = Chapter.get(request.json["chapter"])
     progress = float(request.json["progress"])
 
-    title.update_progress(current_user, chapter, progress)
+    chapter.title.update_progress(current_user, chapter, progress)
 
     return "", 204

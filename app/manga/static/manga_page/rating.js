@@ -77,20 +77,25 @@ class Rating extends Component {
     async onRender(){
         this.content.bindElement(this.element.querySelector(".rating-button__text"));
 
-        try {
-            const response = await fetch(`/api/rating?title=${DATA.title.id}`);
+        if (DATA.user){
+            try {
+                const response = await fetch(`/api/rating?title=${DATA.title.id}`);
 
-            if (response.ok) {
-                const rating = await response.json();
+                if (response.ok) {
+                    const rating = await response.json();
 
-                this.setRating(rating);
+                    this.setRating(rating);
+                }
+                else {
+                    this.content.set(this.emptyLabel);
+                }
             }
-            else {
-                this.content.set(this.emptyLabel);
+            catch (e){
+                console.error(e);
             }
         }
-        catch (e){
-            console.error(e);
+        else {
+            this.content.set(this.emptyLabel);
         }
     }
 
@@ -101,12 +106,18 @@ class Rating extends Component {
     onChooseRating(event) {
         const rating = parseInt(event.detail.rating);
 
-        if (!this.rating)
-            this.addRating(rating);
-        else if (this.rating === rating)
-            this.deleteRating();
-        else
-            this.updateRating(rating);
+        if (DATA.user) {
+            if (!this.rating)
+                this.addRating(rating);
+            else if (this.rating === rating)
+                this.deleteRating();
+            else
+                this.updateRating(rating);
+        }
+        else {
+            const notify = new NotifyManager();
+            notify.push(new Notify("Ошибка", "Вы не авторизированы!"));
+        }
     }
 
     async deleteRating(){
