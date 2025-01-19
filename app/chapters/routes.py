@@ -27,7 +27,6 @@ def get_chapter(chapter_id):
     if current_user.is_authenticated and title.get_progress(current_user) is None:
         title.add_progress(current_user, chapter, 0)
 
-    jsn["title"] = title.to_dict()
     jsn["chapter"] = chapter.to_dict()
 
     pages = chapter.get_pages()

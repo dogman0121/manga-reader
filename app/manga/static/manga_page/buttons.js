@@ -217,7 +217,8 @@ class ReadButton extends Component {
             }
         }
         else {
-            const chapter = JSON.parse(localStorage.getItem("progress"))[DATA.title.id];
+            const progressDict = JSON.parse(localStorage.getItem("progress")) || {};
+            const chapter = progressDict[DATA.title.id];
 
             if (chapter && chapter.progress)
                 this.element.innerHTML = `

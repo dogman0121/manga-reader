@@ -28,10 +28,11 @@ async function saveProgress() {
         })
 
         if (!response.ok){
-            const progressDict = JSON.parse(localStorage.getItem("progress"));
+            const progressDict = JSON.parse(localStorage.getItem("progress")) || {};
 
             const newProgress = DATA.chapter;
             newProgress.progress = progress;
+            delete newProgress.pages;
 
             progressDict[DATA.chapter.title_id] = newProgress;
 
@@ -39,10 +40,11 @@ async function saveProgress() {
         }
     }
     else {
-        const progressDict = JSON.parse(localStorage.getItem("progress"));
+        const progressDict = JSON.parse(localStorage.getItem("progress")) || {};
 
         const newProgress = DATA.chapter;
         newProgress.progress = progress;
+        delete newProgress.pages;
 
         progressDict[DATA.chapter.title_id] = newProgress;
 
@@ -72,19 +74,19 @@ window.addEventListener("load",async function(){
         document.documentElement.clientHeight, document.documentElement.scrollHeight,
         document.documentElement.offsetHeight);
 
+     let progress;
      if (DATA.user) {
          try {
              const response = await fetch(`/api/progress?chapter=${CHAPTER}`);
 
-             let progress;
              if (response.ok) {
                  const chapter = await response.json();
                  progress = await chapter.progress;
              }
              else {
-                 const progressDict = JSON.parse(localStorage.getItem("progress"));
+                 const progressDict = JSON.parse(localStorage.getItem("progress")) || {};
 
-                 const progressChapter = progressDict[DATA.chapter.title_id].json() || {};
+                 const progressChapter = progressDict[DATA.chapter.title_id];
 
                  if (progressChapter.id === DATA.chapter.id) {
                      progress = progressChapter.progress;
@@ -93,11 +95,23 @@ window.addEventListener("load",async function(){
                      progress = 0;
                  }
              }
-
-             window.scrollTo(0, pageHeight * progress);
          }
          catch (e) {
 
          }
      }
+     else {
+         const progressDict = JSON.parse(localStorage.getItem("progress")) || {};
+
+         const progressChapter = progressDict[DATA.chapter.title_id];
+
+         if (progressChapter.id === DATA.chapter.id) {
+             progress = progressChapter.progress;
+         }
+         else {
+             progress = 0;
+         }
+     }
+
+     window.scrollTo(0, pageHeight * progress);
 })
