@@ -196,6 +196,7 @@ textarea:focus {
     margin-top: 5px;
     font-size: 16px;
     color: #FFD600;
+    cursor:pointer;
 }
 
 #genres {
