@@ -139,7 +139,7 @@ class Rating extends Component {
 
     async updateRating(rating){
         try {
-            const response = fetch("../api/rating", {
+            const response = await fetch("../api/rating", {
                 method: "UPDATE",
                 headers: {
                     'Accept': 'application/json',
@@ -200,8 +200,8 @@ class Rating extends Component {
             this.content.set(this.emptyLabel);
         }
         else {
-            this.content.set(this.ratingLabel)
-            this.ratingLabel.set(rating)
+            this.content.set(this.ratingLabel);
+            this.ratingLabel.set(rating);
         }
 
         this.rating = rating;
