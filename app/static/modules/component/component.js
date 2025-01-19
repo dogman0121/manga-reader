@@ -53,6 +53,7 @@ class Component {
         this.element = element;
         this.onInit();
         this.events(this.element);
+        this.onRender();
     }
 
     render(){

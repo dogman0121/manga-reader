@@ -207,11 +207,7 @@ class ReadButton extends Component {
                     `;
             }
             else {
-                this.element.innerHTML = `
-                    <button class="read-button__button">
-                        Нет глав
-                    </button>  
-                `;
+
             }
         }
         catch (e) {
@@ -277,6 +273,6 @@ window.addEventListener("DOMContentLoaded", function () {
         readButton = new ReadButton();
     }
     editButtonEl.replaceWith(editButton.render());
-    readButtonEl.replaceWith(readButton.render());
+    readButton.init(readButtonEl);
     saveButtonEl.replaceWith(saveButton.render());
 });

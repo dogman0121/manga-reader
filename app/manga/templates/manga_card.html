@@ -48,7 +48,17 @@
                 </div>
                 <div class="nav-buttons">
                     <div class="read-button">
-                        <button class="read-button__button"></button>
+                        {% if title.chapters | length %}
+                            <a href="{{ url_for("chapters.get_chapter", chapter_id=title.chapters[0].id) }}">
+                                <button class="read-button__button">
+                                    Читать
+                                </button>
+                            </a>
+                        {% else %}
+                            <button class="read-button__button">
+                                Нет глав
+                            </button>
+                        {% endif %}
                     </div>
                     <div class="rating-button"></div>
                 </div>
